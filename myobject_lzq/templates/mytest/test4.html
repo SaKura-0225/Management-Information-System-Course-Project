@@ -1,0 +1,88 @@
+{% extends "myadmin/base.html" %}
+
+{% block main_body %}                
+ <script src="https://cdn.staticfile.org/echarts/4.3.0/echarts.min.js"></script>
+ <script src="https://cdn.jsdelivr.net/npm/chart.js@2.8.0"></script>
+ <script src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
+ <script>
+     $(document).ready(function(){
+            $("input[name= 'toDel']").each(function(){
+                 var currentAdd = $(this);
+                 currentAdd.click(function(){
+                     code = $(this).attr("systemIdVaule");
+                     $.get("/del/" + code + ".html", function(data, status){
+                        alert("数据:");
+                     });
+                  window.location.reload()
+            });
+     });
+     });
+ </script>
+<div id="main" style="width: 400px;height: 400px;">
+
+    <p>显示e图</p>
+<div class="chart1">
+    <canvas id="Machine1" style="height:500px; width:100%"></canvas>
+
+</div>
+
+
+</div>
+
+    <script type="text/javascript">
+
+        setInterval("myInterval()",2000)
+        function myInterval(){
+
+            $.ajax({
+         url: "http://127.0.0.1:8000/mytest/chart2",
+         type: "POST",
+         dataType: "json",
+         success: function (data) {
+
+             console.log(data)
+             datapv=data;
+         var cts = document.getElementById('Machine1').getContext('2d');
+         var myChart = new Chart(cts, {
+         type: 'bar',
+         data: {
+                labels: ['Speed', 'OutPut','Qualified products', 'Defective'],
+                datasets: [{
+                    data: data,
+                    backgroundColor: [
+                        'rgba(255, 99, 132,0.2)',
+                        'rgba(54, 162, 235,0.2)',
+                        'rgba(255, 206, 86,0.2)',
+                        'rgba(75, 192, 192,0.2)',
+                        'rgba(153, 102, 255,0.2)',
+                        'rgba(255, 159, 64,0.2)'
+                        ],
+                    borderColor: [
+                        'rgba(255, 99, 132,1)',
+                        'rgba(54, 162, 235,1)',
+                        'rgba(255, 206, 86,1)',
+                        'rgba(75, 192, 192,1)',
+                        'rgba(153, 102, 255,1)',
+                        'rgba(255, 159, 64,1)'
+                        ],
+                    borderWidth: 1,
+               }]
+         },
+         options: {
+              animation : true,
+              title: {
+                   display: true,
+                   text: 'Machine1'
+                   },
+              scales: {
+                  yAxes: [{
+                       ticks: {beginAtZero: true}
+                  }]
+              }
+          }
+       });
+    </script>
+
+
+{% endblock %}
+

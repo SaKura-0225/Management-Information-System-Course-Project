@@ -1,0 +1,38 @@
+{% extends "myadmin/base.html" %}
+
+{% block main_body %}                
+ <script src="https://cdn.staticfile.org/echarts/4.3.0/echarts.min.js"></script>
+<div id="main" style="width: 400px;height: 400px;"><p>测试</p></div>
+
+    <script type="text/javascript">
+			{#这里使用view传过来的数据必须进行safe操作（为了安全起见和防止页面乱码），导致数据不可用#}
+            window.product_list={{ product_list|safe }}
+            window.price_list={{ price_list|safe }}
+
+			var myChart=echarts.init(document.getElementById('main'));
+			// 指定图标的配置项和数据
+			var option = {
+				title:{
+					text:'Echarts入门'
+				},
+				tooltip: {},
+				legend:{
+					data:['销售']
+				},
+				xAxis:{
+					data:product_list
+				},
+				yAxis:{},
+				series:[{
+					name:'销量',
+					type:'bar',
+					data:price_list
+				}]
+			};
+			myChart.setOption(option);
+		</script>
+
+
+{% endblock %}
+
+

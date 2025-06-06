@@ -1,0 +1,81 @@
+{% extends "myadmin/base.html" %}
+
+{% block main_body %}                
+ <script src="https://cdn.staticfile.org/echarts/4.3.0/echarts.min.js"></script>
+<div id="main" style="width: 400px;height: 400px;"><p>显示e图</p></div>
+
+    <script type="text/javascript">
+			{#这里使用view传过来的数据必须进行safe操作（为了安全起见和防止页面乱码），导致数据不可用#}
+            window.product_list={{ product_list|safe }}
+            window.price_list={{ price_list|safe }}
+
+			// 指定图标的配置项和数据
+			var chartDom = document.getElementById('main');
+             var myChart = echarts.init(chartDom);
+             var option;
+           var pieData = [];
+         var legendData = [];
+         for(var i=0;i<product_list.length;i++){
+            var temp = {};
+            temp.value = price_list[i];
+            temp.name = product_list[i];
+             pieData.push(temp);
+             legendData.push(product_list[i]);
+         }
+
+            option = {
+  title: {
+    text: 'Nightingale Chart',
+    subtext: 'Fake Data',
+    left: 'center'
+  },
+  tooltip: {
+    trigger: 'item',
+    formatter: '{a} <br/>{b} : {c} ({d}%)'
+  },
+  legend: {
+    left: 'center',
+    top: 'bottom',
+    data: legendData
+  },
+  toolbox: {
+    show: true,
+    feature: {
+      mark: { show: true },
+      dataView: { show: true, readOnly: false },
+      restore: { show: true },
+      saveAsImage: { show: true }
+    }
+  },
+  series: [
+    {
+      name: 'Radius Mode',
+      type: 'pie',
+      radius: [20, 140],
+      center: ['25%', '50%'],
+      roseType: 'radius',
+      itemStyle: {
+        borderRadius: 5
+      },
+      label: {
+        show: false
+      },
+      emphasis: {
+        label: {
+          show: true
+        }
+      },
+      data: pieData
+    },
+
+  ]
+};
+
+option && myChart.setOption(option);
+
+
+		</script>
+
+
+{% endblock %}
+
