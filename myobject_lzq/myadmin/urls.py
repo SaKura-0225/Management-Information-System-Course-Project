@@ -5,14 +5,14 @@ from myadmin.views import index
 from myadmin.views import user
 from myadmin.views import shop
 from myadmin.views import orders
-from myadmin.views import category, product, member
+from myadmin.views import category, product, member,login
 
 urlpatterns = [
     path('', index.index, name="myadmin_index"),  # 后台首页
 
     # 后台管理员登录、退出路由
-    path('login', index.login, name="myadmin_login"),  # 加载登录表单
-    path('dologin', index.dologin, name="myadmin_dologin"),  # 执行登录表单
+    path('login', index.logins, name="myadmin_login"),  # 加载登录表单
+    #path('dologin', index.dologin, name="myadmin_dologin"),  # 执行登录表单
     path('logout', index.logout, name="myadmin_logout"),  # 退出
     path('verify', index.verify, name="myadmin_verify"),  # 输出验证码
 

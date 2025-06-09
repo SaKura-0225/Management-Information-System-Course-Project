@@ -2,6 +2,7 @@ from django.shortcuts import render
 from django.http import HttpResponse
 from myadmin.models import User
 from django.shortcuts import redirect
+from django.contrib.auth import authenticate,login,logout
 from django.urls import reverse
 import re
 from myadmin.models import Orders,User,Shop
@@ -23,11 +24,30 @@ def index(request):
     context = {'o_number':ppp1,'o_money':ppp2,'u_number':ppp3,'s_number':ppp4}
     return render(request, 'myadmin/index/index.html',context)  
 
-# 加载管理员登录表单
-def login(request):
+
+def logins(request):
+    if request.method == 'POST':
+        username = request.POST.get("username")
+        password = request.POST.get("password")
+        user = authenticate(username=username, password=password)
+        print(f"User: {user}, Username: {username}, Password: {password}")  # 调试输出
+        if user:
+            login(request, user)
+            print(f"Authenticated: {request.user.is_authenticated}")  # 调试
+            return redirect(reverse('myadmin_index'))
+        else:
+            msg = '用户名密码错误！'
+            return render(request, 'myadmin/index/login.html', locals())
     return render(request, 'myadmin/index/login.html')
 
+
+
+# 加载管理员登录表单
+#def login(request):
+    #return render(request, 'myadmin/index/login.html')
+
 # 执行管理员登录
+'''
 def dologin(request):
     #try:
         # 验证码判断
@@ -35,27 +55,24 @@ def dologin(request):
            # context = {"info": "验证码不正确"}
            # return render(request, "myadmin/index/login.html", context)
         # 根据登录帐号获取登录者信息
-        user = User.objects.get(username=request.POST['username'])
-        if user.status == 6:
-            #判断登录密码是否正确
-            import hashlib
-            md5 = hashlib.md5()
-            s = request.POST['pass']+user.password_salt
-            md5.update(s.encode('utf-8'))
-            if user.password_hash == md5.hexdigest():
-                print('登录成功')
-                # 把用户信息写到session中
-                request.session['adminuser'] = user.toDict()
-                # 重定向到管理员首页
-                return redirect(reverse('myadmin_index'))
-            else:
-                 context = {"info": "登录密码错误"}
+    if request.method == 'POST':
+        username = request.POST.get("username")
+        password = request.POST.get("password")
+        user = authenticate(username=username,password=password)
+        # 用authenticate判断用户名密码是否正确
+        if user:
+            login(request,user)
+            return redirect('/myadmin')
         else:
-            context = {"info": "无效的登录账号"}
+            msg='用户名密码错误！'
+            return render(request,'myadmin/index/login.html',locals())
+
     #except Exception as err:
         #print(err)
         #context = {"info": "登录账号不存在"}
-        return render(request, "myadmin/index/login.html", context)
+    return render(request,'myadmin/index/login.html')
+'''
+
 # 管理员退出
 def logout(request):
     del request.session['adminuser']

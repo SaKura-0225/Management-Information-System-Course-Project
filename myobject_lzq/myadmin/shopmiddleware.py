@@ -1,3 +1,4 @@
+
 # 自定义中间件类
 from django.shortcuts import redirect
 from django.urls import reverse
@@ -19,6 +20,7 @@ class ShopMiddleware(object):
 
         # 后台请求路由判断
         # 定义网站后台不用登录也可访问的路由url
+        #urllist = []
         urllist = ['/myadmin/login', '/myadmin/dologin', '/myadmin/logout', '/myadmin/verify']
         # 判断当前请求是否是访问网站后台,并且path不在urllist中
         if re.match(r'^/myadmin', path) and (path not in urllist):
