@@ -5,7 +5,8 @@ from myadmin.views import index
 from myadmin.views import user
 from myadmin.views import shop
 from myadmin.views import orders
-from myadmin.views import category, product, member,login
+from myadmin.views import category, product, member
+from myadmin.views import report,warehouse,warehouse_flow
 
 urlpatterns = [
     path('', index.index, name="myadmin_index"),  # 后台首页
@@ -55,4 +56,18 @@ urlpatterns = [
 
     # 订单信息管理路由
     path('orders/', orders.index, name="myadmin_order_index"),  # 浏览
+
+    #出入库管理路由
+    path('warehouse-flow', warehouse_flow.index, name='myadmin_warehouse-flow_index'), #主页浏览，包含显示近期（日、周、月）出入库数量统计图
+    path('warehouse-flow/inbound', warehouse_flow.index , name='myadmin_warehouse-flow_inbound'), #出库表单
+    path('warehouse-flow/outbound', warehouse_flow.index , name='myadmin_warehouse-flow_outbound'), #入库表单
+
+    #报表界面路由
+    path('report', report.index, name='myadmin_report_index'), #主页浏览
+
+
+    #仓位可视化路由
+    path('warehouse', warehouse.index, name='myadmin_warehouse_index'), #主页浏览
 ]
+
+
