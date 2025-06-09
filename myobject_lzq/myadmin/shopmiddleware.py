@@ -2,7 +2,7 @@
 # 自定义中间件类
 from django.shortcuts import redirect
 from django.urls import reverse
-
+from django.contrib.auth.middleware import AuthenticationMiddleware
 import re
 
 
@@ -24,15 +24,15 @@ class ShopMiddleware(object):
         urllist = ['/myadmin/login', '/myadmin/dologin', '/myadmin/logout', '/myadmin/verify']
         # 判断当前请求是否是访问网站后台,并且path不在urllist中
         if re.match(r'^/myadmin', path) and (path not in urllist):
-            # 判断当前用户是否没有登录
-            if "adminuser" not in request.session:
+            # 检查是否登录
+            if not request.user.is_authenticated:
                 # 执行登录界面跳转
                 return redirect(reverse('myadmin_login'))
 
 
         # 判断大堂点餐请求，是否登录（session中是否有webuser)
         if re.match(r'^/web', path):
-            if "webuser" not in request.session:
+            if not request.user.is_authenticated:
                 # 执行登录界面跳转
                 return redirect(reverse('web_login'))
 
