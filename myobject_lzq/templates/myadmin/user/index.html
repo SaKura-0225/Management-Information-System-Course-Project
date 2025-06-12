@@ -81,13 +81,6 @@
                   </td>
                   <td>{{ vo.create_at|date:'Y-m-d' }}</td>
                   <td>{{ vo.update_at }}</td>
-                  <td>
-                    <a type="button" href="{% url 'myadmin_user_edit' vo.id %}" class="btn btn-success btn-xs">
-                      <span class="glyphicon glyphicon-edit" aria-hidden="true"></span> 编辑</a>
-                    <button type="button" onclick="doDel('{% url 'myadmin_user_delete' vo.id %}')" class="btn btn-danger btn-xs">
-                      <span class="glyphicon glyphicon-trash" aria-hidden="true"></span> 删除</button>
-
-                  </td>
                 </tr>
                 {% endfor %}
               </table>

@@ -52,44 +52,17 @@
             <div class="box-body table-responsive no-padding">
               <table class="table table-hover">
                 <tr>
-                  <th>ID</th>
-                  <th>商铺id</th>
-                  <th>会员id</th>
-                  <th>员工账号</th>
-                  <th>金额</th>
-                  <th>当前状态</th>
-                  <th>修改时间</th>
-                  <th>操作</th>
+                  <th>订单编号</th>
+                  <th>订单创建时间</th>
+                  <th>总销售数量</th>
+                  <th>订单类别</th>
                 </tr>
-                {% for vo in user_list %}
+                {% for vo in page_obj %}
                 <tr>
-                  <td>{{ vo.id }}</td>
-                  <td>{{ vo.shopname }}</td>
-                  <td>{{ vo.membername }}</td>
-                  <td>{{ vo.usernickname }}</td>
-                  <td>{{ vo.money }}</td>
-                  <td>
-                    {% if vo.status == 1 %}
-                        <span style="color:blue">过行中</span>
-                    {% elif vo.status == 2 %}
-                        <span style="color:red">无效</span>
-                    {% elif vo.status == 3 %}
-                        <span style="color:green">已完成</span>
-                    {% else %}
-                        <span style="color:red">未知状态</span>
-                    {% endif %}
-
-
-                  </td>
+                  <td><a href="{% url 'myadmin_orders_detail' vo.orders_id %}">{{ vo.orders_id }}</a></td>
                   <td>{{ vo.create_at|date:'Y-m-d' }}</td>
-                  <td>{{ vo.update_at }}</td>
-                  <td>
-                    <a type="button" href="{% url 'myadmin_user_edit' vo.id %}" class="btn btn-success btn-xs">
-                      <span class="glyphicon glyphicon-edit" aria-hidden="true"></span> 编辑</a>
-                    <button type="button" onclick="doDel('{% url 'myadmin_user_delete' vo.id %}')" class="btn btn-danger btn-xs">
-                      <span class="glyphicon glyphicon-trash" aria-hidden="true"></span> 删除</button>
-
-                  </td>
+                  <td>{{ vo.total_amount }}</td>
+                  <td>{{ vo.category }}</td>                 
                 </tr>
                 {% endfor %}
               </table>
@@ -98,14 +71,28 @@
             <div class="box-footer clearfix">
               <a role="button" href="{% url 'myadmin_user_add' %}" class="btn btn-primary">
                       <span class="glyphicon glyphicon-plus" aria-hidden="true"></span> 添加员工</a>
-              <ul class="pagination pagination-sm no-margin pull-right">
-                <li><a href="#">&laquo;</a></li>
-                {% for p in plist %}
-                <li {% if p == pIndex %} class="active" {% endif %}><a href="{% url 'myadmin_user_index' %}">{{p}}</a></li>
-                {% endfor %}
+            </div>
+            {% for contact in page_obj %}
+              {# Each "contact" is a Contact model object. #}
+              {{ contact.full_name|upper }}<br>
+            {% endfor %}
 
-                <li><a href="#">&raquo;</a></li>
-              </ul>
+            <div class="pagination">
+                <span class="step-links">
+                    {% if page_obj.has_previous %}
+                        <a href="?page=1">&laquo; 首页</a>
+                        <a href="?page={{ page_obj.previous_page_number }}&keyword={{ request.GET.keyword }}">上一页</a>
+                    {% endif %}
+
+                    <span class="current">
+                        Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}.
+                    </span>
+
+                    {% if page_obj.has_next %}
+                        <a href="?page={{ page_obj.next_page_number }}">下一页</a>
+                        <a href="?page={{ page_obj.paginator.num_pages }}">尾页 &raquo;</a>
+                    {% endif %}
+                </span>
             </div>
           </div>
           <!-- /.box -->
@@ -116,21 +103,3 @@
     <!-- /.content -->
 {% endblock %}
 
-<script type="text/javascript">
-
-  //自定义函数，实现通过店铺id，Ajax加载对应的菜品分类信息
-  function loadstatus(){
-    //获取选中的id号
-    var id = $("#status").val();
-
-    $.ajax({
-        url: "/myadmin/orders?status="+id,
-        type: 'get',
-        data: {},
-        dataType:'json',
-
-    });
-
-  }
-  loadstatus()
-</script>

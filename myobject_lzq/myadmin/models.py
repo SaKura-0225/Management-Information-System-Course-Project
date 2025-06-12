@@ -1,8 +1,8 @@
 '''
 Author: error: error: git config user.name & please set dead value or install git && error: git config user.email & please set dead value or install git & please set dead value or install git
 Date: 2025-04-22 16:31:29
-LastEditors: error: error: git config user.name & please set dead value or install git && error: git config user.email & please set dead value or install git & please set dead value or install git
-LastEditTime: 2025-05-27 17:10:34
+LastEditors: SaKura0225 2948196205@qq.com
+LastEditTime: 2025-06-12 20:05:46
 FilePath: \code\myobject_lzq\myadmin\models.py
 Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
 '''
@@ -131,3 +131,32 @@ class Order2(models.Model):
     class Meta:
         managed = False
         db_table = 'order2'
+
+
+#布料销售订单
+class WmsOrders(models.Model):
+    user_id = models.IntegerField(blank=True, null=True, db_comment='操作员id')
+    create_at = models.DateTimeField(blank=True, null=True, db_comment='下单时间')
+    orders_id = models.IntegerField(primary_key=True, db_comment='订单编号')
+    total_amount = models.IntegerField(blank=True, null=True, db_comment='面料出库总量')
+    category = models.IntegerField(blank=True, null=True, db_comment='1：镇内订单  2：镇外订单')
+    payment_status = models.IntegerField(blank=True, null=True, db_comment='支付状态:1未支付/2已支付/3已退款')
+    update_at = models.CharField(max_length=30, blank=True, null=True, db_comment='更新时间')
+
+    class Meta:
+        managed = False
+        db_table = 'wms_orders'
+        db_table_comment = '销售订单表'
+
+#布料销售订单详情
+class WmsOrdersDetail(models.Model):
+    price = models.FloatField(db_comment='单价')
+    total_price = models.FloatField()
+    orders_id = models.IntegerField(primary_key=True, db_comment='订单编号')
+    product_id = models.CharField(max_length=45)
+    quantity = models.IntegerField()
+    status = models.CharField(max_length=45)
+
+    class Meta:
+        managed = False
+        db_table = 'wms_orders_detail'
