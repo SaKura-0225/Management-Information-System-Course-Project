@@ -64,9 +64,11 @@ urlpatterns = [
 
 
     #出入库管理路由
-    path('warehouse-flow', warehouse_flow.index, name='myadmin_warehouse-flow_index'), #主页浏览，包含显示近期（日、周、月）出入库数量统计图
-    path('warehouse-flow/inbound', warehouse_flow.index , name='myadmin_warehouse-flow_inbound'), #出库表单
-    path('warehouse-flow/outbound', warehouse_flow.index , name='myadmin_warehouse-flow_outbound'), #入库表单
+    path('warehouse-flow/inbound', warehouse_flow.inbound_index , name='myadmin_warehouse-flow_inbound'), #出库表单
+    path('warehouse-flow/outbound', warehouse_flow.outbound_index , name='myadmin_warehouse-flow_outbound'), #入库表单
+    path('warehouse-flow/outbound/add', warehouse_flow.add_outbound, name='myadmin_outbound_add'),  #增加新订单
+    path('warehouse-flow/outbound/<int:id>/edit', warehouse_flow.edit_outbound, name='myadmin_outbound_edit'),  #根据订单编号修改已有订单
+    path('warehouse-flow/outbound/<int:id>/delete', warehouse_flow.delete_outbound, name='myadmin_outbound_delete'), #根据订单编号删除订单
 
     #报表界面路由
     path('report', report.index, name='myadmin_report_index'), #主页浏览

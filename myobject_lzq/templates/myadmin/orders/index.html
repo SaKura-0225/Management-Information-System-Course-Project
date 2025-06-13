@@ -11,12 +11,6 @@
         <li class="active">订单管理</li>
       </ol>
     </section>
-<script type="text/javascript">
-     function goToPage() {
-      var id = $("#status").val();
-      window.location.href = "/myadmin/orders?status="+id
-     }
-</script>
     <!-- Main content -->
     <section class="content container-fluid">
 
@@ -29,18 +23,7 @@
               <div class="box-tools">
                <form action="{% url 'myadmin_order_index' %}" method="get">
                 <div class="input-group input-group-sm" style="width:150px;float:left;">
-                  <input type="text" name="keyword" class="form-control pull-right" placeholder="商铺名/商铺id">
-                  <div class="input-group-btn">
-                    <button type="submit" class="btn btn-default"><i class="fa fa-search"></i></button>
-                  </div>
-                </div>
-                 <div class="input-group input-group-sm" style="width:150px;float:left;">
-                  <select name="status" id="status" class="form-control select2" style="width: 100%;">
-                    <option value="" {% if selectstatus == "" %} selected {% endif %}>全部</option>                    
-                    <option value="1" {% if selectstatus == "1" %} selected {% endif %}>过行中</option>
-                    <option value="2" {% if selectstatus == "2" %} selected {% endif %}>无效</option>
-                    <option value="3" {% if selectstatus == "3" %} selected {% endif %}>已完成</option>
-                    </select>
+                  <input type="text" name="keyword" class="form-control pull-right" placeholder="订单id">
                   <div class="input-group-btn">
                     <button type="submit" class="btn btn-default"><i class="fa fa-search"></i></button>
                   </div>

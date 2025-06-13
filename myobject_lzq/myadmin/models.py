@@ -2,7 +2,7 @@
 Author: error: error: git config user.name & please set dead value or install git && error: git config user.email & please set dead value or install git & please set dead value or install git
 Date: 2025-04-22 16:31:29
 LastEditors: SaKura0225 2948196205@qq.com
-LastEditTime: 2025-06-13 16:12:28
+LastEditTime: 2025-06-13 20:06:58
 FilePath: \code\myobject_lzq\myadmin\models.py
 Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
 '''
@@ -174,3 +174,18 @@ class OrdersDetailWithDates(models.Model):
     class Meta:
         managed = False
         db_table = 'orders_detail_with_dates'
+
+
+class WmsOutbound(models.Model):
+    orders_id = models.IntegerField(blank=True, null=True, db_comment='采购订单id')
+    name = models.CharField(max_length=50, blank=True, null=True, db_comment='物料名称')
+    product_id = models.IntegerField(blank=True, null=True, db_comment='SKU编号')
+    quantity = models.IntegerField(blank=True, null=True, db_comment='数量')
+    bin_id = models.IntegerField(blank=True, null=True, db_comment='库位编号')
+    user_id = models.IntegerField(blank=True, null=True, db_comment='操作员id')
+    create_at = models.DateTimeField(blank=True, null=True, db_comment='出库时间')
+    update_at = models.DateTimeField(blank=True, null=True, db_comment='更新时间')
+
+    class Meta:
+        managed = False
+        db_table = 'wms_outbound'

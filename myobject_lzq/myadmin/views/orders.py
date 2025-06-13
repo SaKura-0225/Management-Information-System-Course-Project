@@ -1,4 +1,4 @@
-# 员工信息管理视图文件
+# 订单信息管理视图文件
 from django.shortcuts import render, redirect
 from django.http import HttpResponse
 from django.core.paginator import Paginator
@@ -20,8 +20,8 @@ def index(request):
     #查询
     kw = request.GET.get("keyword", None)
     if kw:
-        order_list = order_list.filter(Q(num__contains=kw) | Q(id__contains=kw)) #根据视图中选取订单编号或者id查询
-    paginator = Paginator(order_list, 4)  # Show 1 contacts per page.
+        order_list = order_list.filter(Q(orders_id__contains=kw)) #根据视图中选取订单编号查询
+    paginator = Paginator(order_list, 4)  
     page_number = request.GET.get("page")
     page_obj = paginator.get_page(page_number)
     # 显示所有数据代码：
