@@ -56,21 +56,23 @@
                   <th>订单创建时间</th>
                   <th>总销售数量</th>
                   <th>订单类别</th>
+                  <th>操作</th>
                 </tr>
                 {% for vo in page_obj %}
                 <tr>
                   <td><a href="{% url 'myadmin_orders_detail' vo.orders_id %}">{{ vo.orders_id }}</a></td>
                   <td>{{ vo.create_at|date:'Y-m-d' }}</td>
                   <td>{{ vo.total_amount }}</td>
-                  <td>{{ vo.category }}</td>                 
+                  <td>{{ vo.category }}</td>
+                  <td><a role="button" href="{% url 'myadmin_orders_edit' vo.orders_id %}" class="btn btn-primary">编辑</a></td>            
                 </tr>
                 {% endfor %}
               </table>
             </div>
             <!-- /.box-body -->
             <div class="box-footer clearfix">
-              <a role="button" href="{% url 'myadmin_user_add' %}" class="btn btn-primary">
-                      <span class="glyphicon glyphicon-plus" aria-hidden="true"></span> 添加员工</a>
+              <a role="button" href="{% url 'myadmin_orders_add' %}" class="btn btn-primary">
+                      <span class="glyphicon glyphicon-plus" aria-hidden="true"></span> 添加订单</a>
             </div>
             {% for contact in page_obj %}
               {# Each "contact" is a Contact model object. #}

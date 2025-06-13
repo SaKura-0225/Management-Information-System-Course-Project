@@ -1,5 +1,5 @@
 # 员工信息管理视图文件
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from django.http import HttpResponse
 from django.core.paginator import Paginator
 # Create your views here.
@@ -9,6 +9,7 @@ from django.core.paginator import Paginator
 from django.db.models import Q
 from datetime import datetime
 from django.db.models import Avg, Max, Min, Count, Sum
+from .forms import AddOrdersInfoForm
 
 def index(request):
     umod = WmsOrders.objects.all()
@@ -38,3 +39,26 @@ def wms_orders_detail(request, orders_id):
         "order": order,
         "wms_orders_details": order_details
     })
+
+
+def add_orders(request):
+    if request.method == "POST":
+        form = AddOrdersInfoForm(request.POST)
+        if form.is_valid():
+            form.save()
+            return HttpResponse("订单创建完成")
+    else:
+        form =AddOrdersInfoForm()
+    return render(request, 'myadmin/orders/add.html', {'form':form})
+
+
+def edit_orders(request, orders_id):
+    order = WmsOrders.objects.get(orders_id=orders_id)
+    if request.method == "POST":
+        form = AddOrdersInfoForm(request.POST, instance=order)
+        if form.is_valid():
+            form.save()
+            return redirect('myadmin/orders.index.html')
+    else:
+        form =AddOrdersInfoForm(instance=order)
+    return render(request, 'myadmin/orders/edit.html', {'form':form, 'orders_id':orders_id})

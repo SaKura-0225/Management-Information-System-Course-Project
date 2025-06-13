@@ -1,7 +1,5 @@
-
-
 <h3>新增订单</h3>
-<form action="{% url 'myadmin_orders_add' %}" method="post" >
+<form action="{% url 'myadmin_orders_edit' orders_id %}" method="post" >
   {% csrf_token %}
   {{ form }}
   <button type="submit" class="btn btn-primary">保存</button>
