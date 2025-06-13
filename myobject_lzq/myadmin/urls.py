@@ -1,6 +1,6 @@
 # 后台子路由文件
 from django.urls import path
-
+from django.contrib import admin
 from myadmin.views import index
 from myadmin.views import user
 from myadmin.views import shop
@@ -56,6 +56,9 @@ urlpatterns = [
 
     # 订单信息管理路由
     path('orders/', orders.index, name="myadmin_order_index"),  # 浏览
+    path('orders/<int:orders_id>', orders.wms_orders_detail, name='myadmin_orders_detail'), #根据订单编号浏览订单详情
+    path('orders/add', orders.add_orders, name='myadmin_orders_add'),  #增加新订单
+    path('orders/<int:orders_id>/edit', orders.edit_orders, name='myadmin_orders_edit'),  #根据订单编号修改已有订单
 
     #出入库管理路由
     path('warehouse-flow', warehouse_flow.index, name='myadmin_warehouse-flow_index'), #主页浏览，包含显示近期（日、周、月）出入库数量统计图

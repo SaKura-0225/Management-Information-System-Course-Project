@@ -1,0 +1,19 @@
+{% extends 'myadmin/base.html'%}
+{% block main_body %}
+
+<div class='container'>
+
+{{ order.orders_id }}
+
+<div class="card">
+    <div class="card-header">
+        {{ wms_orders_details.orders_id }}
+    </div>
+    <div class="card-body">
+      <p class="card-text">With supporting text below as a natural lead-in to additional content.</p>
+      <a href="{% url 'myadmin_order_index' %}" class="btn btn-primary">返回</a>
+    </div>
+  </div>
+
+</div>
+{% endblock %}
