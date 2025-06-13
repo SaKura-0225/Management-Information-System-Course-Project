@@ -58,7 +58,16 @@ def edit_orders(request, orders_id):
         form = AddOrdersInfoForm(request.POST, instance=order)
         if form.is_valid():
             form.save()
-            return redirect('myadmin/orders.index.html')
+            return redirect('myadmin_order_index')
     else:
         form =AddOrdersInfoForm(instance=order)
     return render(request, 'myadmin/orders/edit.html', {'form':form, 'orders_id':orders_id})
+
+
+def delete_orders(request, orders_id):
+    order = WmsOrders.objects.get(orders_id=orders_id)
+    if request.method == "POST":
+        order.delete()
+        return redirect('myadmin_order_index')
+    else:
+        return render(request, 'myadmin/orders/delete.html', {'order':order})

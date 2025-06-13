@@ -232,7 +232,19 @@
             <li><a href="{% url 'myadmin_product_index'%}"> <i class="fa fa-circle-o"></i> 入库管理</a></li>
           </ul>
         </li>
-        <li><a href="{% url 'myadmin_order_index'%}"><i class="fa fa-shopping-cart"></i> <span>订单管理</span></a></li>
+        <li class="treeview">
+          <a href="category.html"><i class="fa fa-cutlery"></i> <span>订单管理</span>
+            <span class="pull-right-container">
+              <i class="fa fa-angle-left pull-right"></i>
+            </span>
+          </a>
+          <ul class="treeview-menu">
+            <li><a href="{% url 'myadmin_order_index'%}"> <i class="fa fa-circle-o"></i> 销售订单管理</a></li>
+            <li><a href="{% url 'myadmin_order_index'%}"> <i class="fa fa-circle-o"></i> 销售订单详情</a></li>
+            <li><a href="{% url 'myadmin_order_index'%}"> <i class="fa fa-circle-o"></i> 采购订单管理</a></li>
+            <li><a href="{% url 'myadmin_order_index'%}"> <i class="fa fa-circle-o"></i> 采购订单详情</a></li>
+          </ul>
+        </li>
         <li class="treeview">
           <a href="category.html"><i class="fa fa-cutlery"></i> <span>报表分析</span>
             <span class="pull-right-container">

@@ -64,7 +64,10 @@
                   <td>{{ vo.create_at|date:'Y-m-d' }}</td>
                   <td>{{ vo.total_amount }}</td>
                   <td>{{ vo.category }}</td>
-                  <td><a role="button" href="{% url 'myadmin_orders_edit' vo.orders_id %}" class="btn btn-primary">编辑</a></td>            
+                  <td> 
+                    <a role="button" href="{% url 'myadmin_orders_edit' vo.orders_id %}" class="btn btn-primary">编辑</a>
+                    <a role="button" href="{% url 'myadmin_orders_delete' vo.orders_id %}" class="btn btn-primary">删除</a>
+                  </td>            
                 </tr>
                 {% endfor %}
               </table>
