@@ -1,0 +1,7 @@
+<h3>编辑明细</h3>
+<form action="{% url 'myadmin_orders_edit' orders_id %}" method="post" >
+  {% csrf_token %}
+  {{ form }}
+  <button type="submit" class="btn btn-primary">保存</button>
+  <a href="{% url 'myadmin_order_index' %}" class="btn btn-default">取消</a>
+</form>

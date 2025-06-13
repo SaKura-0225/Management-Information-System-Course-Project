@@ -1,0 +1,106 @@
+  <!-- 出库表 -->
+
+  {% extends 'myadmin/base.html'%}
+  {% block main_body %}
+  <!-- Content Header (Page header) -->
+      <section class="content-header">
+        <h1>
+          出库管理
+          <small>订餐系统后台管理</small>
+        </h1>
+        <ol class="breadcrumb">
+          <li><a href="#"><i class="fa fa-dashboard"></i> 首页</a></li>
+          <li class="active">出库管理</li>
+        </ol>
+      </section>
+      <!-- Main content -->
+      <section class="content container-fluid">
+  
+        <div class="row">
+          <div class="col-xs-12">
+            <div class="box">
+              <div class="box-header">
+                <h3 class="box-title">入库信息表</h3>
+  
+                <div class="box-tools">
+                 <form action="{% url 'myadmin_warehouse-flow_outbound' %}" method="get">
+                  <div class="input-group input-group-sm" style="width:150px;float:left;">
+                    <input type="text" name="keyword" class="form-control pull-right" placeholder="订单id">
+                    <div class="input-group-btn">
+                      <button type="submit" class="btn btn-default"><i class="fa fa-search"></i></button>
+                    </div>
+                  </div>
+                  </form>
+                </div>
+              </div>
+              <!-- /.box-header -->
+              <div class="box-body table-responsive no-padding">
+                <table class="table table-hover">
+                  <tr>
+                    <th>行号</th>
+                    <th>销售订单编号</th>
+                    <th>物料名称</th>
+                    <th>SKU编号</th>
+                    <th>出库数量</th>
+                    <th>库位编号</th>
+                    <th>操作员</th>
+                    <th>出库时间</th>
+                    <th>更新时间</th>
+                    <th>操作</th>
+                  </tr>
+                  {% for vo in page_obj %}
+                  <tr>
+                    <td>{{ vo.id }}</td>
+                    <td>{{ vo.orders_id }}</td>
+                    <td>{{ vo.name }}</td>
+                    <td>{{ vo.product_id }}</td>
+                    <td>{{ vo.quantity }}</td>
+                    <td>{{ vo.bin_id }}</td>
+                    <td>{{ vo.user_id }}</td>
+                    <td>{{ vo.create_at|date:'Y-m-d' }}</td>
+                    <td>{{ vo.update_at|date:'Y-m-d' }}</td>
+                    <td> 
+                      <a role="button" href="{% url 'myadmin_outbound_edit' vo.id %}" class="btn btn-primary">编辑</a>
+                      <a role="button" href="{% url 'myadmin_outbound_delete' vo.id %}" class="btn btn-primary">删除</a>
+                    </td>            
+                  </tr>
+                  {% endfor %}
+                </table>
+              </div>
+              <!-- /.box-body -->
+              <div class="box-footer clearfix">
+                <a role="button" href="{% url 'myadmin_outbound_add' %}" class="btn btn-primary">
+                        <span class="glyphicon glyphicon-plus" aria-hidden="true"></span> 添加明细</a>
+              </div>
+              {% for contact in page_obj %}
+                {# Each "contact" is a Contact model object. #}
+                {{ contact.full_name|upper }}<br>
+              {% endfor %}
+  
+              <div class="pagination">
+                  <span class="step-links">
+                      {% if page_obj.has_previous %}
+                          <a href="?page=1">&laquo; 首页</a>
+                          <a href="?page={{ page_obj.previous_page_number }}&keyword={{ request.GET.keyword }}">上一页</a>
+                      {% endif %}
+  
+                      <span class="current">
+                          Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}.
+                      </span>
+  
+                      {% if page_obj.has_next %}
+                          <a href="?page={{ page_obj.next_page_number }}">下一页</a>
+                          <a href="?page={{ page_obj.paginator.num_pages }}">尾页 &raquo;</a>
+                      {% endif %}
+                  </span>
+              </div>
+            </div>
+            <!-- /.box -->
+          </div>
+        </div>
+  
+      </section>
+      <!-- /.content -->
+  {% endblock %}
+  
+  
