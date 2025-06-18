@@ -1,20 +1,44 @@
 {% extends 'myadmin/base.html'%}
 {% block main_body %}
 
+<<<<<<< HEAD
 <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-6 mb-6 max-w-md mx-auto">
   <div class="text-center mb-6">
     <div class="inline-flex items-center justify-center w-16 h-16 bg-danger/10 rounded-full mb-4">
       <i class="fa fa-exclamation-triangle text-2xl text-danger"></i>
+=======
+<div class='container'>
+<form method='POST'>
+    {% csrf_token %}
+
+    <div class="card">
+        <div class="card-header">
+            {{ outbound.id }}
+            
+        </div>
+        <div class="card-body">
+          <p class="card-text">确定要删除吗？</p>
+        </div>
+      </div>
+    
+>>>>>>> f7fabbd (消除原始代码影响1)
     </div>
     <h3 class="text-xl font-semibold text-dark">确认删除</h3>
     <p class="text-gray-500 mt-2">您确定要删除这个出库记录吗？此操作不可撤销。</p>
   </div>
 
+<<<<<<< HEAD
   <div class="bg-gray-50 rounded-lg p-4 mb-6 border border-gray-100">
     <p class="text-sm text-gray-600">
       <span class="font-medium text-dark">出库单号:</span> {{ outbound.id }}
     </p>
   </div>
+=======
+    <button type="submit" class="btn btn-primary">删除</button>
+    <a href="{% url 'myadmin_warehouse-flow_outbound' %}" class="btn btn-primary">返回</a>
+</form>
+
+>>>>>>> f7fabbd (消除原始代码影响1)
 
   <div class="flex justify-center space-x-4">
     <button type="submit" class="bg-gradient-to-r from-danger to-danger/80 text-white px-6 py-2.5 rounded-lg text-sm font-medium hover:opacity-90 transition-all duration-200 shadow-sm hover:shadow flex items-center">

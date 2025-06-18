@@ -77,6 +77,18 @@ def delete_orders(request, orders_id):
     return render(request, 'myadmin/orders/delete.html', {'order': order})
 
 
+<<<<<<< HEAD
+=======
+'''
+def order_detail_view(request):
+    # 获取指定订单编号下的所有商品明细行
+    details = OrdersDetailWithDates.objects.all()
+    # 可选：计算订单总价、总数量等
+    return render(request, 'myadmin/orders/order_detail_view.html', {
+        'details': details
+    })
+'''
+>>>>>>> f7fabbd (消除原始代码影响1)
 
 def order_detail_view(request):
     keyword = request.GET.get('keyword', '').strip()
