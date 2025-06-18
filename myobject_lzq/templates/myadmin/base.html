@@ -206,9 +206,7 @@
         <li class="header">主要导航</li>
         <!-- 导航列表，你可以自行更改图标 -->
         <li class="active"><a href="{% url 'myadmin_index' %}"><i class="fa fa-home"></i> <span>首页</span></a></li>
-
-        <li><a href="{% url 'myadmin_user_index'%}"><i class="fa fa-users"></i> <span>员工管理</span></a></li>
-        <li><a href="{% url 'myadmin_user_index'%}"><i class="fa fa-users"></i> <span>储位管理</span></a></li>
+        <li><a href="{% url 'myadmin_shop_index'%}"><i class="fa fa-users"></i> <span>储位管理</span></a></li>
         <li><a href="{% url 'myadmin_shop_index'%}"><i class="fa fa-sitemap"></i> <span>店铺管理</span></a></li>
         <li class="treeview">
           <a href="category.html"><i class="fa fa-cutlery"></i> <span>菜品管理</span>
@@ -256,11 +254,18 @@
             <li><a href="{% url 'myadmin_product_index'%}"> <i class="fa fa-circle-o"></i> 出货色号前十</a></li>
           </ul>
         </li>
-        <li><a href="{% url 'myadmin_member_index'%}"><i class="fa fa-user"></i> <span>账号管理</span></a></li>
-        <li><a href="#"><i class="fa fa-key"></i> <span>权限管理</span></a></li>
-        <li><a href="#"><i class="fa fa-gear"></i> <span>系统配置</span></a></li>
-        <li><a href="#"><i class="fa fa-unlock-alt"></i> <span>认证体系</span></a></li>
-      </ul>
+        <li class="treeview">
+          <a href="category.html"><i class="fa fa-cutlery"></i> <span>系统管理</span>
+            <span class="pull-right-container">
+              <i class="fa fa-angle-left pull-right"></i>
+            </span>
+          </a>
+          <ul class="treeview-menu">
+            <li><a href="{% url 'myadmin_order_index'%}"> <i class="fa fa-circle-o"></i> 员工管理</a></li>
+            <li><a href="{% url 'myadmin_order_detail_view'%}"> <i class="fa fa-circle-o"></i> 部门管理</a></li>
+            <li><a href="{% url 'myadmin_order_index'%}"> <i class="fa fa-circle-o"></i> 权限管理</a></li>
+          </ul>
+        </li>
       <!-- /.sidebar-menu -->
     </section>
     <!-- /.sidebar -->

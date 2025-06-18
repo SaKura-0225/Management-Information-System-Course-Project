@@ -5,7 +5,7 @@ from django.core.paginator import Paginator
 from collections import defaultdict
 from datetime import datetime, timedelta
 # Create your views here.
-from myadmin.models import WmsOrders,WmsOrdersDetail,OrdersDetailWithDates
+from myadmin.models import WmsOrders,OrdersDetailWithDates
 from myadmin.models import User
 from django.core.paginator import Paginator
 from django.db.models import Q
@@ -36,7 +36,7 @@ def wms_orders_detail(request, orders_id):
     except WmsOrders.DoesNotExist:
         return HttpResponse("订单不存在", status=404)
 
-    order_details = WmsOrdersDetail.objects.filter(orders_id=orders_id)
+    order_details = OrdersDetailWithDates.objects.filter(orders_id=orders_id)
 
     return render(request, "myadmin/orders/order_details.html", {
         "order": order,
@@ -79,7 +79,7 @@ def delete_orders(request, orders_id):
 '''
 def order_detail_view(request):
     # 获取指定订单编号下的所有商品明细行
-    details = WmsOrdersDetail.objects.all()
+    details = OrdersDetailWithDates.objects.all()
     # 可选：计算订单总价、总数量等
     return render(request, 'myadmin/orders/order_detail_view.html', {
         'details': details

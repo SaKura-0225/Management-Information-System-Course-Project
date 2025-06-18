@@ -2,7 +2,6 @@
 from django.urls import path
 from django.contrib import admin
 from myadmin.views import index
-from myadmin.views import user
 from myadmin.views import shop
 from myadmin.views import orders
 from myadmin.views import category, product, member
@@ -25,13 +24,6 @@ urlpatterns = [
     path('shop/edit/<int:sid>', shop.edit, name="myadmin_shop_edit"),  # 加载编辑表单
     path('shop/update/<int:sid>', shop.update, name="myadmin_shop_update"),  # 执行编辑
 
-    # 员工信息管理路由
-    path('user/', user.index, name="myadmin_user_index"),  # 浏览
-    path('user/add', user.add, name="myadmin_user_add"),  # 添加表单
-    path('user/insert', user.insert, name="myadmin_user_insert"),  # 执行添加
-    path('user/del/<int:uid>', user.delete, name="myadmin_user_delete"),  # 执行删除
-    path('user/edit/<int:uid>', user.edit, name="myadmin_user_edit"),  # 加载编辑表单
-    path('user/update/<int:uid>', user.update, name="myadmin_user_update"),  # 执行编辑
 
     # 菜品分类信息管理路由
     path('category/', category.index, name="myadmin_category_index"),  # 浏览
@@ -76,6 +68,10 @@ urlpatterns = [
 
     #仓位可视化路由
     path('warehouse', warehouse.index, name='myadmin_warehouse_index'), #主页浏览
+
+
+    # 系统管理路由
+    #path('system/employee', )
 ]
 
 

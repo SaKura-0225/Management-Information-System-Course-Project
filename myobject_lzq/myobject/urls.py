@@ -1,3 +1,4 @@
+
 """myobject URL Configuration
 
 The `urlpatterns` list routes URLs to views. For more information please see:
@@ -20,6 +21,5 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('', include('web.urls')),
     path('myadmin/', include('myadmin.urls')),
-    path('mobile/', include('mobile.urls')),
-    path('mytest/', include('mytest.urls')),
+    path('mobile/', include('mobile.urls'))
 ]

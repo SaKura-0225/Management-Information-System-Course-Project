@@ -1,45 +1,10 @@
-'''
-Author: error: error: git config user.name & please set dead value or install git && error: git config user.email & please set dead value or install git & please set dead value or install git
-Date: 2025-04-22 16:31:29
-LastEditors: SaKura0225 2948196205@qq.com
-LastEditTime: 2025-06-13 20:06:58
-FilePath: \code\myobject_lzq\myadmin\models.py
-Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
-'''
+
 from django.db import models
 from datetime import datetime
+from django.contrib.auth.models import User
 
 
 # Create your models here.
-class User1(models.Model):
-
-    username = models.CharField(max_length=50, blank=True, null=True)
-    nickname = models.CharField(max_length=50, blank=True, null=True)
-    password_hash = models.CharField(max_length=100, blank=True, null=True)
-    password_salt = models.CharField(max_length=50, blank=True, null=True)
-    status = models.PositiveIntegerField()
-    create_at = models.DateTimeField(blank=True, null=True)
-    update_at = models.DateTimeField(blank=True, null=True)
-
-    class Meta:
-        managed = False  # Created from a view. Don't remove.
-        db_table = 'user1'
-class User(models.Model):
-    username = models.CharField(max_length=50)
-    nickname = models.CharField(max_length=50)
-    password_hash = models.CharField(max_length=100)
-    password_salt = models.CharField(max_length=50)
-    status = models.IntegerField(default=1)   # 状态：1正常 2禁用3管理员 9删除
-    create_at = models.DateTimeField(default=datetime.now)
-    update_at = models.DateTimeField(default=datetime.now)
-
-
-    def toDict(self):
-        return {'id': self.id, 'username': self.username, 'nickname': self.nickname,
-                'password_hash': self.password_hash}
-
-    class Meta:
-        db_table = "user"
 
 
 # 店铺信息
@@ -147,20 +112,8 @@ class WmsOrders(models.Model):
         managed = False
         db_table = 'wms_orders'
         db_table_comment = '销售订单表'
-
+      
 #布料销售订单详情
-class WmsOrdersDetail(models.Model):
-    price = models.FloatField(db_comment='单价')
-    total_price = models.FloatField()
-    orders_id = models.IntegerField(primary_key=True, db_comment='订单编号')
-    product_id = models.CharField(max_length=45)
-    quantity = models.IntegerField()
-    status = models.CharField(max_length=45)
-
-    class Meta:
-        managed = False
-        db_table = 'wms_orders_detail'
-
 class OrdersDetailWithDates(models.Model):
     orders_id = models.IntegerField(db_comment='订单编号')
     product_id = models.CharField(max_length=45, db_collation='utf8mb4_0900_ai_ci')
@@ -175,7 +128,7 @@ class OrdersDetailWithDates(models.Model):
         managed = False
         db_table = 'orders_detail_with_dates'
 
-
+#出库表
 class WmsOutbound(models.Model):
     orders_id = models.IntegerField(blank=True, null=True, db_comment='采购订单id')
     name = models.CharField(max_length=50, blank=True, null=True, db_comment='物料名称')
@@ -189,3 +142,24 @@ class WmsOutbound(models.Model):
     class Meta:
         managed = False
         db_table = 'wms_outbound'
+
+
+# 部门表
+class Department(models.Model):
+    name = models.CharField(max_length=50, unique=True)
+    code = models.CharField(max_length=20, unique=True)
+
+    def __str__(self):
+        return self.name
+
+# 员工扩展信息（绑定用户）
+
+class EmployeeProfile(models.Model):
+    user = models.OneToOneField(User, on_delete=models.CASCADE, db_constraint=False)
+    department = models.ForeignKey('Department', on_delete=models.SET_NULL, null=True)
+    work_no = models.CharField(max_length=100, blank=True)
+    phone = models.CharField(max_length=20, blank=True)
+    post = models.CharField(max_length=100, blank=True)
+
+    def __str__(self):
+        return self.user.username
