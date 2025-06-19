@@ -13,7 +13,9 @@ from datetime import datetime
 from django.db.models import Avg, Max, Min, Count, Sum
 from .forms import AddOrdersInfoForm
 from django.db.models.functions import ExtractYear, ExtractMonth, ExtractDay
+from django.contrib.auth.decorators import permission_required
 
+@permission_required('myadmin.view_wmsorders', raise_exception=True)
 def index(request):
     umod = WmsOrders.objects.all()
     order_list = umod.order_by("orders_id")  # 对id排序
@@ -76,16 +78,6 @@ def delete_orders(request, orders_id):
         return render(request, 'myadmin/orders/delete.html', {'order':order})
     
 
-'''
-def order_detail_view(request):
-    # 获取指定订单编号下的所有商品明细行
-    details = OrdersDetailWithDates.objects.all()
-    # 可选：计算订单总价、总数量等
-    return render(request, 'myadmin/orders/order_detail_view.html', {
-        'details': details
-    })
-'''
-
 def order_detail_view(request):
     # 获取搜索参数
     keyword = request.GET.get('keyword', '').strip()
@@ -132,18 +124,6 @@ def order_detail_view(request):
 
     # 应用过滤条件
     details = details.filter(filters).order_by('orders_id')
-
-    # 打印调试信息
-    print("=== 搜索调试信息 ===")
-    print("订单编号 keyword:", keyword)
-    print("年 year:", year)
-    print("月 month:", month)
-    print("日 day:", day)
-    print("过滤条件 Q 对象:", filters)
-    print("SQL 查询语句：", str(details.query))
-    print("返回记录条数：", details.count())
-    print("===================")
-
     # 分组聚合
     grouped = defaultdict(list)
     for row in details:

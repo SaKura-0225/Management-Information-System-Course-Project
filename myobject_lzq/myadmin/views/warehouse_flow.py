@@ -14,12 +14,15 @@ from datetime import datetime
 from django.db.models import Avg, Max, Min, Count, Sum
 from .forms import AddWarehouseInfoForm
 from django.db.models.functions import ExtractYear, ExtractMonth, ExtractDay
+from django.contrib.auth.decorators import permission_required
 
 
 
 def inbound_index(request):
     return render(request, 'myadmin/warehouse-flow/inbound_index.html')  
 
+
+@permission_required('myadmin.view_wmsoutbound', raise_exception=True)
 def outbound_index(request):
     outbound = WmsOutbound.objects.all()
     outbound_list = outbound.order_by("id")  # 对id排序
