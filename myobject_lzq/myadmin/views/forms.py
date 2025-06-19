@@ -1,10 +1,14 @@
 
 from django import forms
 <<<<<<< HEAD
+<<<<<<< HEAD
 from myadmin.models import WmsOrders,WmsOutbound,WmsOrdersDetail
 =======
 from myadmin.models import WmsOrders,WmsOutbound
 >>>>>>> dd7dd62 (系统管理功能1)
+=======
+from myadmin.models import WmsOrders,WmsOutbound,WmsOrdersDetail
+>>>>>>> 9851b42 (基本完成订单管理，出库管理和系统管理)
 from django.contrib.auth.models import User, Group
 from myadmin.models import EmployeeProfile, Department
 
@@ -93,6 +97,7 @@ class OrderDetailForm(forms.ModelForm):
             'total_price': forms.NumberInput(attrs={'class': 'form-control'}),
             'status': forms.TextInput(attrs={'class': 'form-control'}),
         }
+<<<<<<< HEAD
 =======
         model = EmployeeProfile
         fields = ['department', 'work_no', 'phone', 'post']
@@ -124,3 +129,5 @@ class OrderDetailForm(forms.ModelForm):
         model = EmployeeProfile
         fields = ['department', 'work_no', 'phone']
 >>>>>>> 1999e5d (消除原始代码影响2)
+=======
+>>>>>>> 9851b42 (基本完成订单管理，出库管理和系统管理)

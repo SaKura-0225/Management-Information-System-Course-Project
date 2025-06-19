@@ -1,5 +1,6 @@
 {% extends 'myadmin/base.html'%}
 {% block main_body %}
+<<<<<<< HEAD
 <!-- 优化后的内容头部区域 -->
 <section class="content-header bg-white rounded-xl shadow-sm p-6 mb-6">
   <div class="flex flex-col md:flex-row md:items-center justify-between">
@@ -100,3 +101,38 @@
   </form>
 </section>
 {% endblock %}    
+=======
+<section class="content-header">
+  <h1>
+    删除订单
+    <small>确认删除操作</small>
+  </h1>
+  <ol class="breadcrumb">
+    <li><a href="#"><i class="fa fa-dashboard"></i> 首页</a></li>
+    <li><a href="{% url 'myadmin_order_index' %}">订单管理</a></li>
+    <li class="active">删除订单</li>
+  </ol>
+</section>
+
+<section class="content container-fluid">
+  <form method="post">
+    {% csrf_token %}
+    <div class="box box-danger">
+      <div class="box-header with-border">
+        <h3 class="box-title">确认删除订单：{{ order.orders_id }}</h3>
+      </div>
+      <div class="box-body">
+        <p><strong>下单时间：</strong>{{ order.create_at|date:'Y-m-d H:i' }}</p>
+        <p><strong>订单类别：</strong>{% if order.category == 1 %}镇内订单{% elif order.category == 2 %}镇外订单{% else %}未知{% endif %}</p>
+        <p><strong>总出库量：</strong>{{ order.total_amount }}</p>
+        <p class="text-danger">⚠ 此操作不可撤销，确定要删除该订单吗？</p>
+      </div>
+      <div class="box-footer">
+        <button type="submit" class="btn btn-danger">确认删除</button>
+        <a href="{% url 'myadmin_order_index' %}" class="btn btn-default">取消</a>
+      </div>
+    </div>
+  </form>
+</section>
+{% endblock %}
+>>>>>>> 9851b42 (基本完成订单管理，出库管理和系统管理)

@@ -78,6 +78,7 @@ def delete_orders(request, orders_id):
 
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 '''
 def order_detail_view(request):
@@ -89,6 +90,8 @@ def order_detail_view(request):
     })
 '''
 >>>>>>> f7fabbd (消除原始代码影响1)
+=======
+>>>>>>> 9851b42 (基本完成订单管理，出库管理和系统管理)
 
 def order_detail_view(request):
     keyword = request.GET.get('keyword', '').strip()

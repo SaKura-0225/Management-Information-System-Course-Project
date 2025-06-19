@@ -81,10 +81,14 @@ class Member(models.Model):
 class WmsOrders(models.Model):
     orders_id = models.IntegerField(primary_key=True, db_comment='订单编号')
 <<<<<<< HEAD
+<<<<<<< HEAD
     user = models.ForeignKey(User, models.DO_NOTHING, blank=True, null=True)
 =======
     user = models.ForeignKey('AuthUser', models.DO_NOTHING, blank=True, null=True, db_comment='操作员id')
 >>>>>>> 92d8e23 (1)
+=======
+    user = models.ForeignKey(User, models.DO_NOTHING, blank=True, null=True)
+>>>>>>> 9851b42 (基本完成订单管理，出库管理和系统管理)
     total_amount = models.IntegerField(blank=True, null=True, db_comment='面料出库总量')
     category = models.IntegerField(blank=True, null=True, db_comment='1：镇内订单  2：镇外订单')
     payment_status = models.IntegerField(blank=True, null=True, db_comment='支付状态:1未支付/2已支付/3已退款')
@@ -96,6 +100,7 @@ class WmsOrders(models.Model):
         managed = False
         db_table = 'wms_orders'
         db_table_comment = '销售订单表'
+<<<<<<< HEAD
       
 <<<<<<< HEAD
 #布料销售订单详情
@@ -129,6 +134,8 @@ class OrdersDetailWithDates(models.Model):
         managed = False
         db_table = 'orders_detail_with_dates'
 >>>>>>> f7fabbd (消除原始代码影响1)
+=======
+>>>>>>> 9851b42 (基本完成订单管理，出库管理和系统管理)
 
 #布料销售订单详情
 class WmsOrdersDetail(models.Model):

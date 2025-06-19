@@ -1,6 +1,7 @@
 {% extends 'myadmin/base.html' %}
 {% block main_body %}
 <<<<<<< HEAD
+<<<<<<< HEAD
 <!-- 优化后的内容头部区域 -->
 <section class="content-header bg-white rounded-xl shadow-sm p-6 mb-6">
   <div class="flex flex-col md:flex-row md:items-center justify-between">
@@ -44,79 +45,38 @@
     </section>
     <!-- Main content -->
     <section class="content container-fluid">
+=======
+<section class="content-header">
+  <h1>
+    订单管理
+    <small>系统后台</small>
+  </h1>
+  <ol class="breadcrumb">
+    <li><a href="#"><i class="fa fa-dashboard"></i> 首页</a></li>
+    <li class="active">订单管理</li>
+  </ol>
+</section>
+>>>>>>> 9851b42 (基本完成订单管理，出库管理和系统管理)
 
-      <div class="row">
-        <div class="col-xs-12">
-          <div class="box">
-            <div class="box-header">
-              <h3 class="box-title">订单信息表{{ o_number.id__count }}</h3>
+<section class="content container-fluid">
+  <div class="row">
+    <div class="col-xs-12">
+      <div class="box">
+        <div class="box-header">
+          <h3 class="box-title">订单信息表（共 {{ page_obj.paginator.count }} 条）</h3>
 
-              <div class="box-tools">
-               <form action="{% url 'myadmin_order_index' %}" method="get">
-                <div class="input-group input-group-sm" style="width:150px;float:left;">
-                  <input type="text" name="keyword" class="form-control pull-right" placeholder="订单id">
-                  <div class="input-group-btn">
-                    <button type="submit" class="btn btn-default"><i class="fa fa-search"></i></button>
-                  </div>
+          <div class="box-tools">
+            <form action="{% url 'myadmin_order_index' %}" method="get">
+              <div class="input-group input-group-sm" style="width: 150px; float: left;">
+                <input type="text" name="keyword" class="form-control pull-right" placeholder="订单ID">
+                <div class="input-group-btn">
+                  <button type="submit" class="btn btn-default"><i class="fa fa-search"></i></button>
                 </div>
-                </form>
               </div>
-            </div>
-            <!-- /.box-header -->
-            <div class="box-body table-responsive no-padding">
-              <table class="table table-hover">
-                <tr>
-                  <th>订单编号</th>
-                  <th>订单创建时间</th>
-                  <th>总销售数量</th>
-                  <th>订单类别</th>
-                  <th>操作</th>
-                </tr>
-                {% for vo in page_obj %}
-                <tr>
-                  <td>{{ vo.orders_id }}</td>
-                  <td>{{ vo.create_at|date:'Y-m-d' }}</td>
-                  <td>{{ vo.total_amount }}</td>
-                  <td>{{ vo.category }}</td>
-                  <td> 
-                    <a role="button" href="{% url 'myadmin_orders_edit' vo.orders_id %}" class="btn btn-primary">编辑</a>
-                    <a role="button" href="{% url 'myadmin_orders_delete' vo.orders_id %}" class="btn btn-primary">删除</a>
-                    <a role="button" href="{% url 'myadmin_orders_detail' vo.orders_id %}" class="btn btn-primary">详情</a>
-                  </td>            
-                </tr>
-                {% endfor %}
-              </table>
-            </div>
-            <!-- /.box-body -->
-            <div class="box-footer clearfix">
-              <a role="button" href="{% url 'myadmin_orders_add' %}" class="btn btn-primary">
-                      <span class="glyphicon glyphicon-plus" aria-hidden="true"></span> 添加订单</a>
-            </div>
-            {% for contact in page_obj %}
-              {# Each "contact" is a Contact model object. #}
-              {{ contact.full_name|upper }}<br>
-            {% endfor %}
-
-            <div class="pagination">
-                <span class="step-links">
-                    {% if page_obj.has_previous %}
-                        <a href="?page=1">&laquo; 首页</a>
-                        <a href="?page={{ page_obj.previous_page_number }}&keyword={{ request.GET.keyword }}">上一页</a>
-                    {% endif %}
-
-                    <span class="current">
-                        Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}.
-                    </span>
-
-                    {% if page_obj.has_next %}
-                        <a href="?page={{ page_obj.next_page_number }}">下一页</a>
-                        <a href="?page={{ page_obj.paginator.num_pages }}">尾页 &raquo;</a>
-                    {% endif %}
-                </span>
-            </div>
+            </form>
           </div>
-          <!-- /.box -->
         </div>
+<<<<<<< HEAD
 >>>>>>> 92d8e23 (1)
       </div>
       <div>
@@ -274,3 +234,77 @@
   </div>
 </section>
 {% endblock %}    
+=======
+
+        <div class="box-body table-responsive no-padding">
+          <table class="table table-hover">
+            <tr>
+              <th>订单编号</th>
+              <th>创建时间</th>
+              <th>总数量</th>
+              <th>类别</th>
+              <th>状态</th>
+              <th>支付</th>
+              <th>操作</th>
+            </tr>
+            {% for vo in page_obj %}
+            <tr>
+              <td>{{ vo.orders_id }}</td>
+              <td>{{ vo.create_at|date:'Y-m-d' }}</td>
+              <td>{{ vo.total_amount }}</td>
+              <td>
+                {% if vo.category == 1 %}镇内订单
+                {% elif vo.category == 2 %}镇外订单
+                {% else %}-{% endif %}
+              </td>
+              <td>
+                {% if vo.status == 1 %}已拣货
+                {% elif vo.status == 2 %}未拣货
+                {% else %}-{% endif %}
+              </td>
+              <td>
+                {% if vo.payment_status == 1 %}未支付
+                {% elif vo.payment_status == 2 %}已支付
+                {% elif vo.payment_status == 3 %}已退款
+                {% else %}-{% endif %}
+              </td>
+              <td>
+                <a href="{% url 'myadmin_orders_edit' vo.orders_id %}" class="btn btn-primary btn-sm">编辑</a>
+                <a href="{% url 'myadmin_orders_delete' vo.orders_id %}" class="btn btn-danger btn-sm">删除</a>
+                <a href="{% url 'myadmin_orders_detail' vo.orders_id %}" class="btn btn-info btn-sm">详情</a>
+              </td>
+            </tr>
+            {% endfor %}
+          </table>
+        </div>
+
+        <div class="box-footer clearfix">
+          <a href="{% url 'myadmin_orders_add' %}" class="btn btn-success">
+            <span class="glyphicon glyphicon-plus" aria-hidden="true"></span> 添加订单
+          </a>
+        </div>
+
+        <div class="pagination">
+          <span class="step-links">
+            {% if page_obj.has_previous %}
+              <a href="?page=1">&laquo; 首页</a>
+              <a href="?page={{ page_obj.previous_page_number }}&keyword={{ request.GET.keyword }}">上一页</a>
+            {% endif %}
+
+            <span class="current">
+              Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}
+            </span>
+
+            {% if page_obj.has_next %}
+              <a href="?page={{ page_obj.next_page_number }}&keyword={{ request.GET.keyword }}">下一页</a>
+              <a href="?page={{ page_obj.paginator.num_pages }}&keyword={{ request.GET.keyword }}">尾页 &raquo;</a>
+            {% endif %}
+          </span>
+        </div>
+
+      </div>
+    </div>
+  </div>
+</section>
+{% endblock %}
+>>>>>>> 9851b42 (基本完成订单管理，出库管理和系统管理)

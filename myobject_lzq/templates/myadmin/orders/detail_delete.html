@@ -1,5 +1,6 @@
 {% extends 'myadmin/base.html' %}
 {% block main_body %}
+<<<<<<< HEAD
 <!-- 优化后的内容头部区域 -->
 <section class="content-header bg-white rounded-xl shadow-sm p-6 mb-6">
   <div class="flex flex-col md:flex-row md:items-center justify-between">
@@ -76,3 +77,13 @@
   </form>
 </section>
 {% endblock %}    
+=======
+<h3>删除订单明细</h3>
+<p>确定要删除订单 {{ detail.orders.orders_id }} 的明细（商品编号：{{ detail.product_id }}）吗？</p>
+<form method="post">
+  {% csrf_token %}
+  <button type="submit" class="btn btn-danger">确认删除</button>
+  <a href="{% url 'myadmin_order_detail_view' %}" class="btn btn-default">取消</a>
+</form>
+{% endblock %}
+>>>>>>> 9851b42 (基本完成订单管理，出库管理和系统管理)
