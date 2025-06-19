@@ -1,3 +1,4 @@
+
 # 出入库信息管理视图文件
 from django.shortcuts import render, redirect
 from django.http import HttpResponse
@@ -11,14 +12,17 @@ from django.core.paginator import Paginator
 from django.db.models import Q
 from datetime import datetime
 from django.db.models import Avg, Max, Min, Count, Sum
-from .forms import AddOrdersInfoForm
+from .forms import AddWarehouseInfoForm
 from django.db.models.functions import ExtractYear, ExtractMonth, ExtractDay
+from django.contrib.auth.decorators import permission_required
 
 
 
 def inbound_index(request):
     return render(request, 'myadmin/warehouse-flow/inbound_index.html')  
 
+
+@permission_required('myadmin.view_wmsoutbound', raise_exception=True)
 def outbound_index(request):
     outbound = WmsOutbound.objects.all()
     outbound_list = outbound.order_by("id")  # 对id排序
@@ -36,24 +40,24 @@ def outbound_index(request):
 
 def add_outbound(request):
     if request.method == "POST":
-        form = AddOrdersInfoForm(request.POST)
+        form = AddWarehouseInfoForm(request.POST)
         if form.is_valid():
             form.save()
-            return HttpResponse("出库明细创建完成")
+            return redirect('myadmin_warehouse-flow_outbound')
     else:
-        form =AddOrdersInfoForm()
-    return render(request, 'myadmin/orders/add.html', {'form':form})
+        form =AddWarehouseInfoForm()
+    return render(request, 'myadmin/warehouse-flow/add.html', {'form':form})
 
 
 def edit_outbound(request, id):
     outbound = WmsOutbound.objects.get(pk=id)
     if request.method == "POST":
-        form = AddOrdersInfoForm(request.POST, instance=outbound)
+        form = AddWarehouseInfoForm(request.POST, instance=outbound)
         if form.is_valid():
             form.save()
             return redirect('myadmin_warehouse-flow_outbound')
     else:
-        form =AddOrdersInfoForm(instance=outbound)
+        form =AddWarehouseInfoForm(instance=outbound)
     return render(request, 'myadmin/warehouse-flow/edit.html', {'form':form, 'id':id})
 
 

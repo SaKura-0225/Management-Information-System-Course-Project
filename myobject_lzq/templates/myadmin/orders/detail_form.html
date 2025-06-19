@@ -1,0 +1,10 @@
+{% extends 'myadmin/base.html' %}
+{% block main_body %}
+<h3>{% if form.instance.pk %}编辑{% else %}新增{% endif %}订单明细（订单号：{{ order.orders_id }}）</h3>
+<form method="post">
+  {% csrf_token %}
+  {{ form.as_p }}
+  <button type="submit" class="btn btn-primary">保存</button>
+  <a href="{% url 'myadmin_order_detail_view' %}" class="btn btn-default">取消</a>
+</form>
+{% endblock %}

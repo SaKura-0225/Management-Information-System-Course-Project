@@ -1,0 +1,10 @@
+{% extends 'myadmin/base.html' %}
+{% block main_body %}
+<h3>删除订单明细</h3>
+<p>确定要删除订单 {{ detail.orders.orders_id }} 的明细（商品编号：{{ detail.product_id }}）吗？</p>
+<form method="post">
+  {% csrf_token %}
+  <button type="submit" class="btn btn-danger">确认删除</button>
+  <a href="{% url 'myadmin_order_detail_view' %}" class="btn btn-default">取消</a>
+</form>
+{% endblock %}
