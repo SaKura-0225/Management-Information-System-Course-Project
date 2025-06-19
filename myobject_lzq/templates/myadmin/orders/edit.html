@@ -1,7 +1,42 @@
-<h3>编辑订单</h3>
-<form action="{% url 'myadmin_orders_edit' orders_id %}" method="post" >
-  {% csrf_token %}
-  {{ form }}
-  <button type="submit" class="btn btn-primary">保存</button>
-  <a href="{% url 'myadmin_order_index' %}" class="btn btn-default">取消</a>
-</form>
+{% extends 'myadmin/base.html' %}
+{% block main_body %}
+<section class="content-header">
+  <h1>
+    编辑订单
+    <small>修改订单相关信息</small>
+  </h1>
+  <ol class="breadcrumb">
+    <li><a href="#"><i class="fa fa-dashboard"></i> 首页</a></li>
+    <li><a href="{% url 'myadmin_order_index' %}">订单管理</a></li>
+    <li class="active">编辑订单</li>
+  </ol>
+</section>
+
+<section class="content container-fluid">
+  <div class="box box-info">
+    <div class="box-header with-border">
+      <h3 class="box-title">订单编号：{{ orders_id }}</h3>
+    </div>
+    <form action="{% url 'myadmin_orders_edit' orders_id %}" method="post" class="form-horizontal">
+      <div class="box-body">
+        {% csrf_token %}
+        {% for field in form %}
+          <div class="form-group">
+            <label class="col-sm-2 control-label">{{ field.label_tag }}</label>
+            <div class="col-sm-6">
+              {{ field }}
+              {% if field.errors %}
+                <div class="text-danger small">{{ field.errors|striptags }}</div>
+              {% endif %}
+            </div>
+          </div>
+        {% endfor %}
+      </div>
+      <div class="box-footer">
+        <button type="submit" class="btn btn-primary">保存</button>
+        <a href="{% url 'myadmin_order_index' %}" class="btn btn-default">取消</a>
+      </div>
+    </form>
+  </div>
+</section>
+{% endblock %}

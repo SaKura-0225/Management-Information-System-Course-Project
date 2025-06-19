@@ -25,6 +25,10 @@ urlpatterns = [
     path('orders/<int:orders_id>/edit', orders.edit_orders, name='myadmin_orders_edit'),  #根据订单编号修改已有订单
     path('orders/<int:orders_id>/delete', orders.delete_orders, name='myadmin_orders_delete'), #根据订单编号删除订单
     path('orders/detail/', orders.order_detail_view, name='myadmin_order_detail_view'),
+    path('orders/detail/add/<int:orders_id>/', orders.order_detail_add, name='myadmin_order_detail_add'),
+    path('orders/detail/edit/<int:detail_id>/', orders.order_detail_edit, name='myadmin_order_detail_edit'),
+    path('orders/detail/delete/<int:detail_id>/', orders.order_detail_delete, name='myadmin_order_detail_delete'),
+
 
 
     #出入库管理路由

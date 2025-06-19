@@ -1,62 +1,73 @@
 {% extends 'myadmin/base.html' %}
 {% block main_body %}
 
-<h3>所有订单明细</h3>
+<h2>所有订单明细</h2>
+<p class="text-muted">共 {{ grouped|length }} 个订单</p>
 
-<p>共 {{ grouped|length }} 个订单</p>
-{% for orders_id, items in grouped.items %}
-  <p>订单：{{ orders_id }}，明细数：{{ items|length }}</p>
-{% endfor %}
-
-<form method="get" class="form-inline mb-3">
-    <input type="text" name="keyword" class="form-control mr-2" placeholder="订单编号"
-           value="{{ keyword }}">
-  
-    <input type="number" name="year" class="form-control mr-2" placeholder="年"
-           value="{{ year }}">
-    <input type="number" name="month" class="form-control mr-2" placeholder="月"
-           value="{{ month }}">
-    <input type="number" name="day" class="form-control mr-2" placeholder="日"
-           value="{{ day }}">
-  
-    <button type="submit" class="btn btn-primary">搜索</button>
-    <a href="{% url 'myadmin_order_detail_view' %}" class="btn btn-secondary ml-2">重置</a>
+<!-- 搜索表单 -->
+<form method="get" class="form-inline mb-4">
+  <div class="form-group mr-2">
+    <input type="text" name="keyword" class="form-control" placeholder="订单编号" value="{{ keyword }}">
+  </div>
+  <div class="form-group mr-2">
+    <input type="number" name="year" class="form-control" placeholder="年" value="{{ year }}">
+  </div>
+  <div class="form-group mr-2">
+    <input type="number" name="month" class="form-control" placeholder="月" value="{{ month }}">
+  </div>
+  <div class="form-group mr-2">
+    <input type="number" name="day" class="form-control" placeholder="日" value="{{ day }}">
+  </div>
+  <button type="submit" class="btn btn-primary">搜索</button>
+  <a href="{% url 'myadmin_order_detail_view' %}" class="btn btn-secondary ml-2">重置</a>
 </form>
 
+<!-- 循环展示每个订单及其明细 -->
 {% for orders_id, items in grouped.items %}
-<div class="card mb-4">
-  <div class="card-header">
-    <strong>订单编号：</strong> {{ orders_id }}
-    <span class="ml-3 small text-muted">
-      创建时间：{{ items.0.create_at }}，
-      更新时间：{{ items.0.update_at }}
-    </span>
+  <div class="card mb-4">
+    <div class="card-header bg-light">
+      <strong>订单编号：</strong> {{ orders_id }}
+      <span class="ml-3 text-muted small">
+        创建时间：{{ items.0.orders.create_at|date:"Y-m-d H:i" }}，
+        更新时间：{{ items.0.orders.update_at|date:"Y-m-d H:i" }}
+      </span>
+    </div>
+    <div class="card-body p-0">
+      <table class="table table-bordered mb-0">
+        <thead class="thead-light">
+          <tr>
+            <th>商品编号</th>
+            <th>数量</th>
+            <th>单价</th>
+            <th>小计</th>
+            <th>状态</th>
+            <th>操作</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for item in items %}
+          <tr>
+            <td>{{ item.product_id }}</td>
+            <td>{{ item.quantity }}</td>
+            <td>{{ item.price }}</td>
+            <td>{{ item.total_price }}</td>
+            <td>{{ item.status }}</td>
+            <td>
+              <a href="{% url 'myadmin_order_detail_edit' item.id %}" class="btn btn-sm btn-warning">编辑</a>
+              <a href="{% url 'myadmin_order_detail_delete' item.id %}" class="btn btn-sm btn-danger">删除</a>
+            </td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+
+    <div class="card-footer">
+      <a href="{% url 'myadmin_order_detail_add' orders_id %}" class="btn btn-sm btn-success">添加明细</a>
+    </div>
   </div>
-  <div class="card-body">
-    <table class="table table-sm table-bordered">
-      <thead>
-        <tr>
-          <th>商品编号</th>
-          <th>数量</th>
-          <th>单价</th>
-          <th>小计</th>
-          <th>状态</th>
-        </tr>
-      </thead>
-      <tbody>
-        {% for item in items %}
-        <tr>
-          <td>{{ item.product_id }}</td>
-          <td>{{ item.quantity }}</td>
-          <td>{{ item.price }}</td>
-          <td>{{ item.total_price }}</td>
-          <td>{{ item.status }}</td>
-        </tr>
-        {% endfor %}
-      </tbody>
-    </table>
-  </div>
-</div>
+{% empty %}
+  <p class="text-muted">暂无订单明细记录</p>
 {% endfor %}
 
 {% endblock %}

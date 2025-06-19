@@ -1,19 +1,48 @@
-{% extends 'myadmin/base.html'%}
+{% extends 'myadmin/base.html' %}
 {% block main_body %}
 
 <div class='container'>
+  <h2>订单详情：#{{ order.orders_id }}</h2>
+  <p>下单时间：{{ order.create_at|date:"Y-m-d H:i" }}</p>
+  <p>订单类型：{{ order.category }}</p>
+  <p>总数量：{{ order.total_amount }}</p>
 
-{{ order.orders_id }}
+  <table class="table table-bordered">
+    <thead>
+      <tr>
+        <th>商品编号</th>
+        <th>数量</th>
+        <th>单价</th>
+        <th>总价</th>
+        <th>状态</th>
+        <th>操作</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for detail in wms_orders_details %}
+      <tr>
+        <td>{{ detail.product_id }}</td>
+        <td>{{ detail.quantity }}</td>
+        <td>{{ detail.price }}</td>
+        <td>{{ detail.total_price }}</td>
+        <td>{{ detail.status }}</td>
+        <td>
+          <a href="{% url 'myadmin_order_detail_edit' detail.id %}" class="btn btn-sm btn-warning">编辑</a>
+          <a href="{% url 'myadmin_order_detail_delete' detail.id %}" class="btn btn-sm btn-danger">删除</a>
+        </td>
+      </tr>
+      {% empty %}
+      <tr>
+        <td colspan="6" class="text-muted text-center">无订单详情记录</td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
 
-<div class="card">
-    <div class="card-header">
-        {{ wms_orders_details.orders_id }}
-    </div>
-    <div class="card-body">
-      <p class="card-text">With supporting text below as a natural lead-in to additional content.</p>
-      <a href="{% url 'myadmin_order_index' %}" class="btn btn-primary">返回</a>
-    </div>
+  <div class="mt-3">
+    <a href="{% url 'myadmin_order_detail_add' order.orders_id %}" class="btn btn-success">添加明细</a>
+    <a href="{% url 'myadmin_order_index' %}" class="btn btn-default">返回订单列表</a>
   </div>
-
 </div>
+
 {% endblock %}
