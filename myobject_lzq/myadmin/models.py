@@ -80,7 +80,11 @@ class Member(models.Model):
 #布料销售订单
 class WmsOrders(models.Model):
     orders_id = models.IntegerField(primary_key=True, db_comment='订单编号')
+<<<<<<< HEAD
     user = models.ForeignKey(User, models.DO_NOTHING, blank=True, null=True)
+=======
+    user = models.ForeignKey('AuthUser', models.DO_NOTHING, blank=True, null=True, db_comment='操作员id')
+>>>>>>> 92d8e23 (1)
     total_amount = models.IntegerField(blank=True, null=True, db_comment='面料出库总量')
     category = models.IntegerField(blank=True, null=True, db_comment='1：镇内订单  2：镇外订单')
     payment_status = models.IntegerField(blank=True, null=True, db_comment='支付状态:1未支付/2已支付/3已退款')
@@ -93,6 +97,7 @@ class WmsOrders(models.Model):
         db_table = 'wms_orders'
         db_table_comment = '销售订单表'
       
+<<<<<<< HEAD
 #布料销售订单详情
 <<<<<<< HEAD
 class WmsOrdersDetail(models.Model):
@@ -107,6 +112,9 @@ class WmsOrdersDetail(models.Model):
         managed = False
         db_table = 'wms_orders_detail'
 =======
+=======
+#布料销售订单详情1
+>>>>>>> 92d8e23 (1)
 class OrdersDetailWithDates(models.Model):
     orders_id = models.IntegerField(db_comment='订单编号')
     product_id = models.CharField(max_length=45, db_collation='utf8mb4_0900_ai_ci')
@@ -121,6 +129,19 @@ class OrdersDetailWithDates(models.Model):
         managed = False
         db_table = 'orders_detail_with_dates'
 >>>>>>> f7fabbd (消除原始代码影响1)
+
+#布料销售订单详情
+class WmsOrdersDetail(models.Model):
+    orders = models.ForeignKey('WmsOrders', models.DO_NOTHING, db_comment='订单编号')
+    product_id = models.CharField(max_length=45)
+    quantity = models.IntegerField()
+    price = models.FloatField(db_comment='单价')
+    total_price = models.FloatField()
+    status = models.CharField(max_length=45)
+
+    class Meta:
+        managed = False
+        db_table = 'wms_orders_detail'
 
 #出库表
 class WmsOutbound(models.Model):

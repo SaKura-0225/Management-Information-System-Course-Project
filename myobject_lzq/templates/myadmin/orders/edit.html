@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 {% extends 'myadmin/base.html' %}
 {% block main_body %}
 <!-- 优化后的内容头部区域 -->
@@ -125,3 +126,12 @@
   }
 </style>
 {% endblock %}
+=======
+<h3>编辑订单</h3>
+<form action="{% url 'myadmin_orders_edit' orders_id %}" method="post" >
+  {% csrf_token %}
+  {{ form }}
+  <button type="submit" class="btn btn-primary">保存</button>
+  <a href="{% url 'myadmin_order_index' %}" class="btn btn-default">取消</a>
+</form>
+>>>>>>> 92d8e23 (1)
