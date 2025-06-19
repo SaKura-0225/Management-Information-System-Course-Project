@@ -1,4 +1,4 @@
-<h3>新增订单</h3>
+<h3>编辑订单</h3>
 <form action="{% url 'myadmin_orders_edit' orders_id %}" method="post" >
   {% csrf_token %}
   {{ form }}

@@ -43,13 +43,14 @@
                 </tr>
                 {% for vo in page_obj %}
                 <tr>
-                  <td><a href="{% url 'myadmin_orders_detail' vo.orders_id %}">{{ vo.orders_id }}</a></td>
+                  <td>{{ vo.orders_id }}</td>
                   <td>{{ vo.create_at|date:'Y-m-d' }}</td>
                   <td>{{ vo.total_amount }}</td>
                   <td>{{ vo.category }}</td>
                   <td> 
                     <a role="button" href="{% url 'myadmin_orders_edit' vo.orders_id %}" class="btn btn-primary">编辑</a>
                     <a role="button" href="{% url 'myadmin_orders_delete' vo.orders_id %}" class="btn btn-primary">删除</a>
+                    <a role="button" href="{% url 'myadmin_orders_detail' vo.orders_id %}" class="btn btn-primary">详情</a>
                   </td>            
                 </tr>
                 {% endfor %}
