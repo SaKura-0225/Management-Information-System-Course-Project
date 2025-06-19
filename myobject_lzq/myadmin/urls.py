@@ -7,7 +7,11 @@ from myadmin.views import index
 from myadmin.views import shop
 >>>>>>> f7fabbd (消除原始代码影响1)
 from myadmin.views import orders
+<<<<<<< HEAD
 from myadmin.views import member
+=======
+from myadmin.views import category, product, member
+>>>>>>> dd7dd62 (系统管理功能1)
 from myadmin.views import report,warehouse,warehouse_flow,system
 
 urlpatterns = [
@@ -83,6 +87,7 @@ urlpatterns = [
 
 
     # 系统管理路由
+<<<<<<< HEAD
     #path('system/employee', )
 ]
 >>>>>>> f7fabbd (消除原始代码影响1)
@@ -103,4 +108,20 @@ urlpatterns = [
     #path('system/permission/<int:id>/delete', system.permission_delete, name='myadmin_system_permission_delete'), #权限删除
 
 
+=======
+    path('system/employee', system.employee_index, name='myadmin_system_employee_index'), #员工管理
+    path('system/employee/add', system.add_employee, name='myadmin_system_employee_add'), #员工添加
+    path('system/employee/<int:pk>/edit', system.edit_employee, name='myadmin_system_employee_edit'), #员工编辑
+    #path('system/employee/<int:id>/delete', system.employee_delete, name='myadmin_system_employee_delete'), #员工删除
+    path('system/department', system.department_index, name='myadmin_system_department_index'), #部门管理
+    #path('system/department/add', system.department_add, name='myadmin_system_department_add'), #部门添加
+    #path('system/department/<int:id>/edit', system.department_edit, name='myadmin_system_department_edit'), #部门编辑
+    #path('system/department/<int:id>/delete', system.department_delete, name='myadmin_system_department_delete'), #部门删除
+    path('system/permission', system.permission_index, name='myadmin_system_permission_index'), #权限管理
+    #path('system/permission/add', system.permission_add, name='myadmin_system_permission_add'), #权限添加       
+    path('system/permission/<int:group_id>/edit', system.edit_permissions, name='myadmin_system_permission_edit'), #权限编辑
+    #path('system/permission/<int:id>/delete', system.permission_delete, name='myadmin_system_permission_delete'), #权限删除
+
+
+>>>>>>> dd7dd62 (系统管理功能1)
 ]

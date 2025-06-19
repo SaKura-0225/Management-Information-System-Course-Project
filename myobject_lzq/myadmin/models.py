@@ -25,6 +25,7 @@ class Shop(models.Model):
         return {'id': self.id, 'name': shopname[0], 'shop': shopname[1], 'cover_pic': self.cover_pic, 'banner_pic': self.banner_pic, 'address': self.address, 'phone': self.phone, 'status': self.status, 'create_at': self.create_at.strftime('%Y-%m-%d %H:%M:%S'), 'update_at': self.update_at.strftime('%Y-%m-%d %H:%M:%S')}
 
     class Meta:
+        managed = False
         db_table = "shop"  # 更改表名
 
 # 菜品类别数据
@@ -36,6 +37,7 @@ class Category(models.Model):
     update_at = models.DateTimeField(default=datetime.now)    # 修改时间
 
     class Meta:
+        managed = False
         db_table = "category"  # 更改表名
 
 #菜品信息模型
@@ -53,6 +55,7 @@ class Product(models.Model):
         return {'id':self.id,'shop_id':self.shop_id,'category_id':self.category_id,'cover_pic':self.cover_pic,'name':self.name,'price':self.price,'status':self.status,'create_at':self.create_at.strftime('%Y-%m-%d %H:%M:%S'),'update_at':self.update_at.strftime('%Y-%m-%d %H:%M:%S')}
 
     class Meta:
+        managed = False
         db_table = "product"  # 更改表名
 
 >>>>>>> f7fabbd (消除原始代码影响1)
