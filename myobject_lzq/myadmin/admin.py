@@ -1,7 +1,6 @@
 
 from django.contrib import admin
-from .models import Product, WmsOrders
+from .models import WmsOrders
 # Register your models here.
 
-admin.site.register(Product)
 admin.site.register(WmsOrders)

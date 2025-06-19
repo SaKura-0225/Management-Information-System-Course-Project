@@ -23,38 +23,19 @@ class AddWarehouseInfoForm(forms.ModelForm):
         }
 
 
-class EmployeeForm(forms.ModelForm):
-    username = forms.CharField()
+class UserForm(forms.ModelForm):
     password = forms.CharField(widget=forms.PasswordInput, required=False)
-    email = forms.EmailField(required=False)
     groups = forms.ModelMultipleChoiceField(
         queryset=Group.objects.all(), required=False,
         widget=forms.CheckboxSelectMultiple
     )
 
     class Meta:
+        model = User
+        fields = ['username', 'email', 'password', 'groups']
+
+
+class EmployeeForm(forms.ModelForm):
+    class Meta:
         model = EmployeeProfile
-        fields = ['department', 'work_no', 'phone', 'post']
-
-    def save(self, commit=True):
-        employee = super().save(commit=False)
-
-        if not hasattr(employee, 'user'):
-            user = User.objects.create_user(
-                username=self.cleaned_data['username'],
-                password=self.cleaned_data['password']
-            )
-            user.email = self.cleaned_data['email']
-            employee.user = user
-        else:
-            user = employee.user
-            user.email = self.cleaned_data['email']
-            if self.cleaned_data['password']:
-                user.set_password(self.cleaned_data['password'])
-
-        if commit:
-            employee.save()
-            user.save()
-            user.groups.set(self.cleaned_data['groups'])
-
-        return employee
+        fields = ['department', 'work_no', 'phone']

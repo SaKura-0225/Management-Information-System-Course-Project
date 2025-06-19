@@ -5,9 +5,9 @@ from django.contrib.auth.models import User, Group, Permission
 from myadmin.models import Department, EmployeeProfile
 from django.contrib.auth.decorators import login_required, permission_required
 from django.shortcuts import render, get_object_or_404, redirect
-from .forms import EmployeeForm
 from myadmin.models import EmployeeProfile
 from django.contrib.contenttypes.models import ContentType
+from .forms import UserForm, EmployeeForm
 
 
 @login_required
@@ -26,16 +26,31 @@ def add_employee(request):
         form = EmployeeForm()
     return render(request, 'myadmin/system/employees/add.html', {'form': form})
 
-def edit_employee(request, pk):
-    emp = get_object_or_404(EmployeeProfile, pk=pk)
+
+def edit_employee(request, user_id):
+    employee = get_object_or_404(EmployeeProfile, user__id=user_id)
+    user = employee.user
+
     if request.method == 'POST':
-        form = EmployeeForm(request.POST, instance=emp)
-        if form.is_valid():
-            form.save()
+        uform = UserForm(request.POST, instance=user)
+        eform = EmployeeForm(request.POST, instance=employee)
+        if uform.is_valid() and eform.is_valid():
+            u = uform.save(commit=False)
+            pwd = uform.cleaned_data.get('password')
+            if pwd:
+                u.set_password(pwd)
+            u.save()
+            u.groups.set(uform.cleaned_data['groups'])  # 更新权限组
+            eform.save()
             return redirect('myadmin_system_employee_index')
     else:
-        form = EmployeeForm(instance=emp, initial={'username': emp.user.username, 'groups': emp.user.groups.all()})
-    return render(request, 'myadmin/system/employees/edit.html', {'form': form})
+        uform = UserForm(instance=user)
+        eform = EmployeeForm(instance=employee)
+
+    return render(request, 'myadmin/system/employees/edit.html', {
+        'uform': uform,
+        'eform': eform
+    })
 
 @login_required
 @permission_required('myadmin.view_department', raise_exception=True)

@@ -5,22 +5,13 @@ from django.shortcuts import redirect
 from django.contrib.auth import authenticate,login,logout
 from django.urls import reverse
 import re
-from myadmin.models import Orders,User,Shop
+from myadmin.models import User
 from django.db.models import Avg,Max,Min,Count,Sum
 # Create your views here.
 
 # 后台管理首页
 def index(request):
-    umod1 = Orders.objects.all()
-    ulist1 = umod1.filter(status__lt=9)
-    ppp1 = ulist1.aggregate(Count('id'))
-    ppp2 = ulist1.aggregate(Sum('money'))
-    umod2 = User.objects.all()
-    ppp3 = umod2.aggregate(Count('id'))
-    umod3 = Shop.objects.all()
-    ulist3 = umod3.filter(status=1)
-    ppp4 = ulist3.aggregate(Count('id'))
-    context = {'o_number':ppp1,'o_money':ppp2,'u_number':ppp3,'s_number':ppp4}
+    context = {'o_number':'ppp1','o_money':'ppp2','u_number':'ppp3','s_number':'ppp4'}
     return render(request, 'myadmin/index/index.html',context)  
 
 

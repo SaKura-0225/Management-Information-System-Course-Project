@@ -6,7 +6,7 @@ from myadmin.models import User
 from django.shortcuts import redirect
 from django.urls import reverse
 import re
-from myadmin.models import Orders,User,Shop
+from myadmin.models import User
 from django.db.models import Avg,Max,Min,Count,Sum
 
 

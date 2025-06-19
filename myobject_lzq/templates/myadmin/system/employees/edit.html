@@ -1,31 +1,18 @@
+<!-- templates/myadmin/system/employee/edit.html -->
 {% extends 'myadmin/base.html' %}
-
 {% block main_body %}
-<section class="content-header">
-  <h1>编辑员工</h1>
-  <ol class="breadcrumb">
-    <li><a href="#"><i class="fa fa-dashboard"></i> 首页</a></li>
-    <li><a href="#">员工管理</a></li>
-    <li class="active">编辑员工</li>
-  </ol>
-</section>
+<h2>编辑员工信息</h2>
 
-<section class="content container-fluid">
-  <div class="box box-primary">
-    <div class="box-header with-border">
-      <h3 class="box-title">员工信息表单</h3>
-    </div>
+<form method="post">
+  {% csrf_token %}
+  <fieldset>
+    <legend>员工信息</legend>
+    {{ uform.as_p }}
+    {{ eform.as_p }}
+  </fieldset>
 
-    <form method="post">
-      {% csrf_token %}
-      <div class="box-body">
-        {{ form.as_p }}
-      </div>
-      <div class="box-footer">
-        <button type="submit" class="btn btn-primary">保存更改</button>
-        <a href="{% url 'myadmin_system_employee_index' %}" class="btn btn-default">取消</a>
-      </div>
-    </form>
-  </div>
-</section>
+  <button type="submit" class="btn btn-primary">保存</button>
+  <a href="{% url 'myadmin_system_employee_index' %}" class="btn btn-default">取消</a>
+</form>
 {% endblock %}
+
