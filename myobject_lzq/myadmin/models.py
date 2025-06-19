@@ -6,6 +6,7 @@ from django.contrib.auth.models import User
 
 # Create your models here.
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 
 
@@ -59,6 +60,8 @@ class Product(models.Model):
         db_table = "product"  # 更改表名
 
 >>>>>>> f7fabbd (消除原始代码影响1)
+=======
+>>>>>>> 1999e5d (消除原始代码影响2)
 # 会员信息表
 class Member(models.Model):
     nickname = models.CharField(max_length=50)    #昵称

@@ -137,6 +137,7 @@
         <li class="header">主要导航</li>
         <!-- 导航列表，你可以自行更改图标 -->
         <li class="active"><a href="{% url 'myadmin_index' %}"><i class="fa fa-home"></i> <span>首页</span></a></li>
+<<<<<<< HEAD
         <li><a href="{% url 'myadmin_shop_index'%}"><i class="fa fa-users"></i> <span>储位管理</span></a></li>
         <li><a href="{% url 'myadmin_shop_index'%}"><i class="fa fa-sitemap"></i> <span>店铺管理</span></a></li>
         <li class="treeview">
@@ -153,6 +154,9 @@
             <i class="fa fa-users w-5 text-center"></i>
             <span>储位管理</span>
 =======
+=======
+        <li><a href="{% url 'myadmin_order_index'%}"><i class="fa fa-users"></i> <span>储位管理</span></a></li>
+>>>>>>> 1999e5d (消除原始代码影响2)
         {% if perms.myadmin.view_wmsoutbound %}
         <li class="treeview">
           <a href="category.html"><i class="fa fa-cutlery"></i> <span>出入库管理</span>
@@ -233,8 +237,8 @@
             </span>
           </a>
           <ul class="treeview-menu">
-            <li><a href="{% url 'myadmin_category_index'%}"> <i class="fa fa-circle-o"></i> 出货型号前十</a></li>
-            <li><a href="{% url 'myadmin_product_index'%}"> <i class="fa fa-circle-o"></i> 出货色号前十</a></li>
+            <li><a href="{% url 'myadmin_order_index'%}"> <i class="fa fa-circle-o"></i> 出货型号前十</a></li>
+            <li><a href="{% url 'myadmin_order_index'%}"> <i class="fa fa-circle-o"></i> 出货色号前十</a></li>
           </ul>
 >>>>>>> dd7dd62 (系统管理功能1)
         </li>

@@ -3,6 +3,7 @@ from django.urls import path
 from django.contrib import admin
 from myadmin.views import index
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 from myadmin.views import shop
 >>>>>>> f7fabbd (消除原始代码影响1)
@@ -12,6 +13,10 @@ from myadmin.views import member
 =======
 from myadmin.views import category, product, member
 >>>>>>> dd7dd62 (系统管理功能1)
+=======
+from myadmin.views import orders
+from myadmin.views import member
+>>>>>>> 1999e5d (消除原始代码影响2)
 from myadmin.views import report,warehouse,warehouse_flow,system
 
 urlpatterns = [
@@ -22,6 +27,7 @@ urlpatterns = [
     #path('dologin', index.dologin, name="myadmin_dologin"),  # 执行登录表单
     path('logout', index.logout, name="myadmin_logout"),  # 退出
     path('verify', index.verify, name="myadmin_verify"),  # 输出验证码
+<<<<<<< HEAD
 <<<<<<< HEAD
 =======
 
@@ -52,6 +58,8 @@ urlpatterns = [
     path('product/update/<int:pid>', product.update, name="myadmin_product_update"),  # 执行编辑
 
 >>>>>>> f7fabbd (消除原始代码影响1)
+=======
+>>>>>>> 1999e5d (消除原始代码影响2)
     # 会员管理路由
     path('member/', member.index, name="myadmin_member_index"),  # 浏览会员信息
     path('member/del/<int:mid>', member.delete, name="myadmin_member_del"),  # 执行删除
@@ -111,7 +119,7 @@ urlpatterns = [
 =======
     path('system/employee', system.employee_index, name='myadmin_system_employee_index'), #员工管理
     path('system/employee/add', system.add_employee, name='myadmin_system_employee_add'), #员工添加
-    path('system/employee/<int:pk>/edit', system.edit_employee, name='myadmin_system_employee_edit'), #员工编辑
+    path('system/employee/<int:user_id>/edit', system.edit_employee, name='myadmin_system_employee_edit'), #员工编辑
     #path('system/employee/<int:id>/delete', system.employee_delete, name='myadmin_system_employee_delete'), #员工删除
     path('system/department', system.department_index, name='myadmin_system_department_index'), #部门管理
     #path('system/department/add', system.department_add, name='myadmin_system_department_add'), #部门添加

@@ -48,6 +48,7 @@ class AddWarehouseInfoForm(forms.ModelForm):
 
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 class UserForm(forms.ModelForm):
     password = forms.CharField(widget=forms.PasswordInput, required=False)
 =======
@@ -56,6 +57,10 @@ class EmployeeForm(forms.ModelForm):
     password = forms.CharField(widget=forms.PasswordInput, required=False)
     email = forms.EmailField(required=False)
 >>>>>>> dd7dd62 (系统管理功能1)
+=======
+class UserForm(forms.ModelForm):
+    password = forms.CharField(widget=forms.PasswordInput, required=False)
+>>>>>>> 1999e5d (消除原始代码影响2)
     groups = forms.ModelMultipleChoiceField(
         queryset=Group.objects.all(), required=False,
         widget=forms.CheckboxSelectMultiple
@@ -63,12 +68,16 @@ class EmployeeForm(forms.ModelForm):
 
     class Meta:
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> 1999e5d (消除原始代码影响2)
         model = User
         fields = ['username', 'email', 'password', 'groups']
 
 
 class EmployeeForm(forms.ModelForm):
     class Meta:
+<<<<<<< HEAD
         model = EmployeeProfile
         fields = ['department', 'work_no', 'phone']
 
@@ -111,3 +120,7 @@ class OrderDetailForm(forms.ModelForm):
 
         return employee
 >>>>>>> dd7dd62 (系统管理功能1)
+=======
+        model = EmployeeProfile
+        fields = ['department', 'work_no', 'phone']
+>>>>>>> 1999e5d (消除原始代码影响2)

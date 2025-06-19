@@ -105,7 +105,7 @@
       <td>{{ e.department.name }}</td>
       <td>{{ e.department.name }}</td>
       <td>
-        <a href="{% url 'myadmin_system_employee_edit' e.id %}">编辑</a>
+        <a href="{% url 'myadmin_system_employee_edit' e.user_id %}">编辑</a>
         <a href="#">删除</a>
       </td>
     </tr>
