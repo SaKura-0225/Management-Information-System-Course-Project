@@ -1,39 +1,80 @@
 {% extends 'myadmin/base.html' %}
 {% block main_body %}
-<h2>员工管理</h2>
-<table class="table table-bordered">
-  <thead>
-    <tr>
-      <th>序号</th>
-      <th>工号</th>
-      <th>姓名</th>
-      <th>电话</th>
-      <th>邮箱</th>
-      <th>部门</th>
-      <th>岗位</th>
-      <th>操作</th>
-    </tr>
-  </thead>
-  <tbody>
-    {% for e in employees %}
-    <tr>
-      <td>{{ e.id }}</td>
-      <td>{{ e.work_no }}</td>
-      <td>{{ e.user.username }}</td>
-      <td>{{ e.phone }}</td>
-      <td>{{ e.user.email }}</td>
-      <td>{{ e.department.name }}</td>
-      <td>{{ e.department.name }}</td>
-      <td>
-        <a href="{% url 'myadmin_system_employee_edit' e.user_id %}">编辑</a>
-        <a href="#">删除</a>
-      </td>
-    </tr>
-    {% endfor %}
-    <div class="box-footer clearfix">
-      <a role="button" href="{% url 'myadmin_system_employee_add' %}" class="btn btn-primary">
-              <span class="glyphicon glyphicon-plus" aria-hidden="true"></span> 添加员工</a>
+<!-- 优化后的内容头部区域 -->
+<section class="content-header bg-white rounded-xl shadow-sm p-6 mb-6">
+  <div class="flex flex-col md:flex-row md:items-center justify-between">
+    <div>
+      <h1 class="text-[clamp(1.5rem,3vw,2rem)] font-semibold text-dark">员工管理</h1>
     </div>
-  </tbody>
-</table>
-{% endblock %}
+    <div class="mt-4 md:mt-0">
+      <a href="{% url 'myadmin_system_employee_add' %}" class="bg-primary hover:bg-primary/90 text-white px-4 py-3 rounded-lg flex items-center space-x-2 transition-all duration-200 shadow-sm hover:shadow">
+        <i class="fa fa-plus"></i>
+        <span class="hidden sm:inline">添加员工</span>
+      </a>
+    </div>
+  </div>
+  
+  <!-- 面包屑导航 -->
+  <div class="mt-4 flex items-center text-sm text-gray-500">
+    <a href="#" class="hover:text-primary flex items-center">
+      <i class="fa fa-dashboard mr-1"></i> 首页
+    </a>
+    <i class="fa fa-angle-right mx-2 text-xs"></i>
+    <span class="text-dark font-medium">员工管理</span>
+  </div>
+</section>
+
+<!-- 员工表格 -->
+<div class="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
+  <div class="overflow-x-auto">
+    <table class="w-full text-sm text-left">
+      <thead class="bg-gray-50 text-xs uppercase text-gray-500">
+        <tr>
+          <th class="px-6 py-4">序号</th>
+          <th class="px-6 py-4">工号</th>
+          <th class="px-6 py-4">姓名</th>
+          <th class="px-6 py-4">电话</th>
+          <th class="px-6 py-4">邮箱</th>
+          <th class="px-6 py-4">部门</th>
+          <th class="px-6 py-4">岗位</th>
+          <th class="px-6 py-4">操作</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for e in employees %}
+        <tr class="border-b border-gray-100 hover:bg-gray-50 transition-colors duration-150">
+          <td class="px-6 py-4 font-medium text-dark">{{ e.id }}</td>
+          <td class="px-6 py-4">{{ e.work_no }}</td>
+          <td class="px-6 py-4">
+            <div class="flex items-center">
+              <div class="w-8 h-8 rounded-full bg-primary/10 flex items-center justify-center text-primary mr-2">
+                <i class="fa fa-user"></i>
+              </div>
+              {{ e.user.username }}
+            </div>
+          </td>
+          <td class="px-6 py-4">{{ e.phone }}</td>
+          <td class="px-6 py-4 text-primary">{{ e.user.email }}</td>
+          <td class="px-6 py-4">
+            <span class="px-2 py-1 text-xs rounded-full bg-primary/10 text-primary">
+              {{ e.department.name }}
+            </span>
+          </td>
+          <td class="px-6 py-4">{{ e.post }}</td>
+          <td class="px-6 py-4">
+            <div class="flex space-x-2">
+              <a href="{% url 'myadmin_system_employee_edit' e.user_id %}" class="px-3 py-1 bg-primary/10 text-primary rounded-lg text-xs hover:bg-primary/20 transition-colors duration-150">
+                <i class="fa fa-pencil mr-1"></i> 编辑
+              </a>
+              <a href="#" class="px-3 py-1 bg-danger/10 text-danger rounded-lg text-xs hover:bg-danger/20 transition-colors duration-150">
+                <i class="fa fa-trash mr-1"></i> 删除
+              </a>
+            </div>
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
+{% endblock %}    

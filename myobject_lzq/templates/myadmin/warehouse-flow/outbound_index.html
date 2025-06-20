@@ -1,106 +1,168 @@
-  <!-- 出库表 -->
+{% extends 'myadmin/base.html'%}
+{% block main_body %}
+<!-- 优化后的内容头部区域 -->
+<section class="content-header bg-white rounded-xl shadow-sm p-6 mb-6">
+  <div class="flex flex-col md:flex-row md:items-center justify-between">
+    <div>
+      <h1 class="text-[clamp(1.5rem,3vw,2rem)] font-semibold text-dark">出库管理</h1>
+      <p class="text-gray-500 text-sm">订餐系统后台管理</p>
+    </div>
+    <div class="mt-4 md:mt-0 flex items-center space-x-4">
+      <!-- 优化后的搜索框 -->
+      <div class="relative flex-grow max-w-md">
+        <form action="{% url 'myadmin_warehouse-flow_outbound' %}" method="get">
+          <span class="absolute inset-y-0 left-0 flex items-center pl-4">
+            <i class="fa fa-search text-gray-400"></i>
+          </span>
+          <input type="text" name="keyword" placeholder="搜索订单ID..." 
+                 class="w-full pl-12 pr-4 py-3 rounded-lg border border-gray-200 focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary text-sm bg-gray-50 transition-all duration-200" />
+        </form>
+      </div>
+      
+      <!-- 新增快捷操作按钮 -->
+      <a href="{% url 'myadmin_outbound_add' %}" class="bg-primary hover:bg-primary/90 text-white px-4 py-3 rounded-lg flex items-center space-x-2 transition-all duration-200 shadow-sm hover:shadow">
+        <i class="fa fa-plus"></i>
+        <span class="hidden sm:inline">添加明细</span>
+      </a>
+    </div>
+  </div>
+  
+  <!-- 新增数据概览小卡片 -->
+  <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mt-6">
+    <div class="bg-primary/5 rounded-lg p-3 flex items-center">
+      <div class="w-8 h-8 rounded bg-primary/10 flex items-center justify-center text-primary mr-3">
+        <i class="fa fa-clock-o"></i>
+      </div>
+      <div>
+        <p class="text-xs text-gray-500">今日出库</p>
+        <p class="text-sm font-medium text-dark">42单</p>
+      </div>
+    </div>
+    <div class="bg-secondary/5 rounded-lg p-3 flex items-center">
+      <div class="w-8 h-8 rounded bg-secondary/10 flex items-center justify-center text-secondary mr-3">
+        <i class="fa fa-cubes"></i>
+      </div>
+      <div>
+        <p class="text-xs text-gray-500">出库总量</p>
+        <p class="text-sm font-medium text-dark">1,256件</p>
+      </div>
+    </div>
+    <div class="bg-success/5 rounded-lg p-3 flex items-center">
+      <div class="w-8 h-8 rounded bg-success/10 flex items-center justify-center text-success mr-3">
+        <i class="fa fa-check-circle"></i>
+      </div>
+      <div>
+        <p class="text-xs text-gray-500">已完成</p>
+        <p class="text-sm font-medium text-dark">38单</p>
+      </div>
+    </div>
+    <div class="bg-warning/5 rounded-lg p-3 flex items-center">
+      <div class="w-8 h-8 rounded bg-warning/10 flex items-center justify-center text-warning mr-3">
+        <i class="fa fa-exclamation-triangle"></i>
+      </div>
+      <div>
+        <p class="text-xs text-gray-500">待处理</p>
+        <p class="text-sm font-medium text-dark">4单</p>
+      </div>
+    </div>
+  </div>
+</section>
 
-  {% extends 'myadmin/base.html'%}
-  {% block main_body %}
-  <!-- Content Header (Page header) -->
-      <section class="content-header">
-        <h1>
-          出库管理
-          <small>订餐系统后台管理</small>
-        </h1>
-        <ol class="breadcrumb">
-          <li><a href="#"><i class="fa fa-dashboard"></i> 首页</a></li>
-          <li class="active">出库管理</li>
-        </ol>
-      </section>
-      <!-- Main content -->
-      <section class="content container-fluid">
-  
-        <div class="row">
-          <div class="col-xs-12">
-            <div class="box">
-              <div class="box-header">
-                <h3 class="box-title">入库信息表</h3>
-  
-                <div class="box-tools">
-                 <form action="{% url 'myadmin_warehouse-flow_outbound' %}" method="get">
-                  <div class="input-group input-group-sm" style="width:150px;float:left;">
-                    <input type="text" name="keyword" class="form-control pull-right" placeholder="订单id">
-                    <div class="input-group-btn">
-                      <button type="submit" class="btn btn-default"><i class="fa fa-search"></i></button>
-                    </div>
+<!-- Main content -->
+<section class="content container-fluid">
+  <div class="row">
+    <div class="col-xs-12">
+      <div class="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
+        <!-- 表格头部 -->
+        <div class="p-6 border-b border-gray-100">
+          <h3 class="text-lg font-semibold text-dark">出库信息表</h3>
+        </div>
+        
+        <!-- 表格内容 -->
+        <div class="overflow-x-auto">
+          <table class="w-full text-sm text-left">
+            <thead class="bg-gray-50 text-xs uppercase text-gray-500">
+              <tr>
+                <th class="px-6 py-4">行号</th>
+                <th class="px-6 py-4">销售订单编号</th>
+                <th class="px-6 py-4">物料名称</th>
+                <th class="px-6 py-4">SKU编号</th>
+                <th class="px-6 py-4">出库数量</th>
+                <th class="px-6 py-4">库位编号</th>
+                <th class="px-6 py-4">操作员</th>
+                <th class="px-6 py-4">出库时间</th>
+                <th class="px-6 py-4">更新时间</th>
+                <th class="px-6 py-4">操作</th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for vo in page_obj %}
+              <tr class="border-b border-gray-100 hover:bg-gray-50 transition-colors duration-150">
+                <td class="px-6 py-4 font-medium text-dark">{{ vo.id }}</td>
+                <td class="px-6 py-4">{{ vo.orders_id }}</td>
+                <td class="px-6 py-4">{{ vo.name }}</td>
+                <td class="px-6 py-4">{{ vo.product_id }}</td>
+                <td class="px-6 py-4">{{ vo.quantity }}</td>
+                <td class="px-6 py-4">{{ vo.bin_id }}</td>
+                <td class="px-6 py-4">{{ vo.user_id }}</td>
+                <td class="px-6 py-4">{{ vo.create_at|date:'Y-m-d' }}</td>
+                <td class="px-6 py-4">{{ vo.update_at|date:'Y-m-d' }}</td>
+                <td class="px-6 py-4">
+                  <div class="flex space-x-2">
+                    <a href="{% url 'myadmin_outbound_edit' vo.id %}" class="px-3 py-1 bg-primary/10 text-primary rounded-lg text-xs hover:bg-primary/20 transition-colors duration-150">
+                      <i class="fa fa-pencil mr-1"></i> 编辑
+                    </a>
+                    <a href="{% url 'myadmin_outbound_delete' vo.id %}" class="px-3 py-1 bg-danger/10 text-danger rounded-lg text-xs hover:bg-danger/20 transition-colors duration-150">
+                      <i class="fa fa-trash mr-1"></i> 删除
+                    </a>
                   </div>
-                  </form>
-                </div>
-              </div>
-              <!-- /.box-header -->
-              <div class="box-body table-responsive no-padding">
-                <table class="table table-hover">
-                  <tr>
-                    <th>行号</th>
-                    <th>销售订单编号</th>
-                    <th>物料名称</th>
-                    <th>SKU编号</th>
-                    <th>出库数量</th>
-                    <th>库位编号</th>
-                    <th>操作员</th>
-                    <th>出库时间</th>
-                    <th>更新时间</th>
-                    <th>操作</th>
-                  </tr>
-                  {% for vo in page_obj %}
-                  <tr>
-                    <td>{{ vo.id }}</td>
-                    <td>{{ vo.orders_id }}</td>
-                    <td>{{ vo.name }}</td>
-                    <td>{{ vo.product_id }}</td>
-                    <td>{{ vo.quantity }}</td>
-                    <td>{{ vo.bin_id }}</td>
-                    <td>{{ vo.user_id }}</td>
-                    <td>{{ vo.create_at|date:'Y-m-d' }}</td>
-                    <td>{{ vo.update_at|date:'Y-m-d' }}</td>
-                    <td> 
-                      <a role="button" href="{% url 'myadmin_outbound_edit' vo.id %}" class="btn btn-primary">编辑</a>
-                      <a role="button" href="{% url 'myadmin_outbound_delete' vo.id %}" class="btn btn-primary">删除</a>
-                    </td>            
-                  </tr>
-                  {% endfor %}
-                </table>
-              </div>
-              <!-- /.box-body -->
-              <div class="box-footer clearfix">
-                <a role="button" href="{% url 'myadmin_outbound_add' %}" class="btn btn-primary">
-                        <span class="glyphicon glyphicon-plus" aria-hidden="true"></span> 添加明细</a>
-              </div>
-              {% for contact in page_obj %}
-                {# Each "contact" is a Contact model object. #}
-                {{ contact.full_name|upper }}<br>
+                </td>
+              </tr>
               {% endfor %}
-  
-              <div class="pagination">
-                  <span class="step-links">
-                      {% if page_obj.has_previous %}
-                          <a href="?page=1">&laquo; 首页</a>
-                          <a href="?page={{ page_obj.previous_page_number }}&keyword={{ request.GET.keyword }}">上一页</a>
-                      {% endif %}
-  
-                      <span class="current">
-                          Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}.
-                      </span>
-  
-                      {% if page_obj.has_next %}
-                          <a href="?page={{ page_obj.next_page_number }}">下一页</a>
-                          <a href="?page={{ page_obj.paginator.num_pages }}">尾页 &raquo;</a>
-                      {% endif %}
-                  </span>
-              </div>
-            </div>
-            <!-- /.box -->
+            </tbody>
+          </table>
+        </div>
+        
+        <!-- 分页 -->
+        <div class="p-6 bg-gray-50 border-t border-gray-100 flex flex-col sm:flex-row justify-between items-center">
+          <div class="mb-4 sm:mb-0">
+            <span class="text-sm text-gray-500">
+              显示第 {{ page_obj.start_index }} 至 {{ page_obj.end_index }} 条，共 {{ page_obj.paginator.count }} 条记录
+            </span>
+          </div>
+          
+          <div class="flex items-center space-x-1">
+            {% if page_obj.has_previous %}
+              <a href="?page=1&keyword={{ request.GET.keyword }}" class="px-3 py-1.5 rounded-lg border border-gray-200 text-gray-600 hover:bg-gray-50 transition-colors duration-150">
+                <i class="fa fa-angle-double-left"></i>
+              </a>
+              <a href="?page={{ page_obj.previous_page_number }}&keyword={{ request.GET.keyword }}" class="px-3 py-1.5 rounded-lg border border-gray-200 text-gray-600 hover:bg-gray-50 transition-colors duration-150">
+                <i class="fa fa-angle-left"></i>
+              </a>
+            {% endif %}
+            
+            {% for num in page_obj.paginator.page_range %}
+              {% if page_obj.number == num %}
+                <span class="px-3 py-1.5 rounded-lg bg-primary text-white">{{ num }}</span>
+              {% elif num > page_obj.number|add:'-3' and num < page_obj.number|add:'3' %}
+                <a href="?page={{ num }}&keyword={{ request.GET.keyword }}" class="px-3 py-1.5 rounded-lg border border-gray-200 text-gray-600 hover:bg-gray-50 transition-colors duration-150">
+                  {{ num }}
+                </a>
+              {% endif %}
+            {% endfor %}
+            
+            {% if page_obj.has_next %}
+              <a href="?page={{ page_obj.next_page_number }}&keyword={{ request.GET.keyword }}" class="px-3 py-1.5 rounded-lg border border-gray-200 text-gray-600 hover:bg-gray-50 transition-colors duration-150">
+                <i class="fa fa-angle-right"></i>
+              </a>
+              <a href="?page={{ page_obj.paginator.num_pages }}&keyword={{ request.GET.keyword }}" class="px-3 py-1.5 rounded-lg border border-gray-200 text-gray-600 hover:bg-gray-50 transition-colors duration-150">
+                <i class="fa fa-angle-double-right"></i>
+              </a>
+            {% endif %}
           </div>
         </div>
-  
-      </section>
-      <!-- /.content -->
-  {% endblock %}
-  
-  
+      </div>
+    </div>
+  </div>
+</section>
+{% endblock %}    
