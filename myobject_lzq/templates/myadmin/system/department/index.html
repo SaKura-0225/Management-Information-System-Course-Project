@@ -1,5 +1,6 @@
 {% extends 'myadmin/base.html' %}
 {% block main_body %}
+<<<<<<< HEAD
 <!-- 优化后的内容头部区域 -->
 <section class="content-header bg-white rounded-xl shadow-sm p-6 mb-6">
   <div class="flex flex-col md:flex-row md:items-center justify-between">
@@ -67,9 +68,47 @@
           <p class="text-gray-500">暂无员工</p>
         </div>
         {% endif %}
+=======
+<section class="content-header">
+  <h1>部门管理</h1>
+  <ol class="breadcrumb">
+    <li><a href="#"><i class="fa fa-dashboard"></i> 首页</a></li>
+    <li class="active">部门管理</li>
+  </ol>
+</section>
+
+<section class="content container-fluid">
+  <div class="row">
+    {% for dept in departments %}
+    <div class="col-md-4">
+      <div class="box box-primary">
+        <div class="box-header with-border">
+          <h3 class="box-title">{{ dept.name }}</h3>
+        </div>
+        <div class="box-body">
+          {% if dept.employeeprofile_set.all %}
+          <ul class="list-group">
+            {% for emp in dept.employeeprofile_set.all %}
+            <li class="list-group-item">
+              <strong>{{ emp.user.get_full_name|default:emp.user.username }}</strong><br>
+              工号：{{ emp.work_no }}<br>
+              电话：{{ emp.phone|default:"-" }}<br>
+              岗位：{{ emp.post|default:"-" }}
+            </li>
+            {% endfor %}
+          </ul>
+          {% else %}
+          <p class="text-muted">暂无员工</p>
+          {% endif %}
+        </div>
+>>>>>>> 2c95d41e70eb474d1d97f9ad525e8f21e80c6c6e
       </div>
     </div>
     {% endfor %}
   </div>
 </section>
+<<<<<<< HEAD
 {% endblock %}    
+=======
+{% endblock %}
+>>>>>>> 2c95d41e70eb474d1d97f9ad525e8f21e80c6c6e

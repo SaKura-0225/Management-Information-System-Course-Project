@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 {% extends 'myadmin/base.html' %}
 {% block main_body %}
 <!-- 优化后的内容头部区域 -->
@@ -57,3 +58,11 @@
   </div>
 </div>
 {% endblock %}    
+=======
+<h2>新增员工</h2>
+<form method="post">
+  {% csrf_token %}
+  {{ form.as_p }}
+  <button type="submit">保存</button>
+</form>
+>>>>>>> 2c95d41e70eb474d1d97f9ad525e8f21e80c6c6e

@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 {% extends 'myadmin/base.html' %}
 {% block main_body %}
 {% load labels %}
@@ -77,3 +78,30 @@
   </div>
 </div>
 {% endblock %}    
+=======
+
+{% extends 'myadmin/base.html' %}
+{% block main_body %}
+{% load labels %}
+<h2>编辑权限组：{{ group.name }}</h2>
+<form method="post">
+  {% csrf_token %}
+  <div class="form-group">
+    <label>分配权限（仅限 myadmin 应用）：</label><br>
+    {% for perm in permissions %}
+      <div class="checkbox">
+        <label>
+          <input type="checkbox" name="permissions" value="{{ perm.id }}"
+            {% if perm.id in current_permissions %}checked{% endif %}>
+            {{ perm.codename|perm_label }}
+        </label>
+      </div>
+    {% empty %}
+      <p class="text-muted">暂无可用权限</p>
+    {% endfor %}
+  </div>
+  <button type="submit" class="btn btn-primary">保存</button>
+  <a href="{% url 'myadmin_system_permission_index' %}" class="btn btn-default">取消</a>
+</form>
+{% endblock %}
+>>>>>>> 2c95d41e70eb474d1d97f9ad525e8f21e80c6c6e
