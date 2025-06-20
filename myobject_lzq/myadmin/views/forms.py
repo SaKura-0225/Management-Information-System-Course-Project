@@ -10,7 +10,7 @@ from myadmin.models import WmsOrders,WmsOutbound
 from myadmin.models import WmsOrders,WmsOutbound,WmsOrdersDetail
 >>>>>>> 9851b42 (基本完成订单管理，出库管理和系统管理)
 from django.contrib.auth.models import User, Group
-from myadmin.models import EmployeeProfile, Department
+from myadmin.models import MyadminEmployeeprofile, Department
 
 class AddOrdersInfoForm(forms.ModelForm):
     class Meta:
@@ -82,7 +82,11 @@ class UserForm(forms.ModelForm):
 class EmployeeForm(forms.ModelForm):
     class Meta:
 <<<<<<< HEAD
+<<<<<<< HEAD
         model = EmployeeProfile
+=======
+        model = MyadminEmployeeprofile
+>>>>>>> 6c0dbd3 (添加模型)
         fields = ['department', 'work_no', 'phone']
 
 
