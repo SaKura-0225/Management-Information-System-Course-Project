@@ -1,5 +1,3 @@
-<<<<<<< HEAD
-<<<<<<< HEAD
 {% extends 'myadmin/base.html' %}
 {% block main_body %}
 {% load labels %}
@@ -115,40 +113,3 @@
   </div>
 </div>
 {% endblock %}
-=======
-权限管理
->>>>>>> f7fabbd (消除原始代码影响1)
-=======
-{% extends 'myadmin/base.html' %}
-{% block main_body %}
-{% load labels %}
-<h2>权限组管理</h2>
-
-<table class="table table-bordered">
-  <thead>
-    <tr>
-      <th>组名</th>
-      <th>已有权限</th>
-      <th>操作</th>
-    </tr>
-  </thead>
-  <tbody>
-    {% for group in groups %}
-    <tr>
-      <td>{{ group.group.name }}</td>
-      <td>
-        {% for perm in group.permissions.all %}
-          <span class="label label-info">{{ perm.codename|perm_label }}</span>
-        {% empty %}
-          <span class="text-muted">暂无权限</span>
-        {% endfor %}
-      </td>
-      <td>
-        <a href="{% url 'myadmin_system_permission_edit' group.group.id %}" class="btn btn-sm btn-primary">编辑权限</a>
-      </td>
-    </tr>
-    {% endfor %}
-  </tbody>
-</table>
-{% endblock %}
->>>>>>> dd7dd62 (系统管理功能1)

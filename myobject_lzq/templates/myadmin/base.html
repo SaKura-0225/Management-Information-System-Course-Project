@@ -119,7 +119,6 @@
           </div>
         </div>
       </div>
-<<<<<<< HEAD
     </div>
     
     <!-- 导航菜单 -->
@@ -130,43 +129,14 @@
           <a href="{% url 'myadmin_index' %}" class="sidebar-item-active flex items-center px-3 py-2.5 rounded-md text-sm font-medium">
             <i class="fa fa-home w-5 text-center"></i>
             <span>首页</span>
-=======
-
-      <!-- Sidebar Menu -->
-      <ul class="sidebar-menu" data-widget="tree">
-        <li class="header">主要导航</li>
-        <!-- 导航列表，你可以自行更改图标 -->
-        <li class="active"><a href="{% url 'myadmin_index' %}"><i class="fa fa-home"></i> <span>首页</span></a></li>
-<<<<<<< HEAD
-        <li><a href="{% url 'myadmin_shop_index'%}"><i class="fa fa-users"></i> <span>储位管理</span></a></li>
-        <li><a href="{% url 'myadmin_shop_index'%}"><i class="fa fa-sitemap"></i> <span>店铺管理</span></a></li>
-        <li class="treeview">
-          <a href="category.html"><i class="fa fa-cutlery"></i> <span>菜品管理</span>
-            <span class="pull-right-container">
-              <i class="fa fa-angle-left pull-right"></i>
-            </span>
->>>>>>> f7fabbd (消除原始代码影响1)
           </a>
         </li>
-<<<<<<< HEAD
         <li>
           <a href="{% url 'myadmin_order_index'%}" class="sidebar-item-hover flex items-center px-3 py-2.5 rounded-md text-sm font-medium text-gray-700 hover:text-primary">
             <i class="fa fa-users w-5 text-center"></i>
             <span>储位管理</span>
-=======
-=======
-        <li><a href="{% url 'myadmin_order_index'%}"><i class="fa fa-users"></i> <span>储位管理</span></a></li>
->>>>>>> 1999e5d (消除原始代码影响2)
-        {% if perms.myadmin.view_wmsoutbound %}
-        <li class="treeview">
-          <a href="category.html"><i class="fa fa-cutlery"></i> <span>出入库管理</span>
-            <span class="pull-right-container">
-              <i class="fa fa-angle-left pull-right"></i>
-            </span>
->>>>>>> dd7dd62 (系统管理功能1)
           </a>
         </li>
-<<<<<<< HEAD
         {% if perms.myadmin.view_wmsoutbound %}
         <li>
           <div class="nav-dropdown">
@@ -213,34 +183,6 @@
               </a>
             </div>
           </div>
-=======
-        {% endif %}
-        {% if perms.myadmin.view_wmsorders %}
-        <li class="treeview">
-          <a href="category.html"><i class="fa fa-cutlery"></i> <span>订单管理</span>
-            <span class="pull-right-container">
-              <i class="fa fa-angle-left pull-right"></i>
-            </span>
-          </a>
-          <ul class="treeview-menu">
-            <li><a href="{% url 'myadmin_order_index'%}"> <i class="fa fa-circle-o"></i> 销售订单管理</a></li>
-            <li><a href="{% url 'myadmin_order_detail_view'%}"> <i class="fa fa-circle-o"></i> 销售订单详情</a></li>
-            <li><a href="{% url 'myadmin_order_index'%}"> <i class="fa fa-circle-o"></i> 采购订单管理</a></li>
-            <li><a href="{% url 'myadmin_order_index'%}"> <i class="fa fa-circle-o"></i> 采购订单详情</a></li>
-          </ul>
-        </li>
-        {% endif %}
-        <li class="treeview">
-          <a href="category.html"><i class="fa fa-cutlery"></i> <span>报表分析</span>
-            <span class="pull-right-container">
-              <i class="fa fa-angle-left pull-right"></i>
-            </span>
-          </a>
-          <ul class="treeview-menu">
-            <li><a href="{% url 'myadmin_order_index'%}"> <i class="fa fa-circle-o"></i> 出货型号前十</a></li>
-            <li><a href="{% url 'myadmin_order_index'%}"> <i class="fa fa-circle-o"></i> 出货色号前十</a></li>
-          </ul>
->>>>>>> dd7dd62 (系统管理功能1)
         </li>
         {% endif %}
         <li>
@@ -284,26 +226,8 @@
             </div>
           </div>
         </li>
-<<<<<<< HEAD
       </ul>
     </nav>
-=======
-        <li class="treeview">
-          <a href="category.html"><i class="fa fa-cutlery"></i> <span>系统管理</span>
-            <span class="pull-right-container">
-              <i class="fa fa-angle-left pull-right"></i>
-            </span>
-          </a>
-          <ul class="treeview-menu">
-            <li><a href="{% url 'myadmin_system_employee_index'%}"> <i class="fa fa-circle-o"></i> 员工管理</a></li>
-            <li><a href="{% url 'myadmin_system_department_index'%}"> <i class="fa fa-circle-o"></i> 部门管理</a></li>
-            <li><a href="{% url 'myadmin_system_permission_index'%}"> <i class="fa fa-circle-o"></i> 权限管理</a></li>
-          </ul>
-        </li>
-      <!-- /.sidebar-menu -->
-    </section>
-    <!-- /.sidebar -->
->>>>>>> f7fabbd (消除原始代码影响1)
   </aside>
 
   <!-- 主内容区域 -->

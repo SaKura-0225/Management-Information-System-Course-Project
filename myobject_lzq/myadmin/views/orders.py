@@ -19,7 +19,7 @@ def index(request):
     if kw:
         order_list = order_list.filter(orders_id__icontains=kw)
     
-    paginator = Paginator(order_list, 4)
+    paginator = Paginator(order_list, 50)
     page_number = request.GET.get("page")
     page_obj = paginator.get_page(page_number)
 
@@ -77,21 +77,6 @@ def delete_orders(request, orders_id):
     return render(request, 'myadmin/orders/delete.html', {'order': order})
 
 
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
-'''
-def order_detail_view(request):
-    # 获取指定订单编号下的所有商品明细行
-    details = OrdersDetailWithDates.objects.all()
-    # 可选：计算订单总价、总数量等
-    return render(request, 'myadmin/orders/order_detail_view.html', {
-        'details': details
-    })
-'''
->>>>>>> f7fabbd (消除原始代码影响1)
-=======
->>>>>>> 9851b42 (基本完成订单管理，出库管理和系统管理)
 
 def order_detail_view(request):
     keyword = request.GET.get('keyword', '').strip()

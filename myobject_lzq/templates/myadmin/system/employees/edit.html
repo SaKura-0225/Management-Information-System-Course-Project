@@ -1,7 +1,4 @@
-<!-- templates/myadmin/system/employee/edit.html -->
 {% extends 'myadmin/base.html' %}
-<<<<<<< HEAD
-<<<<<<< HEAD
 {% block main_body %}
 <!-- 优化后的内容头部区域 -->
 <section class="content-header bg-white rounded-xl shadow-sm p-6 mb-6">
@@ -64,27 +61,3 @@
   </div>
 </div>
 {% endblock %}    
-=======
-
-=======
->>>>>>> 1999e5d (消除原始代码影响2)
-{% block main_body %}
-<h2>编辑员工信息</h2>
-
-<form method="post">
-  {% csrf_token %}
-  <fieldset>
-    <legend>员工信息</legend>
-    {{ uform.as_p }}
-    {{ eform.as_p }}
-  </fieldset>
-
-  <button type="submit" class="btn btn-primary">保存</button>
-  <a href="{% url 'myadmin_system_employee_index' %}" class="btn btn-default">取消</a>
-</form>
-{% endblock %}
-<<<<<<< HEAD
->>>>>>> dd7dd62 (系统管理功能1)
-=======
-
->>>>>>> 1999e5d (消除原始代码影响2)

@@ -1,6 +1,5 @@
 {% extends 'myadmin/base.html' %}
 {% block main_body %}
-<<<<<<< HEAD
 <!-- 优化后的内容头部区域 -->
 <section class="content-header bg-white rounded-xl shadow-sm p-6 mb-6">
   <div class="flex flex-col md:flex-row md:items-center justify-between">
@@ -63,13 +62,3 @@
   </div>
 </section>
 {% endblock %}    
-=======
-<h3>{% if form.instance.pk %}编辑{% else %}新增{% endif %}订单明细（订单号：{{ order.orders_id }}）</h3>
-<form method="post">
-  {% csrf_token %}
-  {{ form.as_p }}
-  <button type="submit" class="btn btn-primary">保存</button>
-  <a href="{% url 'myadmin_order_detail_view' %}" class="btn btn-default">取消</a>
-</form>
-{% endblock %}
->>>>>>> 9851b42 (基本完成订单管理，出库管理和系统管理)
