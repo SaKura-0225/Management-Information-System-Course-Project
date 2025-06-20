@@ -1,32 +1,115 @@
 {% extends 'myadmin/base.html' %}
 {% block main_body %}
 {% load labels %}
-<h2>权限组管理</h2>
+<!-- 优化后的内容头部区域 -->
+<section class="content-header bg-white rounded-xl shadow-sm p-6 mb-6">
+  <div class="flex flex-col md:flex-row md:items-center justify-between">
+    <div>
+      <h1 class="text-[clamp(1.5rem,3vw,2rem)] font-semibold text-dark">权限组管理</h1>
+      <p class="text-gray-500 text-sm">管理系统中的权限组与权限分配</p>
+    </div>
 
-<table class="table table-bordered">
-  <thead>
-    <tr>
-      <th>组名</th>
-      <th>已有权限</th>
-      <th>操作</th>
-    </tr>
-  </thead>
-  <tbody>
-    {% for group in groups %}
-    <tr>
-      <td>{{ group.group.name }}</td>
-      <td>
-        {% for perm in group.permissions.all %}
-          <span class="label label-info">{{ perm.codename|perm_label }}</span>
-        {% empty %}
-          <span class="text-muted">暂无权限</span>
+
+  </div>
+  
+  <!-- 面包屑导航 -->
+  <div class="mt-4 flex items-center text-sm text-gray-500">
+    <a href="#" class="hover:text-primary flex items-center">
+      <i class="fa fa-dashboard mr-1"></i> 首页
+    </a>
+    <i class="fa fa-angle-right mx-2 text-xs"></i>
+    <span class="text-dark font-medium">权限组管理</span>
+  </div>
+</section>
+
+<!-- 权限组列表 -->
+<div class="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
+  <!-- 搜索和筛选 -->
+  <div class="p-6 border-b border-gray-100 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+    <div class="flex-1 w-full sm:w-auto">
+      <div class="relative">
+        <span class="absolute inset-y-0 left-0 flex items-center pl-3">
+          <i class="fa fa-search text-gray-400"></i>
+        </span>
+        <input type="text" placeholder="搜索权限组..." class="pl-10 pr-4 py-2 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary text-sm w-full sm:w-64">
+      </div>
+    </div>
+    <div class="flex space-x-2">
+      <button class="px-4 py-2 bg-gray-100 text-gray-700 rounded-lg text-sm hover:bg-gray-200 transition-colors duration-150 flex items-center">
+        <i class="fa fa-filter mr-1"></i> 筛选
+      </button>
+      <button class="px-4 py-2 bg-gray-100 text-gray-700 rounded-lg text-sm hover:bg-gray-200 transition-colors duration-150 flex items-center">
+        <i class="fa fa-sort mr-1"></i> 排序
+      </button>
+    </div>
+  </div>
+  
+  <!-- 列表内容 -->
+  <div class="overflow-x-auto">
+    <table class="w-full text-sm text-left">
+      <thead class="bg-gray-50 text-xs uppercase text-gray-500">
+        <tr>
+          <th class="px-6 py-3 font-medium">组名</th>
+          <th class="px-6 py-3 font-medium">已有权限</th>
+          <th class="px-6 py-3 font-medium text-right">操作</th>
+        </tr>
+      </thead>
+      <tbody class="divide-y divide-gray-100">
+        {% for group in groups %}
+        <tr class="hover:bg-gray-50 transition-colors duration-100">
+          <td class="px-6 py-4 whitespace-nowrap">
+            <div class="flex items-center">
+              <div class="w-8 h-8 bg-primary/10 rounded-md flex items-center justify-center text-primary mr-3">
+                <i class="fa fa-shield"></i>
+              </div>
+              <span class="font-medium text-dark">{{ group.group.name }}</span>
+            </div>
+          </td>
+          <td class="px-6 py-4">
+            <div class="flex flex-wrap gap-2">
+              {% for perm in group.permissions.all %}
+                <span class="px-2 py-1 bg-primary/10 text-primary text-xs rounded-full">
+                  {{ perm.codename|perm_label }}
+                </span>
+              {% empty %}
+                <span class="text-gray-400 text-sm">暂无权限</span>
+              {% endfor %}
+            </div>
+          </td>
+          <td class="px-6 py-4 whitespace-nowrap text-right">
+            <div class="flex justify-end space-x-2">
+              <a href="{% url 'myadmin_system_permission_edit' group.group.id %}" class="p-2 bg-primary/10 text-primary rounded-md hover:bg-primary/20 transition-colors duration-150">
+                <i class="fa fa-edit"></i>
+              </a>
+
+            </div>
+          </td>
+        </tr>
         {% endfor %}
-      </td>
-      <td>
-        <a href="{% url 'myadmin_system_permission_edit' group.group.id %}" class="btn btn-sm btn-primary">编辑权限</a>
-      </td>
-    </tr>
-    {% endfor %}
-  </tbody>
-</table>
+      </tbody>
+    </table>
+  </div>
+  
+  <!-- 分页 -->
+  <div class="p-6 border-t border-gray-100 flex flex-col sm:flex-row justify-between items-center">
+    <div class="text-sm text-gray-500 mb-4 sm:mb-0">
+      显示 {{ groups.start_index }} 到 {{ groups.end_index }} 共 {{ groups.paginator.count }} 条记录
+    </div>
+    <div class="flex items-center space-x-2">
+      <a href="#" class="px-3 py-1 rounded-md border border-gray-200 text-gray-500 hover:bg-gray-50 transition-colors duration-150">
+        <i class="fa fa-angle-left"></i>
+      </a>
+      {% for page in groups.paginator.page_range %}
+        {% if page == groups.number %}
+          <a href="#" class="px-3 py-1 rounded-md bg-primary text-white">{{ page }}</a>
+        {% else %}
+          <a href="?page={{ page }}" class="px-3 py-1 rounded-md border border-gray-200 text-gray-700 hover:bg-gray-50 transition-colors duration-150">{{ page }}</a>
+        {% endif %}
+      {% endfor %}
+      <a href="#" class="px-3 py-1 rounded-md border border-gray-200 text-gray-500 hover:bg-gray-50 transition-colors duration-150">
+        <i class="fa fa-angle-right"></i>
+      </a>
+    </div>
+  </div>
+</div>
 {% endblock %}

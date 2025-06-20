@@ -1,48 +1,120 @@
 {% extends 'myadmin/base.html' %}
 {% block main_body %}
+<!-- 优化后的内容头部区域 -->
+<section class="content-header bg-white rounded-xl shadow-sm p-6 mb-6">
+  <div class="flex flex-col md:flex-row md:items-center justify-between">
+    <div>
+      <h1 class="text-[clamp(1.5rem,3vw,2rem)] font-semibold text-dark">订单详情</h1>
+      <p class="text-gray-500 text-sm">订单编号：#{{ order.orders_id }}</p>
+    </div>
+    <div class="mt-4 md:mt-0 flex space-x-2">
+      <a href="{% url 'myadmin_order_detail_add' order.orders_id %}" class="bg-success hover:bg-success/90 text-white px-4 py-2 rounded-lg flex items-center space-x-2 transition-all duration-200 shadow-sm hover:shadow">
+        <i class="fa fa-plus"></i>
+        <span>添加明细</span>
+      </a>
+      <a href="{% url 'myadmin_order_index' %}" class="bg-gray-100 hover:bg-gray-200 text-gray-700 px-4 py-2 rounded-lg flex items-center space-x-2 transition-all duration-200">
+        <i class="fa fa-arrow-left"></i>
+        <span>返回订单列表</span>
+      </a>
+    </div>
+  </div>
+  
+  <!-- 面包屑导航 -->
+  <div class="mt-4 flex items-center text-sm text-gray-500">
+    <a href="#" class="hover:text-primary flex items-center">
+      <i class="fa fa-dashboard mr-1"></i> 首页
+    </a>
+    <i class="fa fa-angle-right mx-2 text-xs"></i>
+    <a href="{% url 'myadmin_order_index' %}" class="hover:text-primary">订单管理</a>
+    <i class="fa fa-angle-right mx-2 text-xs"></i>
+    <span class="text-dark font-medium">订单详情</span>
+  </div>
+</section>
 
-<div class='container'>
-  <h2>订单详情：#{{ order.orders_id }}</h2>
-  <p>下单时间：{{ order.create_at|date:"Y-m-d H:i" }}</p>
-  <p>订单类型：{{ order.category }}</p>
-  <p>总数量：{{ order.total_amount }}</p>
-
-  <table class="table table-bordered">
-    <thead>
-      <tr>
-        <th>商品编号</th>
-        <th>数量</th>
-        <th>单价</th>
-        <th>总价</th>
-        <th>状态</th>
-        <th>操作</th>
-      </tr>
-    </thead>
-    <tbody>
-      {% for detail in wms_orders_details %}
-      <tr>
-        <td>{{ detail.product_id }}</td>
-        <td>{{ detail.quantity }}</td>
-        <td>{{ detail.price }}</td>
-        <td>{{ detail.total_price }}</td>
-        <td>{{ detail.status }}</td>
-        <td>
-          <a href="{% url 'myadmin_order_detail_edit' detail.id %}" class="btn btn-sm btn-warning">编辑</a>
-          <a href="{% url 'myadmin_order_detail_delete' detail.id %}" class="btn btn-sm btn-danger">删除</a>
-        </td>
-      </tr>
-      {% empty %}
-      <tr>
-        <td colspan="6" class="text-muted text-center">无订单详情记录</td>
-      </tr>
-      {% endfor %}
-    </tbody>
-  </table>
-
-  <div class="mt-3">
-    <a href="{% url 'myadmin_order_detail_add' order.orders_id %}" class="btn btn-success">添加明细</a>
-    <a href="{% url 'myadmin_order_index' %}" class="btn btn-default">返回订单列表</a>
+<!-- 订单信息卡片 -->
+<div class="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden mb-6">
+  <div class="p-6">
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+      <div class="bg-gray-50 p-4 rounded-lg">
+        <h3 class="text-sm font-medium text-gray-500 mb-2">下单时间</h3>
+        <p class="text-dark font-medium">{{ order.create_at|date:"Y-m-d H:i" }}</p>
+      </div>
+      
+      <div class="bg-gray-50 p-4 rounded-lg">
+        <h3 class="text-sm font-medium text-gray-500 mb-2">订单类型</h3>
+        <p class="text-dark font-medium">
+          {% if order.category == 1 %}镇内订单
+          {% elif order.category == 2 %}镇外订单
+          {% else %}-{% endif %}
+        </p>
+      </div>
+      
+      <div class="bg-gray-50 p-4 rounded-lg">
+        <h3 class="text-sm font-medium text-gray-500 mb-2">总数量</h3>
+        <p class="text-dark font-medium">{{ order.total_amount }}</p>
+      </div>
+    </div>
   </div>
 </div>
 
-{% endblock %}
+<!-- 订单明细表格 -->
+<div class="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
+  <div class="overflow-x-auto">
+    <table class="w-full text-sm text-left">
+      <thead class="bg-gray-50 text-xs uppercase text-gray-500">
+        <tr>
+          <th class="px-6 py-4">商品编号</th>
+          <th class="px-6 py-4">数量</th>
+          <th class="px-6 py-4">单价</th>
+          <th class="px-6 py-4">总价</th>
+          <th class="px-6 py-4">状态</th>
+          <th class="px-6 py-4">操作</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for detail in wms_orders_details %}
+        <tr class="border-b border-gray-100 hover:bg-gray-50 transition-colors duration-150">
+          <td class="px-6 py-4 font-medium text-dark">{{ detail.product_id }}</td>
+          <td class="px-6 py-4">{{ detail.quantity }}</td>
+          <td class="px-6 py-4">{{ detail.price }}</td>
+          <td class="px-6 py-4 font-medium">{{ detail.total_price }}</td>
+          <td class="px-6 py-4">
+            {% if detail.status == "已完成" %}
+              <span class="px-2 py-1 text-xs rounded-full bg-green-100 text-green-800">已完成</span>
+            {% elif detail.status == "处理中" %}
+              <span class="px-2 py-1 text-xs rounded-full bg-yellow-100 text-yellow-800">处理中</span>
+            {% elif detail.status == "已取消" %}
+              <span class="px-2 py-1 text-xs rounded-full bg-red-100 text-red-800">已取消</span>
+            {% else %}
+              {{ detail.status }}
+            {% endif %}
+          </td>
+          <td class="px-6 py-4">
+            <div class="flex space-x-2">
+              <a href="{% url 'myadmin_order_detail_edit' detail.id %}" class="px-3 py-1 bg-warning/10 text-warning rounded-lg text-xs hover:bg-warning/20 transition-colors duration-150">
+                <i class="fa fa-pencil mr-1"></i> 编辑
+              </a>
+              <a href="{% url 'myadmin_order_detail_delete' detail.id %}" class="px-3 py-1 bg-danger/10 text-danger rounded-lg text-xs hover:bg-danger/20 transition-colors duration-150">
+                <i class="fa fa-trash mr-1"></i> 删除
+              </a>
+            </div>
+          </td>
+        </tr>
+        {% empty %}
+        <tr>
+          <td colspan="6" class="px-6 py-8 text-gray-500 text-center">
+            <div class="flex flex-col items-center justify-center">
+              <div class="w-12 h-12 bg-gray-100 rounded-full flex items-center justify-center mb-3">
+                <i class="fa fa-inbox text-gray-400"></i>
+              </div>
+              <p>无订单详情记录</p>
+            </div>
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
+
+{% endblock %}    

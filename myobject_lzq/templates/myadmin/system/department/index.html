@@ -1,40 +1,75 @@
 {% extends 'myadmin/base.html' %}
 {% block main_body %}
-<section class="content-header">
-  <h1>部门管理</h1>
-  <ol class="breadcrumb">
-    <li><a href="#"><i class="fa fa-dashboard"></i> 首页</a></li>
-    <li class="active">部门管理</li>
-  </ol>
+<!-- 优化后的内容头部区域 -->
+<section class="content-header bg-white rounded-xl shadow-sm p-6 mb-6">
+  <div class="flex flex-col md:flex-row md:items-center justify-between">
+    <div>
+      <h1 class="text-[clamp(1.5rem,3vw,2rem)] font-semibold text-dark">部门管理</h1>
+    </div>
+    <div class="mt-4 md:mt-0">
+      <a href="#" class="bg-primary hover:bg-primary/90 text-white px-4 py-3 rounded-lg flex items-center space-x-2 transition-all duration-200 shadow-sm hover:shadow">
+        <i class="fa fa-plus"></i>
+        <span class="hidden sm:inline">添加部门</span>
+      </a>
+    </div>
+  </div>
+  
+  <!-- 面包屑导航 -->
+  <div class="mt-4 flex items-center text-sm text-gray-500">
+    <a href="#" class="hover:text-primary flex items-center">
+      <i class="fa fa-dashboard mr-1"></i> 首页
+    </a>
+    <i class="fa fa-angle-right mx-2 text-xs"></i>
+    <span class="text-dark font-medium">部门管理</span>
+  </div>
 </section>
 
+<!-- Main content -->
 <section class="content container-fluid">
-  <div class="row">
+  <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
     {% for dept in departments %}
-    <div class="col-md-4">
-      <div class="box box-primary">
-        <div class="box-header with-border">
-          <h3 class="box-title">{{ dept.name }}</h3>
+    <div class="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden transition-all duration-200 hover:shadow">
+      <!-- 部门头部 -->
+      <div class="p-6 bg-primary/5 border-b border-gray-100">
+        <h3 class="text-lg font-semibold text-dark flex items-center">
+          <i class="fa fa-building-o text-primary mr-2"></i>
+          {{ dept.name }}
+        </h3>
+      </div>
+      
+      <!-- 部门员工列表 -->
+      <div class="p-6">
+        {% if dept.employeeprofile_set.all %}
+        <div class="space-y-4">
+          {% for emp in dept.employeeprofile_set.all %}
+          <div class="p-4 bg-gray-50 rounded-lg hover:bg-gray-100 transition-colors duration-150">
+            <div class="flex items-start">
+              <div class="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center text-primary mr-3">
+                <i class="fa fa-user"></i>
+              </div>
+              <div>
+                <h4 class="font-medium text-dark">{{ emp.user.get_full_name|default:emp.user.username }}</h4>
+                <div class="text-sm text-gray-500 mt-1">
+                  <p>工号：{{ emp.work_no }}</p>
+                  <p>电话：{{ emp.phone|default:"-" }}</p>
+                  <p>岗位：{{ emp.post|default:"-" }}</p>
+                </div>
+              </div>
+            </div>
+          </div>
+          {% endfor %}
         </div>
-        <div class="box-body">
-          {% if dept.employeeprofile_set.all %}
-          <ul class="list-group">
-            {% for emp in dept.employeeprofile_set.all %}
-            <li class="list-group-item">
-              <strong>{{ emp.user.get_full_name|default:emp.user.username }}</strong><br>
-              工号：{{ emp.work_no }}<br>
-              电话：{{ emp.phone|default:"-" }}<br>
-              岗位：{{ emp.post|default:"-" }}
-            </li>
-            {% endfor %}
-          </ul>
-          {% else %}
-          <p class="text-muted">暂无员工</p>
-          {% endif %}
+        {% else %}
+        <div class="py-8 text-center">
+          <div class="w-12 h-12 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-3">
+            <i class="fa fa-users text-gray-400"></i>
+          </div>
+          <p class="text-gray-500">暂无员工</p>
         </div>
+        {% endif %}
       </div>
     </div>
     {% endfor %}
   </div>
 </section>
-{% endblock %}
+{% endblock %}    

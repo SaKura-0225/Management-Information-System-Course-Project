@@ -1,10 +1,78 @@
 {% extends 'myadmin/base.html' %}
 {% block main_body %}
-<h3>删除订单明细</h3>
-<p>确定要删除订单 {{ detail.orders.orders_id }} 的明细（商品编号：{{ detail.product_id }}）吗？</p>
-<form method="post">
-  {% csrf_token %}
-  <button type="submit" class="btn btn-danger">确认删除</button>
-  <a href="{% url 'myadmin_order_detail_view' %}" class="btn btn-default">取消</a>
-</form>
-{% endblock %}
+<!-- 优化后的内容头部区域 -->
+<section class="content-header bg-white rounded-xl shadow-sm p-6 mb-6">
+  <div class="flex flex-col md:flex-row md:items-center justify-between">
+    <div>
+      <h1 class="text-[clamp(1.5rem,3vw,2rem)] font-semibold text-dark">删除订单明细</h1>
+      <p class="text-gray-500 text-sm">确认删除操作</p>
+    </div>
+    <div class="mt-4 md:mt-0">
+      <a href="{% url 'myadmin_order_detail_view' %}" class="px-4 py-2 bg-gray-100 text-gray-700 rounded-lg text-sm hover:bg-gray-200 transition-colors duration-150 flex items-center">
+        <i class="fa fa-arrow-left mr-1"></i> 返回列表
+      </a>
+    </div>
+  </div>
+  
+  <!-- 面包屑导航 -->
+  <div class="mt-4 flex items-center text-sm text-gray-500">
+    <a href="#" class="hover:text-primary flex items-center">
+      <i class="fa fa-dashboard mr-1"></i> 首页
+    </a>
+    <i class="fa fa-angle-right mx-2 text-xs"></i>
+    <a href="{% url 'myadmin_order_index' %}" class="hover:text-primary">订单管理</a>
+    <i class="fa fa-angle-right mx-2 text-xs"></i>
+    <a href="{% url 'myadmin_order_detail_view' %}" class="hover:text-primary">订单详情</a>
+    <i class="fa fa-angle-right mx-2 text-xs"></i>
+    <span class="text-dark font-medium">删除订单明细</span>
+  </div>
+</section>
+
+<!-- Main content -->
+<section class="content container-fluid">
+  <form method="post">
+    {% csrf_token %}
+    <div class="bg-white rounded-xl shadow-sm border border-red-100 overflow-hidden">
+      <!-- 警告图标 -->
+      <div class="bg-red-50 p-6 border-b border-red-100 flex items-center">
+        <div class="w-12 h-12 rounded-full bg-red-100 flex items-center justify-center text-red-500 mr-4">
+          <i class="fa fa-exclamation-triangle text-xl"></i>
+        </div>
+        <h3 class="text-lg font-semibold text-red-700">确认删除订单明细</h3>
+      </div>
+      
+      <!-- 订单信息 -->
+      <div class="p-6">
+        <div class="bg-gray-50 p-4 rounded-lg border border-gray-200">
+          <p class="text-gray-800">确定要删除订单 <strong>{{ detail.orders.orders_id }}</strong> 的明细（商品编号：<strong>{{ detail.product_id }}</strong>）吗？</p>
+        </div>
+        
+        <!-- 警告信息 -->
+        <div class="mt-6 p-4 bg-red-50 border border-red-200 rounded-lg">
+          <div class="flex items-start">
+            <div class="flex-shrink-0 pt-0.5">
+              <i class="fa fa-exclamation-circle text-red-500"></i>
+            </div>
+            <div class="ml-3">
+              <h3 class="text-sm font-medium text-red-800">重要警告</h3>
+              <div class="mt-2 text-sm text-red-700">
+                <p>此操作不可撤销，删除后将无法恢复该订单明细的所有数据。</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <!-- 按钮区域 -->
+      <div class="mt-8 pt-6 border-t border-gray-100 flex flex-col sm:flex-row justify-end space-y-4 sm:space-y-0 sm:space-x-4 p-6">
+        <a href="{% url 'myadmin_order_detail_view' %}" class="px-6 py-3 bg-gray-100 text-gray-700 rounded-lg text-sm font-medium hover:bg-gray-200 transition-colors duration-150 text-center">
+          取消
+        </a>
+        <button type="submit" class="px-6 py-3 bg-red-600 text-white rounded-lg text-sm font-medium hover:bg-red-700 transition-colors duration-150 text-center">
+          <i class="fa fa-trash mr-1"></i> 确认删除
+        </button>
+      </div>
+    </div>
+  </form>
+</section>
+{% endblock %}    

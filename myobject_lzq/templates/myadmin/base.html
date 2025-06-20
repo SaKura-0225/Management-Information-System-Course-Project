@@ -4,334 +4,454 @@
 <head>
   <meta charset="utf-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
-  <title>订餐系统后台管理</title>
-  <!-- 支持响应式布局 -->
-  <!-- 支持响应式布局 -->
-  <!-- 支持响应式布局 -->
+  <title>F布行后台管理系统</title>
   <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
-  <link rel="stylesheet" href="{% static 'myadmin/bower_components/bootstrap/dist/css/bootstrap.min.css'%}">
-  <!-- 象形字体 -->
-  <!-- 象形字体 -->
-  <!-- 象形字体 -->
-  <link rel="stylesheet" href="{% static 'myadmin/bower_components/font-awesome/css/font-awesome.min.css'%}">
-  <!-- 图标 -->
-  <link rel="stylesheet" href="{% static 'myadmin/bower_components/Ionicons/css/ionicons.min.css'%}">
-  <!-- 主题风格样式 -->
-  <link rel="stylesheet" href="{% static 'myadmin/dist/css/AdminLTE.min.css'%}">
-  <!-- AdminLTE 皮肤.这里选择的是skin-blue样式，我们还可以有其他皮肤可以选择. -->
-  <link rel="stylesheet" href="{% static 'myadmin/dist/css/skins/skin-blue.min.css'%}">
-  <!-- 兼容IE9以下浏览器 -->
-  <!--[if lt IE 9]>
-  <script src="{% static 'myadmin/local/js/html5shiv.min.js'%}"></script>
-  <script src="{% static 'myadmin/local/js/respond.min.js'%}"></script>
-  <![endif]-->
-  <!-- Google Font -->
-  <link rel="stylesheet" href="{% static 'myadmin/local/css/google_fonts.css'%}">
+  <!-- Tailwind CSS v3 -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Font Awesome -->
+  <link href="https://cdn.jsdelivr.net/npm/font-awesome@4.7.0/css/font-awesome.min.css" rel="stylesheet">
+  <!-- 自定义Tailwind配置 -->
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            primary: '#165DFF',
+            secondary: '#0FC6C2',
+            success: '#00B42A',
+            warning: '#FF7D00',
+            danger: '#F53F3F',
+            info: '#86909C',
+            light: '#F2F3F5',
+            dark: '#1D2129',
+          },
+          fontFamily: {
+            inter: ['Inter', 'system-ui', 'sans-serif'],
+          },
+        },
+      }
+    }
+  </script>
+  <style type="text/tailwindcss">
+    @layer utilities {
+      .content-auto {
+        content-visibility: auto;
+      }
+      .sidebar-item-active {
+        @apply bg-primary/10 text-primary border-l-4 border-primary;
+      }
+      .card-shadow {
+        @apply shadow-[0_2px_14px_0_rgba(0,0,0,0.06)];
+      }
+      .transition-sidebar {
+        transition: width 0.3s ease, left 0.3s ease;
+      }
+      .nav-link-hover {
+        @apply relative overflow-hidden;
+      }
+      .nav-link-hover::after {
+        content: '';
+        @apply absolute bottom-0 left-0 w-0 h-0.5 bg-primary transition-all duration-300;
+      }
+      .nav-link-hover:hover::after {
+        @apply w-full;
+      }
+      .sidebar-item-hover {
+        @apply relative overflow-hidden transition-all duration-300;
+      }
+      .sidebar-item-hover::before {
+        content: '';
+        @apply absolute left-0 top-0 h-full w-0 bg-primary/10 transition-all duration-300;
+      }
+      .sidebar-item-hover:hover::before {
+        @apply w-full;
+      }
+      .fade-in {
+        animation: fadeIn 0.5s ease-in-out;
+      }
+      @keyframes fadeIn {
+        from { opacity: 0; transform: translateY(10px); }
+        to { opacity: 1; transform: translateY(0); }
+      }
+      .scale-hover {
+        @apply transition-transform duration-300;
+      }
+      .scale-hover:hover {
+        @apply transform scale-105;
+      }
+      .pulse-hover {
+        @apply relative;
+      }
+      .pulse-hover::before {
+        content: '';
+        @apply absolute inset-0 rounded-full bg-primary/20 opacity-0 transition-opacity duration-300;
+      }
+      .pulse-hover:hover::before {
+        @apply opacity-100;
+      }
+    }
+  </style>
 </head>
-<body class="hold-transition skin-blue sidebar-mini">
-<div class="wrapper">
-
-  <!-- Main Header 主体页头 -->
-  <header class="main-header">
-
-    <!-- Logo -->
-    <a href="index2.html" class="logo">
-      <!-- 侧栏迷你徽标 mini 50x50 pixels -->
-      <span class="logo-mini"><b>餐</b></span>
-      <!-- 常规状态标志和移动设备标志 -->
-      <span class="logo-lg"><b>订餐系统后台管理</b></span>
-    </a>
-
-    <!-- Header Navbar 首部导航栏 -->
-    <nav class="navbar navbar-static-top" role="navigation">
-      <!-- Sidebar toggle button 侧边栏切换按钮 -->
-      <a href="#" class="sidebar-toggle" data-toggle="push-menu" role="button">
-        <span class="sr-only">切换导航</span>
-      </a>
-      <!-- 右栏菜单 -->
-      <div class="navbar-custom-menu">
-        <ul class="nav navbar-nav">
-          <!-- messages-menu 消息菜单: 样式可以在 dropdown.less 中找到 -->
-          <li class="dropdown messages-menu">
-            <!-- Menu toggle button 菜单切换按钮 -->
-            <a href="#" class="dropdown-toggle" data-toggle="dropdown">
-              <i class="fa fa-envelope-o"></i>
-              <span class="label label-success">4</span>
-            </a>
-            <ul class="dropdown-menu">
-              <li class="header">你有4个短信息</li>
-              <li>
-                <!-- 内部菜单：包含消息 -->
-                <ul class="menu">
-                  <li><!-- start message 信息开始 -->
-                    <a href="#">
-                      <div class="pull-left">
-                        <!-- User Image 使用图片 -->
-                        <img src="{% static 'dist/img/user2-160x160.jpg'%}" class="img-circle" alt="User Image">
-                      </div>
-                      <!-- 消息标题和时间 -->
-                      <h4>
-                        我们都支持团队
-                        <small><i class="fa fa-clock-o"></i> 5 分钟</small>
-                      </h4>
-                      <!-- The message -->
-                      <p>Why not buy a new awesome theme?</p>
-                    </a>
-                  </li>
-                  <!-- end message -->
-                </ul>
-                <!-- /.menu -->
-              </li>
-              <li class="footer"><a href="#">查看所有信息</a></li>
-            </ul>
-          </li>
-          <!-- /.messages-menu -->
-
-          <!-- Notifications Menu 通知菜单 -->
-          <li class="dropdown notifications-menu">
-            <!-- Menu toggle button  菜单切换按钮 -->
-            <a href="#" class="dropdown-toggle" data-toggle="dropdown">
-              <i class="fa fa-bell-o"></i>
-              <span class="label label-warning">10</span>
-            </a>
-            <ul class="dropdown-menu">
-              <li class="header">你有10条通知信息</li>
-              <li>
-                <!-- Inner Menu: contains the notifications -->
-                <ul class="menu">
-                  <li><!-- start notification -->
-                    <a href="#">
-                      <i class="fa fa-users text-aqua"></i> 今天有5名新成员加入
-                    </a>
-                  </li>
-                  <!-- end notification -->
-                </ul>
-              </li>
-              <li class="footer"><a href="#">查看全部</a></li>
-            </ul>
-          </li>
-          <!-- Tasks Menu 任务菜单 -->
-          <li class="dropdown tasks-menu">
-            <!-- Menu Toggle Button 菜单切换按钮 -->
-            <a href="#" class="dropdown-toggle" data-toggle="dropdown">
-              <i class="fa fa-flag-o"></i>
-              <span class="label label-danger">9</span>
-            </a>
-            <ul class="dropdown-menu">
-              <li class="header">你有9个任务</li>
-              <li>
-                <!-- Inner menu: contains the tasks -->
-                <ul class="menu">
-                  <li><!-- Task item -->
-                    <a href="#">
-                      <!-- Task title and progress text -->
-                      <h3>
-                        设计一些按钮
-                        <small class="pull-right">20%</small>
-                      </h3>
-                      <!-- The progress bar -->
-                      <div class="progress xs">
-                        <!-- Change the css width attribute to simulate progress -->
-                        <div class="progress-bar progress-bar-aqua" style="width: 20%" role="progressbar"
-                             aria-valuenow="20" aria-valuemin="0" aria-valuemax="100">
-                          <span class="sr-only">20% 完成</span>
-                        </div>
-                      </div>
-                    </a>
-                  </li>
-                  <!-- end task item -->
-                </ul>
-              </li>
-              <li class="footer">
-                <a href="#">查看所有任务</a>
-              </li>
-            </ul>
-          </li>
-          <!-- User Account Menu -->
-          <li class="dropdown user user-menu">
-            <!-- Menu Toggle Button -->
-            <a href="#" class="dropdown-toggle" data-toggle="dropdown">
-              <!-- The user image in the navbar-->
-              <img src="{% static 'dist/img/user2-160x160.jpg'%}" class="user-image" alt="User Image">
-              <!-- hidden-xs hides the username on small devices so only the image appears. -->
-              <span class="hidden-xs">{{request.session.adminuser.nickname}}</span>
-            </a>
-            <ul class="dropdown-menu">
-              <!-- The user image in the menu -->
-              <li class="user-header">
-                <img src="{% static 'dist/img/user2-160x160.jpg'%}" class="img-circle" alt="User Image">
-
-                <p>
-                 {{request.session.adminuser.nickname}}
-                  <small>{{request.session.adminuser.creat_at}}</small>
-                </p>
-              </li>
-              <!-- Menu Footer-->
-              <li class="user-footer">
-                <div class="pull-left">
-                  <a href="#" class="btn btn-default btn-flat">个人信息</a>
-                </div>
-                <div class="pull-right">
-                  <a href="{% url 'myadmin_logout' %}" class="btn btn-default btn-flat">退 出</a>
-                </div>
-              </li>
-            </ul>
-          </li>
-
-        </ul>
+<body class="font-inter bg-gray-50 text-dark min-h-screen flex flex-col">
+<div class="flex h-screen overflow-hidden">
+  <!-- 侧边栏 -->
+  <aside id="sidebar" class="w-64 bg-white border-r border-gray-200 shadow-sm transition-sidebar fixed inset-y-0 left-0 z-30">
+    <!-- Logo区域 -->
+    <div class="flex items-center justify-between h-16 px-4 border-b border-gray-200">
+      <div class="flex items-center space-x-2">
+        <div class="w-8 h-8 rounded-md bg-primary flex items-center justify-center text-white font-bold">餐</div>
+        <span class="text-lg font-semibold">订餐系统后台管理</span>
       </div>
-    </nav>
-  </header>
-
-  <!-- 左侧柱。包含徽标和边栏 -->
-  <aside class="main-sidebar">
-
-    <!-- sidebar: style can be found in sidebar.less -->
-    <section class="sidebar">
-
-      <!-- Sidebar user panel (optional) -->
-      <div class="user-panel">
-        <div class="pull-left image">
-          <img src="{% static 'myadmin/dist/img/222.jpg'%}" class="img-circle" alt="User Image">
-        </div>
-        <div class="pull-left info">
-          <p>{{request.session.adminuser.nickname}}</p>
-          <!-- Status -->
-          <a href="#"><i class="fa fa-circle text-success"></i> 在线</a>
+      <button id="sidebar-toggle" class="lg:hidden text-gray-500 hover:text-primary">
+        <i class="fa fa-bars"></i>
+      </button>
+    </div>
+    
+    <!-- 用户信息 -->
+    <div class="p-4 border-b border-gray-200">
+      <div class="flex items-center space-x-3">
+        <img src="{% static 'myadmin/dist/img/222.jpg'%}" alt="用户头像" class="w-10 h-10 rounded-full object-cover border-2 border-primary scale-hover">
+        <div>
+          <p class="font-medium">{{request.session.adminuser.nickname}}</p>
+          <div class="flex items-center text-xs text-success">
+            <span class="w-2 h-2 rounded-full bg-success mr-1"></span>
+            在线
+          </div>
         </div>
       </div>
-
-      <!-- Sidebar Menu -->
-      <ul class="sidebar-menu" data-widget="tree">
-        <li class="header">主要导航</li>
-        <!-- 导航列表，你可以自行更改图标 -->
-        <li class="active"><a href="{% url 'myadmin_index' %}"><i class="fa fa-home"></i> <span>首页</span></a></li>
-        <li><a href="{% url 'myadmin_order_index'%}"><i class="fa fa-users"></i> <span>储位管理</span></a></li>
-        {% if perms.myadmin.view_wmsoutbound %}
-        <li class="treeview">
-          <a href="category.html"><i class="fa fa-cutlery"></i> <span>出入库管理</span>
-            <span class="pull-right-container">
-              <i class="fa fa-angle-left pull-right"></i>
-            </span>
+    </div>
+    
+    <!-- 导航菜单 -->
+    <nav class="p-2 overflow-y-auto h-[calc(100vh-144px)]">
+      <div class="text-xs font-semibold text-gray-500 uppercase tracking-wider px-3 py-2 mb-1">主要导航</div>
+      <ul class="space-y-1">
+        <li>
+          <a href="{% url 'myadmin_index' %}" class="sidebar-item-active flex items-center px-3 py-2.5 rounded-md text-sm font-medium">
+            <i class="fa fa-home w-5 text-center"></i>
+            <span>首页</span>
           </a>
-          <ul class="treeview-menu">
-            <li><a href="{% url 'myadmin_warehouse-flow_outbound'%}"> <i class="fa fa-circle-o"></i> 出库管理</a></li>
-            <li><a href="{% url 'myadmin_warehouse-flow_inbound'%}"> <i class="fa fa-circle-o"></i> 入库管理</a></li>
-          </ul>
+        </li>
+        <li>
+          <a href="{% url 'myadmin_order_index'%}" class="sidebar-item-hover flex items-center px-3 py-2.5 rounded-md text-sm font-medium text-gray-700 hover:text-primary">
+            <i class="fa fa-users w-5 text-center"></i>
+            <span>储位管理</span>
+          </a>
+        </li>
+        {% if perms.myadmin.view_wmsoutbound %}
+        <li>
+          <div class="nav-dropdown">
+            <button class="sidebar-item-hover flex items-center justify-between w-full px-3 py-2.5 rounded-md text-sm font-medium text-gray-700 hover:text-primary">
+              <div class="flex items-center">
+                <i class="fa fa-cutlery w-5 text-center"></i>
+                <span>出入库管理</span>
+              </div>
+              <i class="fa fa-angle-left transition-transform duration-200"></i>
+            </button>
+            <div class="nav-dropdown-content hidden pl-10 mt-1 space-y-1">
+              <a href="{% url 'myadmin_warehouse-flow_outbound'%}" class="block px-3 py-2 rounded-md text-sm text-gray-600 hover:bg-gray-100 hover:text-primary transition-colors duration-200">
+                <i class="fa fa-circle-o mr-1"></i> 出库管理
+              </a>
+              <a href="{% url 'myadmin_warehouse-flow_inbound'%}" class="block px-3 py-2 rounded-md text-sm text-gray-600 hover:bg-gray-100 hover:text-primary transition-colors duration-200">
+                <i class="fa fa-circle-o mr-1"></i> 入库管理
+              </a>
+            </div>
+          </div>
         </li>
         {% endif %}
         {% if perms.myadmin.view_wmsorders %}
-        <li class="treeview">
-          <a href="category.html"><i class="fa fa-cutlery"></i> <span>订单管理</span>
-            <span class="pull-right-container">
-              <i class="fa fa-angle-left pull-right"></i>
-            </span>
-          </a>
-          <ul class="treeview-menu">
-            <li><a href="{% url 'myadmin_order_index'%}"> <i class="fa fa-circle-o"></i> 销售订单管理</a></li>
-            <li><a href="{% url 'myadmin_order_detail_view'%}"> <i class="fa fa-circle-o"></i> 销售订单详情</a></li>
-            <li><a href="{% url 'myadmin_order_index'%}"> <i class="fa fa-circle-o"></i> 采购订单管理</a></li>
-            <li><a href="{% url 'myadmin_order_index'%}"> <i class="fa fa-circle-o"></i> 采购订单详情</a></li>
-          </ul>
+        <li>
+          <div class="nav-dropdown">
+            <button class="sidebar-item-hover flex items-center justify-between w-full px-3 py-2.5 rounded-md text-sm font-medium text-gray-700 hover:text-primary">
+              <div class="flex items-center">
+                <i class="fa fa-cutlery w-5 text-center"></i>
+                <span>订单管理</span>
+              </div>
+              <i class="fa fa-angle-left transition-transform duration-200"></i>
+            </button>
+            <div class="nav-dropdown-content hidden pl-10 mt-1 space-y-1">
+              <a href="{% url 'myadmin_order_index'%}" class="block px-3 py-2 rounded-md text-sm text-gray-600 hover:bg-gray-100 hover:text-primary transition-colors duration-200">
+                <i class="fa fa-circle-o mr-1"></i> 销售订单管理
+              </a>
+              <a href="{% url 'myadmin_order_detail_view'%}" class="block px-3 py-2 rounded-md text-sm text-gray-600 hover:bg-gray-100 hover:text-primary transition-colors duration-200">
+                <i class="fa fa-circle-o mr-1"></i> 销售订单详情
+              </a>
+              <a href="{% url 'myadmin_order_index'%}" class="block px-3 py-2 rounded-md text-sm text-gray-600 hover:bg-gray-100 hover:text-primary transition-colors duration-200">
+                <i class="fa fa-circle-o mr-1"></i> 采购订单管理
+              </a>
+              <a href="{% url 'myadmin_order_index'%}" class="block px-3 py-2 rounded-md text-sm text-gray-600 hover:bg-gray-100 hover:text-primary transition-colors duration-200">
+                <i class="fa fa-circle-o mr-1"></i> 采购订单详情
+              </a>
+            </div>
+          </div>
         </li>
         {% endif %}
-        <li class="treeview">
-          <a href="category.html"><i class="fa fa-cutlery"></i> <span>报表分析</span>
-            <span class="pull-right-container">
-              <i class="fa fa-angle-left pull-right"></i>
-            </span>
-          </a>
-          <ul class="treeview-menu">
-            <li><a href="{% url 'myadmin_order_index'%}"> <i class="fa fa-circle-o"></i> 出货型号前十</a></li>
-            <li><a href="{% url 'myadmin_order_index'%}"> <i class="fa fa-circle-o"></i> 出货色号前十</a></li>
-          </ul>
+        <li>
+          <div class="nav-dropdown">
+            <button class="sidebar-item-hover flex items-center justify-between w-full px-3 py-2.5 rounded-md text-sm font-medium text-gray-700 hover:text-primary">
+              <div class="flex items-center">
+                <i class="fa fa-cutlery w-5 text-center"></i>
+                <span>报表分析</span>
+              </div>
+              <i class="fa fa-angle-left transition-transform duration-200"></i>
+            </button>
+            <div class="nav-dropdown-content hidden pl-10 mt-1 space-y-1">
+              <a href="{% url 'myadmin_order_index'%}" class="block px-3 py-2 rounded-md text-sm text-gray-600 hover:bg-gray-100 hover:text-primary transition-colors duration-200">
+                <i class="fa fa-circle-o mr-1"></i> 出货型号前十
+              </a>
+              <a href="{% url 'myadmin_order_index'%}" class="block px-3 py-2 rounded-md text-sm text-gray-600 hover:bg-gray-100 hover:text-primary transition-colors duration-200">
+                <i class="fa fa-circle-o mr-1"></i> 出货色号前十
+              </a>
+            </div>
+          </div>
         </li>
-        <li class="treeview">
-          <a href="category.html"><i class="fa fa-cutlery"></i> <span>系统管理</span>
-            <span class="pull-right-container">
-              <i class="fa fa-angle-left pull-right"></i>
-            </span>
-          </a>
-          <ul class="treeview-menu">
-            <li><a href="{% url 'myadmin_system_employee_index'%}"> <i class="fa fa-circle-o"></i> 员工管理</a></li>
-            <li><a href="{% url 'myadmin_system_department_index'%}"> <i class="fa fa-circle-o"></i> 部门管理</a></li>
-            <li><a href="{% url 'myadmin_system_permission_index'%}"> <i class="fa fa-circle-o"></i> 权限管理</a></li>
-          </ul>
+        <li>
+          <div class="nav-dropdown">
+            <button class="sidebar-item-hover flex items-center justify-between w-full px-3 py-2.5 rounded-md text-sm font-medium text-gray-700 hover:text-primary">
+              <div class="flex items-center">
+                <i class="fa fa-cutlery w-5 text-center"></i>
+                <span>系统管理</span>
+              </div>
+              <i class="fa fa-angle-left transition-transform duration-200"></i>
+            </button>
+            <div class="nav-dropdown-content hidden pl-10 mt-1 space-y-1">
+              <a href="{% url 'myadmin_system_employee_index'%}" class="block px-3 py-2 rounded-md text-sm text-gray-600 hover:bg-gray-100 hover:text-primary transition-colors duration-200">
+                <i class="fa fa-circle-o mr-1"></i> 员工管理
+              </a>
+              <a href="{% url 'myadmin_system_department_index'%}" class="block px-3 py-2 rounded-md text-sm text-gray-600 hover:bg-gray-100 hover:text-primary transition-colors duration-200">
+                <i class="fa fa-circle-o mr-1"></i> 部门管理
+              </a>
+              <a href="{% url 'myadmin_system_permission_index'%}" class="block px-3 py-2 rounded-md text-sm text-gray-600 hover:bg-gray-100 hover:text-primary transition-colors duration-200">
+                <i class="fa fa-circle-o mr-1"></i> 权限管理
+              </a>
+            </div>
+          </div>
         </li>
-      <!-- /.sidebar-menu -->
-    </section>
-    <!-- /.sidebar -->
+      </ul>
+    </nav>
   </aside>
 
-  <!-- Content Wrapper. Contains page content -->
-  <div class="content-wrapper">
-    {% block main_body %}
-    {% endblock %}
+  <!-- 主内容区域 -->
+  <div class="flex-1 flex flex-col overflow-hidden ml-64 transition-all duration-300" id="main-content">
+    <!-- 顶部导航栏 -->
+    <header class="bg-white border-b border-gray-200 h-16 flex items-center justify-between px-6 shadow-sm">
+      <div class="flex items-center">
+        <button id="mobile-sidebar-toggle" class="mr-4 text-gray-500 lg:hidden">
+          <i class="fa fa-bars"></i>
+        </button>
+        <div class="relative">
+          <span class="absolute inset-y-0 left-0 flex items-center pl-3">
+            <i class="fa fa-search text-gray-400"></i>
+          </span>
+          <input type="text" placeholder="搜索..." class="pl-10 pr-4 py-2 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary text-sm w-64">
+        </div>
+      </div>
+      
+      <div class="flex items-center space-x-4">
+        <!-- 消息通知 -->
+        <div class="relative">
+          <button class="p-2 rounded-full hover:bg-gray-100 relative pulse-hover">
+            <i class="fa fa-envelope-o text-gray-600"></i>
+            <span class="absolute top-1 right-1 w-4 h-4 bg-success rounded-full flex items-center justify-center text-white text-xs">4</span>
+          </button>
+        </div>
+        
+        <!-- 系统通知 -->
+        <div class="relative">
+          <button class="p-2 rounded-full hover:bg-gray-100 relative pulse-hover">
+            <i class="fa fa-bell-o text-gray-600"></i>
+            <span class="absolute top-1 right-1 w-4 h-4 bg-warning rounded-full flex items-center justify-center text-white text-xs">10</span>
+          </button>
+        </div>
+        
+        <!-- 任务通知 -->
+        <div class="relative">
+          <button class="p-2 rounded-full hover:bg-gray-100 relative pulse-hover">
+            <i class="fa fa-flag-o text-gray-600"></i>
+            <span class="absolute top-1 right-1 w-4 h-4 bg-danger rounded-full flex items-center justify-center text-white text-xs">9</span>
+          </button>
+        </div>
+        
+        <!-- 用户菜单 -->
+        <div class="relative group">
+          <button class="flex items-center space-x-2 focus:outline-none">
+            <img src="{% static 'dist/img/user2-160x160.jpg'%}" alt="用户头像" class="w-8 h-8 rounded-full object-cover scale-hover">
+            <span class="text-sm font-medium hidden md:block">{{request.session.adminuser.nickname}}</span>
+            <i class="fa fa-angle-down text-gray-500"></i>
+          </button>
+          
+          <!-- 用户下拉菜单 -->
+          <div class="absolute right-0 mt-2 w-48 bg-white rounded-lg shadow-lg py-1 z-50 hidden group-hover:block fade-in">
+            <div class="px-4 py-2 border-b border-gray-100">
+              <p class="text-sm font-medium">{{request.session.adminuser.nickname}}</p>
+              <p class="text-xs text-gray-500">{{request.session.adminuser.creat_at}}</p>
+            </div>
+            <a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 nav-link-hover">
+              <i class="fa fa-user-o mr-2"></i> 个人信息
+            </a>
+            <a href="{% url 'myadmin_logout' %}" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 nav-link-hover">
+              <i class="fa fa-sign-out mr-2"></i> 退出登录
+            </a>
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <!-- 内容区域 -->
+    <main class="flex-1 overflow-y-auto p-6 bg-gray-50">
+      {% block main_body %}
+      {% endblock %}
+    </main>
+    
+    <!-- 页脚 -->
+    <footer class="bg-white border-t border-gray-200 py-4 px-6 text-sm text-gray-600">
+      <div class="flex flex-col md:flex-row justify-between items-center">
+        <div>
+          <strong>Copyright &copy; 2020 <a href="#" class="text-primary hover:underline nav-link-hover">北京****有限公司</a>.</strong> 版权所有
+        </div>
+        <div class="mt-2 md:mt-0">
+          系统版本: v1.0.0
+        </div>
+      </div>
+    </footer>
   </div>
-  <!-- /.content-wrapper -->
-
-  <!-- Main Footer -->
-  <footer class="main-footer">
-    <!-- To the right -->
-    <div class="pull-right hidden-xs">
-      <!--餐饮管理平台-->
-    </div>
-    <!-- Default to the left -->
-    <strong>Copyright &copy; 2020 <a href="#">北京****有限公司</a>.</strong> 版权所有
-  </footer>
-
-  <!-- 添加侧栏的背景。必须放置此处紧接在控制侧边栏之后 -->
-  <div class="control-sidebar-bg"></div>
 </div>
-<!-- ./wrapper -->
 
 <!-- edu-model提示框模板 -->
-<div id="edu-alert" class="modal">
-  <div class="modal-dialog modal-sm">
-    <div class="modal-content">
-      <div class="modal-header">
-        <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">×</span><span class="sr-only">Close</span></button>
-        <h5 class="modal-title"><i class="fa fa-exclamation-circle"></i> [Title]</h5>
-      </div>
-      <div class="modal-body small">
-        <p>[Message]</p>
-      </div>
-      <div class="modal-footer" >
-        <button type="button" class="btn btn-primary ok" data-dismiss="modal">[BtnOk]</button>
-        <button type="button" class="btn btn-default cancel" data-dismiss="modal">[BtnCancel]</button>
-      </div>
+<div id="edu-alert" class="fixed inset-0 flex items-center justify-center z-50 hidden">
+  <div class="absolute inset-0 bg-black bg-opacity-50 transition-opacity"></div>
+  <div class="relative bg-white rounded-lg shadow-xl w-full max-w-sm mx-4 transform transition-all">
+    <div class="p-4 border-b border-gray-200 flex items-center">
+      <i class="fa fa-exclamation-circle text-primary mr-2"></i>
+      <h3 class="text-lg font-medium" id="modal-title">[Title]</h3>
+      <button class="ml-auto text-gray-400 hover:text-gray-500" data-dismiss="modal">
+        <i class="fa fa-times"></i>
+      </button>
+    </div>
+    <div class="p-6 text-sm" id="modal-message">
+      <p>[Message]</p>
+    </div>
+    <div class="p-4 border-t border-gray-200 flex justify-end space-x-3">
+      <button class="px-4 py-2 border border-gray-300 rounded-md text-sm font-medium text-gray-700 hover:bg-gray-50" data-dismiss="modal" id="modal-cancel">
+        [BtnCancel]
+      </button>
+      <button class="px-4 py-2 bg-primary border border-transparent rounded-md text-sm font-medium text-white hover:bg-primary/90" id="modal-ok">
+        [BtnOk]
+      </button>
     </div>
   </div>
 </div>
-<!-- edu-model-end -->
 
-<!-- REQUIRED JS SCRIPTS -->
-
-<!-- jQuery 3 -->
-<script src="{% static 'myadmin/bower_components/jquery/dist/jquery.min.js'%}"></script>
-<!-- Bootstrap 3.3.7 -->
-<script src="{% static 'myadmin/bower_components/bootstrap/dist/js/bootstrap.min.js'%}"></script>
-<!-- AdminLTE App -->
-<script src="{% static 'myadmin/dist/js/adminlte.min.js'%}"></script>
-
-<script src="{% static 'myadmin/dist/js/edu-modal-alert-confirm.js'%}"></script>
-
-<!-- 此处可以添加SimLoopl和FastClick插件，用于增强用户体验。 -->
-
-<script type="text/javascript">
-  function doDel(url){
-    Modal.confirm({
-        msg: "确定要删除吗？",
-        title: ' 信息提示',
-        btnok: '确定',
-        btncl:'取消'
-      }).on(function (e){
-        if(e){
-          window.location.href=url;
-          // Modal.alert({msg: "成功删除",title: ' 信息提示',btnok: '确定',btncl:'取消'});
-        }
-      });
+<!-- JavaScript -->
+<script>
+  // 侧边栏下拉菜单
+  document.querySelectorAll('.nav-dropdown button').forEach(button => {
+    button.addEventListener('click', () => {
+      const dropdownContent = button.nextElementSibling;
+      const icon = button.querySelector('.fa-angle-left');
+      
+      // 切换下拉菜单显示状态
+      dropdownContent.classList.toggle('hidden');
+      
+      // 旋转箭头图标
+      if (!dropdownContent.classList.contains('hidden')) {
+        icon.style.transform = 'rotate(-90deg)';
+      } else {
+        icon.style.transform = 'rotate(0)';
+      }
+    });
+  });
+  
+  // 移动端侧边栏切换
+  document.getElementById('mobile-sidebar-toggle').addEventListener('click', () => {
+    const sidebar = document.getElementById('sidebar');
+    const mainContent = document.getElementById('main-content');
+    
+    if (sidebar.style.left === '0px') {
+      sidebar.style.left = '-256px';
+      mainContent.style.marginLeft = '0';
+    } else {
+      sidebar.style.left = '0';
+      mainContent.style.marginLeft = '256px';
+    }
+  });
+  
+  // 侧边栏切换（大屏幕）
+  document.getElementById('sidebar-toggle').addEventListener('click', () => {
+    const sidebar = document.getElementById('sidebar');
+    const mainContent = document.getElementById('main-content');
+    
+    if (sidebar.classList.contains('w-64')) {
+      sidebar.classList.remove('w-64');
+      sidebar.classList.add('w-0');
+      mainContent.classList.remove('ml-64');
+      mainContent.classList.add('ml-0');
+    } else {
+      sidebar.classList.remove('w-0');
+      sidebar.classList.add('w-64');
+      mainContent.classList.remove('ml-0');
+      mainContent.classList.add('ml-64');
+    }
+  });
+  
+  // 模态框功能
+  function doDel(url) {
+    const modal = document.getElementById('edu-alert');
+    const modalTitle = document.getElementById('modal-title');
+    const modalMessage = document.getElementById('modal-message');
+    const modalOk = document.getElementById('modal-ok');
+    const modalCancel = document.getElementById('modal-cancel');
+    
+    // 设置模态框内容
+    modalTitle.textContent = '信息提示';
+    modalMessage.innerHTML = '<p>确定要删除吗？</p>';
+    modalOk.textContent = '确定';
+    modalCancel.textContent = '取消';
+    
+    // 显示模态框
+    modal.classList.remove('hidden');
+    
+    // 点击确定按钮
+    modalOk.onclick = () => {
+      window.location.href = url;
+      modal.classList.add('hidden');
+    };
+    
+    // 点击取消按钮或关闭图标
+    const closeButtons = document.querySelectorAll('[data-dismiss="modal"]');
+    closeButtons.forEach(button => {
+      button.onclick = () => {
+        modal.classList.add('hidden');
+      };
+    });
   }
+  
+  // 页面加载时处理响应式
+  window.addEventListener('resize', () => {
+    const sidebar = document.getElementById('sidebar');
+    const mainContent = document.getElementById('main-content');
+    
+    if (window.innerWidth < 1024) {
+      sidebar.style.left = '-256px';
+      mainContent.style.marginLeft = '0';
+    } else {
+      sidebar.style.left = '0';
+      mainContent.style.marginLeft = '256px';
+    }
+  });
+  
+  // 初始化页面
+  window.addEventListener('load', () => {
+    if (window.innerWidth < 1024) {
+      const sidebar = document.getElementById('sidebar');
+      const mainContent = document.getElementById('main-content');
+      
+      sidebar.style.left = '-256px';
+      mainContent.style.marginLeft = '0';
+    }
+    
+    // 添加页面加载动画
+    document.body.classList.add('loaded');
+  });
 </script>
 
 {% block loadjavascript %}
