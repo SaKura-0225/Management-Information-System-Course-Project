@@ -2,7 +2,7 @@
 from django import forms
 from myadmin.models import WmsOrders,WmsOutbound,WmsOrdersDetail
 from django.contrib.auth.models import User, Group
-from myadmin.models import EmployeeProfile, Department
+from myadmin.models import MyadminEmployeeprofile, Department
 
 class AddOrdersInfoForm(forms.ModelForm):
     class Meta:
@@ -57,7 +57,7 @@ class UserForm(forms.ModelForm):
 
 class EmployeeForm(forms.ModelForm):
     class Meta:
-        model = EmployeeProfile
+        model = MyadminEmployeeprofile
         fields = ['department', 'work_no', 'phone']
 
 
