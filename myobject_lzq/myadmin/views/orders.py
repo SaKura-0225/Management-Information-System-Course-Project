@@ -19,7 +19,7 @@ def index(request):
     if kw:
         order_list = order_list.filter(orders_id__icontains=kw)
     
-    paginator = Paginator(order_list, 4)
+    paginator = Paginator(order_list, 50)
     page_number = request.GET.get("page")
     page_obj = paginator.get_page(page_number)
 
