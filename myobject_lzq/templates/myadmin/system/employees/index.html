@@ -1,6 +1,5 @@
 {% extends 'myadmin/base.html' %}
 {% block main_body %}
-<<<<<<< HEAD
 <!-- 优化后的内容头部区域 -->
 <section class="content-header bg-white rounded-xl shadow-sm p-6 mb-6">
   <div class="flex flex-col md:flex-row md:items-center justify-between">
@@ -79,42 +78,3 @@
   </div>
 </div>
 {% endblock %}    
-=======
-<h2>员工管理</h2>
-<table class="table table-bordered">
-  <thead>
-    <tr>
-      <th>序号</th>
-      <th>工号</th>
-      <th>姓名</th>
-      <th>电话</th>
-      <th>邮箱</th>
-      <th>部门</th>
-      <th>岗位</th>
-      <th>操作</th>
-    </tr>
-  </thead>
-  <tbody>
-    {% for e in employees %}
-    <tr>
-      <td>{{ e.id }}</td>
-      <td>{{ e.work_no }}</td>
-      <td>{{ e.user.username }}</td>
-      <td>{{ e.phone }}</td>
-      <td>{{ e.user.email }}</td>
-      <td>{{ e.department.name }}</td>
-      <td>{{ e.department.name }}</td>
-      <td>
-        <a href="{% url 'myadmin_system_employee_edit' e.user_id %}">编辑</a>
-        <a href="#">删除</a>
-      </td>
-    </tr>
-    {% endfor %}
-    <div class="box-footer clearfix">
-      <a role="button" href="{% url 'myadmin_system_employee_add' %}" class="btn btn-primary">
-              <span class="glyphicon glyphicon-plus" aria-hidden="true"></span> 添加员工</a>
-    </div>
-  </tbody>
-</table>
-{% endblock %}
->>>>>>> 2c95d41e70eb474d1d97f9ad525e8f21e80c6c6e
