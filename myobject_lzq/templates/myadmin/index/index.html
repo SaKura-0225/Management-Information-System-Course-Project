@@ -27,7 +27,7 @@
   
   <!-- 新增数据概览小卡片 -->
   <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mt-6">
-    <div class="bg-primary/5 rounded-lg p-3 flex items-center">
+    <div class="bg-primary/5 rounded-lg p-3 flex items-center hover:bg-primary/10 transition-colors duration-300">
       <div class="w-8 h-8 rounded bg-primary/10 flex items-center justify-center text-primary mr-3">
         <i class="fa fa-clock-o"></i>
       </div>
@@ -36,7 +36,7 @@
         <p class="text-sm font-medium text-dark">128</p>
       </div>
     </div>
-    <div class="bg-secondary/5 rounded-lg p-3 flex items-center">
+    <div class="bg-secondary/5 rounded-lg p-3 flex items-center hover:bg-secondary/10 transition-colors duration-300">
       <div class="w-8 h-8 rounded bg-secondary/10 flex items-center justify-center text-secondary mr-3">
         <i class="fa fa-users"></i>
       </div>
@@ -45,7 +45,7 @@
         <p class="text-sm font-medium text-dark">42</p>
       </div>
     </div>
-    <div class="bg-success/5 rounded-lg p-3 flex items-center">
+    <div class="bg-success/5 rounded-lg p-3 flex items-center hover:bg-success/10 transition-colors duration-300">
       <div class="w-8 h-8 rounded bg-success/10 flex items-center justify-center text-success mr-3">
         <i class="fa fa-check-circle"></i>
       </div>
@@ -54,7 +54,7 @@
         <p class="text-sm font-medium text-dark">86</p>
       </div>
     </div>
-    <div class="bg-warning/5 rounded-lg p-3 flex items-center">
+    <div class="bg-warning/5 rounded-lg p-3 flex items-center hover:bg-warning/10 transition-colors duration-300">
       <div class="w-8 h-8 rounded bg-warning/10 flex items-center justify-center text-warning mr-3">
         <i class="fa fa-exclamation-triangle"></i>
       </div>
@@ -69,16 +69,16 @@
 <!-- Main content -->
 <section class="content container-fluid">
   <!-- Small boxes (Stat box) -->
-  <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+  <div class="grid grid-cols-1 md:grid-cols-2 gap-6 lg:gap-8">
     <!-- 订单数量卡片 -->
-    <div class="bg-white rounded-xl shadow-sm border border-gray-100 hover:shadow-md transition-all duration-300 overflow-hidden">
+    <div class="bg-white rounded-xl shadow-sm border border-gray-100 hover:shadow-md hover:border-primary/30 hover:bg-primary/5 transition-all duration-300 overflow-hidden transform hover:-translate-y-1">
       <div class="p-6">
         <div class="flex justify-between items-start">
           <div>
             <p class="text-gray-500 text-sm mb-1">订单数量</p>
             <h3 class="text-3xl font-bold text-dark">{{ o_number.id__count }}</h3>
           </div>
-          <div class="w-12 h-12 rounded-lg bg-primary/10 flex items-center justify-center text-primary">
+          <div class="w-14 h-14 rounded-lg bg-primary/10 flex items-center justify-center text-primary">
             <i class="fa fa-shopping-bag text-xl"></i>
           </div>
         </div>
@@ -87,7 +87,7 @@
           <span class="text-gray-500 ml-2">相比上月</span>
         </div>
       </div>
-      <div class="px-6 py-3 bg-gray-50 border-t border-gray-100">
+      <div class="px-6 py-3 bg-gray-50 border-t border-gray-100 hover:bg-primary/5 transition-colors duration-300">
         <a href="#" class="text-primary text-sm hover:text-primary/80 flex items-center">
           查看详情 <i class="fa fa-angle-right ml-1"></i>
         </a>
@@ -95,14 +95,14 @@
     </div>
 
     <!-- 销售总金额卡片 -->
-    <div class="bg-white rounded-xl shadow-sm border border-gray-100 hover:shadow-md transition-all duration-300 overflow-hidden">
+    <div class="bg-white rounded-xl shadow-sm border border-gray-100 hover:shadow-md hover:border-primary/30 hover:bg-primary/5 transition-all duration-300 overflow-hidden transform hover:-translate-y-1">
       <div class="p-6">
         <div class="flex justify-between items-start">
           <div>
             <p class="text-gray-500 text-sm mb-1">销售总金额</p>
             <h3 class="text-3xl font-bold text-dark">{{ o_money.money__sum }}<sup class="text-base">元</sup></h3>
           </div>
-          <div class="w-12 h-12 rounded-lg bg-secondary/10 flex items-center justify-center text-secondary">
+          <div class="w-14 h-14 rounded-lg bg-secondary/10 flex items-center justify-center text-secondary">
             <i class="fa fa-line-chart text-xl"></i>
           </div>
         </div>
@@ -111,7 +111,7 @@
           <span class="text-gray-500 ml-2">相比上月</span>
         </div>
       </div>
-      <div class="px-6 py-3 bg-gray-50 border-t border-gray-100">
+      <div class="px-6 py-3 bg-gray-50 border-t border-gray-100 hover:bg-primary/5 transition-colors duration-300">
         <a href="#" class="text-primary text-sm hover:text-primary/80 flex items-center">
           查看详情 <i class="fa fa-angle-right ml-1"></i>
         </a>
@@ -119,14 +119,14 @@
     </div>
 
     <!-- 员工数量卡片 -->
-    <div class="bg-white rounded-xl shadow-sm border border-gray-100 hover:shadow-md transition-all duration-300 overflow-hidden">
+    <div class="bg-white rounded-xl shadow-sm border border-gray-100 hover:shadow-md hover:border-primary/30 hover:bg-primary/5 transition-all duration-300 overflow-hidden transform hover:-translate-y-1">
       <div class="p-6">
         <div class="flex justify-between items-start">
           <div>
             <p class="text-gray-500 text-sm mb-1">员工数量</p>
             <h3 class="text-3xl font-bold text-dark">{{ u_number.id__count }}</h3>
           </div>
-          <div class="w-12 h-12 rounded-lg bg-success/10 flex items-center justify-center text-success">
+          <div class="w-14 h-14 rounded-lg bg-success/10 flex items-center justify-center text-success">
             <i class="fa fa-users text-xl"></i>
           </div>
         </div>
@@ -135,7 +135,7 @@
           <span class="text-gray-500 ml-2">相比上月</span>
         </div>
       </div>
-      <div class="px-6 py-3 bg-gray-50 border-t border-gray-100">
+      <div class="px-6 py-3 bg-gray-50 border-t border-gray-100 hover:bg-primary/5 transition-colors duration-300">
         <a href="#" class="text-primary text-sm hover:text-primary/80 flex items-center">
           查看详情 <i class="fa fa-angle-right ml-1"></i>
         </a>
@@ -143,14 +143,14 @@
     </div>
 
     <!-- 运营店铺数量卡片 -->
-    <div class="bg-white rounded-xl shadow-sm border border-gray-100 hover:shadow-md transition-all duration-300 overflow-hidden">
+    <div class="bg-white rounded-xl shadow-sm border border-gray-100 hover:shadow-md hover:border-primary/30 hover:bg-primary/5 transition-all duration-300 overflow-hidden transform hover:-translate-y-1">
       <div class="p-6">
         <div class="flex justify-between items-start">
           <div>
             <p class="text-gray-500 text-sm mb-1">运营店铺数量</p>
             <h3 class="text-3xl font-bold text-dark">{{ s_number.id__count }}</h3>
           </div>
-          <div class="w-12 h-12 rounded-lg bg-warning/10 flex items-center justify-center text-warning">
+          <div class="w-14 h-14 rounded-lg bg-warning/10 flex items-center justify-center text-warning">
             <i class="fa fa-store text-xl"></i>
           </div>
         </div>
@@ -159,7 +159,7 @@
           <span class="text-gray-500 ml-2">相比上月</span>
         </div>
       </div>
-      <div class="px-6 py-3 bg-gray-50 border-t border-gray-100">
+      <div class="px-6 py-3 bg-gray-50 border-t border-gray-100 hover:bg-primary/5 transition-colors duration-300">
         <a href="#" class="text-primary text-sm hover:text-primary/80 flex items-center">
           查看详情 <i class="fa fa-angle-right ml-1"></i>
         </a>
@@ -168,4 +168,4 @@
   </div>
 
 </section>
-{% endblock %}    
+{% endblock %}
