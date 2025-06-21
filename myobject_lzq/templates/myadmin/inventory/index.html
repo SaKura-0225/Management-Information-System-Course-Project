@@ -1,59 +1,145 @@
 {% extends 'myadmin/base.html' %}
 {% block main_body %}
-<h2>库存总览</h2>
-<form method="get" class="form-inline mb-3">
-    <input type="text" name="product_id" value="{{ search_pid }}" class="form-control mr-2" placeholder="产品编号">
-    <input type="text" name="fabric_type" value="{{ search_fabric }}" class="form-control mr-2" placeholder="布料品种">
-    <input type="text" name="color" value="{{ search_color }}" class="form-control mr-2" placeholder="颜色">
-    
-    <select name="status" class="form-control mr-2">
-      <option value="">全部状态</option>
-      <option value="normal" {% if search_status == 'normal' %}selected{% endif %}>正常</option>
-      <option value="warning" {% if search_status == 'warning' %}selected{% endif %}>低于预警</option>
-    </select>
+<!-- 内容头部区域 -->
+<section class="content-header bg-white rounded-xl shadow-sm p-6 mb-6">
+  <div class="flex flex-col md:flex-row md:items-center justify-between">
+    <div>
+      <h1 class="text-[clamp(1.5rem,3vw,2rem)] font-semibold text-dark">库存总览</h1>
+      <p class="text-gray-500 text-sm">查看和管理系统中的所有库存信息</p>
+    </div>
+
+  </div>
   
-    <button type="submit" class="btn btn-primary">搜索</button>
-    <a href="{% url 'myadmin_stock_index' %}" class="btn btn-default ml-2">重置</a>
-</form>
-<table class="table table-bordered">
-  <thead>
-    <tr>
-      <th>产品编号</th>
-      <th>品种</th>
-      <th>颜色</th>
-      <th>库存数量</th>
-      <th>状态</th>
-      <th>操作</th>
-    </tr>
-  </thead>
-  <tbody>
-    {% for item in page_obj %}
-    <tr class="{% if item.is_warning %}table-danger{% endif %}">
-      <td>{{ item.product.product_id }}</td>
-      <td>{{ item.product.fabric_type.fabric_type_name }}</td>
-      <td>{{ item.product.color.color_name }}</td>
-      <td>{{ item.quantity }}</td>
-      <td>
-        {% if item.is_warning %}
-          <span class="label label-danger">低于预警</span>
-        {% else %}
-          <span class="label label-success">正常</span>
+  <!-- 面包屑导航 -->
+  <div class="mt-4 flex items-center text-sm text-gray-500">
+    <a href="#" class="hover:text-primary flex items-center">
+      <i class="fa fa-dashboard mr-1"></i> 首页
+    </a>
+    <i class="fa fa-angle-right mx-2 text-xs"></i>
+    <span class="text-dark font-medium">库存总览</span>
+  </div>
+</section>
+
+<!-- 搜索筛选区域 -->
+<div class="bg-white rounded-xl shadow-sm border border-gray-100 p-6 mb-6">
+  <form method="get" class="grid grid-cols-1 md:grid-cols-5 gap-4">
+    <div class="md:col-span-4">
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+        <div>
+          <label class="block text-sm font-medium text-gray-700 mb-1">产品编号</label>
+          <input type="text" name="product_id" value="{{ search_pid }}" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:border-primary focus:ring focus:ring-primary/20 focus:outline-none" placeholder="搜索产品编号">
+        </div>
+        <div>
+          <label class="block text-sm font-medium text-gray-700 mb-1">布料品种</label>
+          <input type="text" name="fabric_type" value="{{ search_fabric }}" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:border-primary focus:ring focus:ring-primary/20 focus:outline-none" placeholder="搜索布料品种">
+        </div>
+        <div>
+          <label class="block text-sm font-medium text-gray-700 mb-1">颜色</label>
+          <input type="text" name="color" value="{{ search_color }}" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:border-primary focus:ring focus:ring-primary/20 focus:outline-none" placeholder="搜索颜色">
+        </div>
+      </div>
+    </div>
+    <div class="md:col-span-1">
+      <label class="block text-sm font-medium text-gray-700 mb-1">库存状态</label>
+      <select name="status" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:border-primary focus:ring focus:ring-primary/20 focus:outline-none">
+        <option value="">全部状态</option>
+        <option value="normal" {% if search_status == 'normal' %}selected{% endif %}>正常</option>
+        <option value="warning" {% if search_status == 'warning' %}selected{% endif %}>低于预警</option>
+      </select>
+    </div>
+    
+    <div class="md:col-span-5 flex justify-end space-x-4 pt-4">
+      <a href="{% url 'myadmin_stock_index' %}" class="px-6 py-2.5 border border-gray-300 rounded-lg text-sm font-medium text-gray-700 hover:bg-gray-50 transition-colors duration-200 flex items-center">
+        <i class="fa fa-refresh mr-2"></i> 重置
+      </a>
+      <button type="submit" class="px-6 py-2.5 bg-primary text-white rounded-lg text-sm font-medium hover:bg-primary/90 transition-colors duration-200 flex items-center">
+        <i class="fa fa-search mr-2"></i> 搜索
+      </button>
+    </div>
+  </form>
+</div>
+
+<!-- 库存表格 -->
+<div class="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
+  <div class="overflow-x-auto">
+    <table class="w-full">
+      <thead>
+        <tr class="bg-gray-50 text-left">
+          <th class="px-6 py-3 text-xs font-medium text-gray-500 uppercase tracking-wider">产品编号</th>
+          <th class="px-6 py-3 text-xs font-medium text-gray-500 uppercase tracking-wider">品种</th>
+          <th class="px-6 py-3 text-xs font-medium text-gray-500 uppercase tracking-wider">颜色</th>
+          <th class="px-6 py-3 text-xs font-medium text-gray-500 uppercase tracking-wider">库存数量</th>
+          <th class="px-6 py-3 text-xs font-medium text-gray-500 uppercase tracking-wider">状态</th>
+          <th class="px-6 py-3 text-xs font-medium text-gray-500 uppercase tracking-wider text-right">操作</th>
+        </tr>
+      </thead>
+      <tbody class="divide-y divide-gray-200">
+        {% for item in page_obj %}
+        <tr class="hover:bg-gray-50 transition-colors duration-150">
+          <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">{{ item.product.product_id }}</td>
+          <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-700">{{ item.product.fabric_type.fabric_type_name }}</td>
+          <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-700">{{ item.product.color.color_name }}</td>
+          <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-700">
+            <span class="font-medium {% if item.is_warning %}text-red-600{% else %}text-green-600{% endif %}">
+              {{ item.quantity }}
+            </span>
+          </td>
+          <td class="px-6 py-4 whitespace-nowrap">
+            {% if item.is_warning %}
+              <span class="px-2 py-1 text-xs rounded-full bg-red-100 text-red-800">低于预警</span>
+            {% else %}
+              <span class="px-2 py-1 text-xs rounded-full bg-green-100 text-green-800">正常</span>
+            {% endif %}
+          </td>
+          <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-right">
+            <a href="{% url 'myadmin_stock_check' item.product.product_id %}" class="text-primary hover:text-primary/80 transition-colors duration-150 px-3 py-1 bg-blue-50 rounded-lg">
+              <i class="fa fa-clipboard-check mr-1"></i> 盘点
+            </a>
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+  
+  <!-- 分页导航 -->
+  <div class="px-6 py-4 border-t border-gray-200 flex flex-col sm:flex-row justify-between items-center">
+    <div class="text-sm text-gray-700 mb-4 sm:mb-0">
+      显示第 <span class="font-medium">{{ page_obj.start_index }}</span> 至 <span class="font-medium">{{ page_obj.end_index }}</span> 条，共 <span class="font-medium">{{ page_obj.paginator.count }}</span> 条记录
+    </div>
+    <div class="flex items-center space-x-2">
+      {% if page_obj.has_previous %}
+        <a href="?page={{ page_obj.previous_page_number }}{% if query_string %}&{{ query_string }}{% endif %}" class="px-3 py-1 rounded-md border border-gray-300 text-sm font-medium text-gray-700 hover:bg-gray-50 transition-colors duration-150">
+          <i class="fa fa-angle-left"></i>
+        </a>
+      {% else %}
+        <span class="px-3 py-1 rounded-md border border-gray-300 text-sm font-medium text-gray-400 cursor-not-allowed">
+          <i class="fa fa-angle-left"></i>
+        </span>
+      {% endif %}
+      
+      {% for i in page_obj.paginator.page_range %}
+        {% if page_obj.number == i %}
+          <span class="px-3 py-1 rounded-md bg-primary text-white text-sm font-medium">
+            {{ i }}
+          </span>
+        {% elif i > page_obj.number|add:'-3' and i < page_obj.number|add:'3' %}
+          <a href="?page={{ i }}{% if query_string %}&{{ query_string }}{% endif %}" class="px-3 py-1 rounded-md border border-gray-300 text-sm font-medium text-gray-700 hover:bg-gray-50 transition-colors duration-150">
+            {{ i }}
+          </a>
         {% endif %}
-      </td>
-      <td>
-        <a href="{% url 'myadmin_stock_check' item.product.product_id %}" class="btn btn-sm btn-primary">盘点</a>
-      </td>
-    </tr>
-    {% endfor %}
-  </tbody>
-</table>
-<div class="pagination">
-  {% if page_obj.has_previous %}
-    <a href="?page={{ page_obj.previous_page_number }}">上一页</a>
-  {% endif %}
-  <span>第 {{ page_obj.number }} 页 / 共 {{ page_obj.paginator.num_pages }} 页</span>
-  {% if page_obj.has_next %}
-    <a href="?page={{ page_obj.next_page_number }}">下一页</a>
-  {% endif %}
+      {% endfor %}
+      
+      {% if page_obj.has_next %}
+        <a href="?page={{ page_obj.next_page_number }}{% if query_string %}&{{ query_string }}{% endif %}" class="px-3 py-1 rounded-md border border-gray-300 text-sm font-medium text-gray-700 hover:bg-gray-50 transition-colors duration-150">
+          <i class="fa fa-angle-right"></i>
+        </a>
+      {% else %}
+        <span class="px-3 py-1 rounded-md border border-gray-300 text-sm font-medium text-gray-400 cursor-not-allowed">
+          <i class="fa fa-angle-right"></i>
+        </span>
+      {% endif %}
+    </div>
+  </div>
 </div>
 {% endblock %}
