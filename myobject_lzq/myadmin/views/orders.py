@@ -84,9 +84,7 @@ def order_detail_view(request):
     month = request.GET.get('month')
     day = request.GET.get('day')
 
-    details = WmsOrdersDetail.objects.select_related('orders').all()
     filters = Q()
-
     if keyword:
         filters &= Q(orders__orders_id__icontains=keyword)
 
@@ -110,11 +108,28 @@ def order_detail_view(request):
     except ValueError:
         pass
 
-    details = details.filter(filters).order_by('orders__orders_id')
+    # 先查所有明细（可关联到 orders）
+    all_details = WmsOrdersDetail.objects.select_related('orders').filter(filters)
 
+    # 获取唯一订单编号列表（最新订单在前）
+    all_orders = sorted(
+        {d.orders for d in all_details},
+        key=lambda o: o.create_at or datetime.min,
+        reverse=True
+    )
+
+    # 分页（每页 20 个订单）
+    paginator = Paginator(all_orders, 20)
+    page_number = request.GET.get('page')
+    page_obj = paginator.get_page(page_number)
+
+    # 从当前页的订单提取出明细并按订单号分组
     grouped = defaultdict(list)
-    for row in details:
-        grouped[row.orders.orders_id].append(row)
+    current_order_ids = [o.orders_id for o in page_obj]
+
+    for detail in all_details:
+        if detail.orders.orders_id in current_order_ids:
+            grouped[detail.orders.orders_id].append(detail)
 
     return render(request, 'myadmin/orders/order_detail_view.html', {
         'grouped': dict(grouped),
@@ -122,8 +137,8 @@ def order_detail_view(request):
         'year': year,
         'month': month,
         'day': day,
+        'page_obj': page_obj,
     })
-
 
 def order_detail_add(request, orders_id):
     order = get_object_or_404(WmsOrders, orders_id=orders_id)

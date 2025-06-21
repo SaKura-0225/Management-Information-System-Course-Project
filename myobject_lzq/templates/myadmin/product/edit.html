@@ -1,0 +1,10 @@
+{% extends 'myadmin/base.html' %}
+{% block main_body %}
+<h2>{% if form.instance.pk %}编辑{% else %}添加{% endif %}产品</h2>
+<form method="post">
+  {% csrf_token %}
+  {{ form.as_p }}
+  <button type="submit" class="btn btn-primary">保存</button>
+  <a href="{% url 'myadmin_product_index' %}" class="btn btn-default">取消</a>
+</form>
+{% endblock %}

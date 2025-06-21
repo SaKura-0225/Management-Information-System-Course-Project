@@ -148,5 +148,21 @@
   </div>
 </div>
 {% endfor %}
+<!-- 分页器 -->
+<div class="mt-6 flex justify-center space-x-2">
+  {% if page_obj.has_previous %}
+    <a href="?page=1{% if keyword %}&keyword={{ keyword }}{% endif %}" class="px-3 py-1 border rounded">首页</a>
+    <a href="?page={{ page_obj.previous_page_number }}{% if keyword %}&keyword={{ keyword }}{% endif %}" class="px-3 py-1 border rounded">上一页</a>
+  {% endif %}
+
+  <span class="px-3 py-1 border bg-gray-100 rounded">
+    第 {{ page_obj.number }} 页 / 共 {{ page_obj.paginator.num_pages }} 页
+  </span>
+
+  {% if page_obj.has_next %}
+    <a href="?page={{ page_obj.next_page_number }}{% if keyword %}&keyword={{ keyword }}{% endif %}" class="px-3 py-1 border rounded">下一页</a>
+    <a href="?page={{ page_obj.paginator.num_pages }}{% if keyword %}&keyword={{ keyword }}{% endif %}" class="px-3 py-1 border rounded">尾页</a>
+  {% endif %}
+</div>
 
 {% endblock %}    

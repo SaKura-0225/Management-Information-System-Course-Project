@@ -1,0 +1,10 @@
+{% extends 'myadmin/base.html' %}
+{% block main_body %}
+<h2>删除客户</h2>
+<p>确认要删除客户：<strong>{{ customer.company_name }}</strong> 吗？</p>
+<form method="post">
+  {% csrf_token %}
+  <button type="submit" class="btn btn-danger">删除</button>
+  <a href="{% url 'myadmin_customer_index' %}" class="btn btn-default">取消</a>
+</form>
+{% endblock %}

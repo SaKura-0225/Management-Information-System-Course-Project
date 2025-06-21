@@ -1,0 +1,45 @@
+{% extends 'myadmin/base.html' %}
+{% block main_body %}
+<h2>产品信息</h2>
+<table class="table">
+  <thead>
+    <tr>
+      <th>产品编号</th>
+      <th>布料品种</th>
+      <th>颜色</th>
+      <th>库位编码</th>
+      <th>单价</th>
+      <th>在库数量</th>
+      <th>操作</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for p in page_obj %}
+    <tr>
+      <td>{{ p.product_id }}</td>
+      <td>{{ p.fabric_type.fabric_type_name }}</td>
+      <td>{{ p.color.color_name }}</td>
+      <td>{{ p.loc.loc_id }}</td>
+      <td>{{ p.price }}</td>
+      <td>{{ p.loc.quantity }}</td>
+      <td>
+        <a href="{% url 'myadmin_product_edit' p.id %}">编辑</a>
+        <a href="{% url 'myadmin_product_delete' p.id %}">删除</a>
+      </td>
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
+
+<div class="pagination">
+  {% if page_obj.has_previous %}
+    <a href="?page=1">&laquo; 首页</a>
+    <a href="?page={{ page_obj.previous_page_number }}">上一页</a>
+  {% endif %}
+  <span>第 {{ page_obj.number }} 页 / 共 {{ page_obj.paginator.num_pages }} 页</span>
+  {% if page_obj.has_next %}
+    <a href="?page={{ page_obj.next_page_number }}">下一页</a>
+    <a href="?page={{ page_obj.paginator.num_pages }}">尾页 &raquo;</a>
+  {% endif %}
+</div>
+{% endblock %}

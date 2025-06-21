@@ -1,0 +1,12 @@
+{% extends 'myadmin/base.html' %}
+{% block main_body %}
+<h2>产品盘点：{{ product.product_id }}</h2>
+<p><strong>当前系统库存：</strong> {{ form.initial.expected_qty }}</p>
+
+<form method="post">
+  {% csrf_token %}
+  {{ form.as_p }}
+  <button type="submit" class="btn btn-success">提交盘点</button>
+  <a href="{% url 'myadmin_stock_index' %}" class="btn btn-secondary">取消</a>
+</form>
+{% endblock %}

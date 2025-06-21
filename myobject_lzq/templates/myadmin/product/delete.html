@@ -1,0 +1,9 @@
+{% extends 'myadmin/base.html' %}
+{% block main_body %}
+<h3>确定要删除产品 {{ product.product_id }} 吗？</h3>
+<form method="post">
+  {% csrf_token %}
+  <button type="submit" class="btn btn-danger">删除</button>
+  <a href="{% url 'myadmin_product_index' %}" class="btn btn-secondary">取消</a>
+</form>
+{% endblock %}

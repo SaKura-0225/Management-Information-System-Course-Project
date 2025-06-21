@@ -136,17 +136,32 @@
             <span>储位管理</span>
           </a>
         </li>
+        <li>
+          <a href="{% url 'myadmin_customer_index'%}" class="sidebar-item-hover flex items-center px-3 py-2.5 rounded-md text-sm font-medium text-gray-700 hover:text-primary">
+            <i class="fa fa-users w-5 text-center"></i>
+            <span>客户管理</span>
+          </a>
+        </li>
         {% if perms.myadmin.view_wmsoutbound %}
         <li>
           <div class="nav-dropdown">
             <button class="sidebar-item text-gray-700 hover:bg-primary/5 hover:text-primary flex items-center justify-between w-full" data-level="1" data-module="warehouse">
               <div class="flex items-center">
                 <i class="fa fa-cutlery w-5 text-center"></i>
-                <span>出入库管理</span>
+                <span>库存管理</span>
               </div>
               <i class="fa fa-angle-down transition-transform duration-200 nav-icon"></i>
             </button>
             <div class="nav-dropdown-content hidden pl-6 mt-1 space-y-1" data-module="warehouse">
+              <a href="{% url 'myadmin_warehouse-flow_outbound'%}" class="block px-3 py-2 rounded-md text-sm text-gray-600 hover:bg-gray-100 hover:text-primary transition-colors duration-200">
+                <i class="fa fa-circle-o mr-1"></i> 储位信息
+              </a>
+              <a href="{% url 'myadmin_product_index'%}" class="block px-3 py-2 rounded-md text-sm text-gray-600 hover:bg-gray-100 hover:text-primary transition-colors duration-200">
+                <i class="fa fa-circle-o mr-1"></i> 产品信息
+              </a>
+              <a href="{% url 'myadmin_stock_index'%}" class="block px-3 py-2 rounded-md text-sm text-gray-600 hover:bg-gray-100 hover:text-primary transition-colors duration-200">
+                <i class="fa fa-circle-o mr-1"></i> 库存信息
+              </a>
               <a href="{% url 'myadmin_warehouse-flow_outbound'%}" class="sidebar-subitem text-gray-600 hover:bg-primary/10 hover:text-primary" data-level="2" data-module="warehouse">
                 <i class="fa fa-circle-o mr-1"></i> 出库管理
               </a>

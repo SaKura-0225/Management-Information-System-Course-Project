@@ -1,0 +1,10 @@
+{% extends 'myadmin/base.html' %}
+{% block main_body %}
+<h2>添加客户</h2>
+<form method="post">
+  {% csrf_token %}
+  {{ form.as_p }}
+  <button type="submit" class="btn btn-primary">保存</button>
+  <a href="{% url 'myadmin_customer_index' %}" class="btn btn-default">取消</a>
+</form>
+{% endblock %}
