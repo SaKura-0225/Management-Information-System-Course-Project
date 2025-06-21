@@ -60,4 +60,39 @@
     </form>
   </div>
 </div>
-{% endblock %}    
+
+<style>
+  /* 直接选择form内的输入类元素，无需依赖.form-group */
+  form input, 
+  form select, 
+  form textarea {
+    border: 1px solid #000; /* 黑色边框 */
+    border-radius: 0.375rem;
+    padding: 0.5rem;
+    transition: all 0.3s ease-in-out;
+  }
+
+  /* 鼠标悬停时的放大动效及阴影 */
+  form input:hover, 
+  form select:hover, 
+  form textarea:hover {
+    transform: scale(1.05); 
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1); 
+  }
+
+  /* 聚焦时的样式，修改边框色并保持放大 */
+  form input:focus, 
+  form select:focus, 
+  form textarea:focus {
+    border-color: #165DFF; 
+    outline: none;
+    transform: scale(1.05); 
+  }
+
+  /* 错误提示样式 */
+  .text-danger {
+    color: #F53F3F; 
+  }
+</style>
+
+{% endblock %}

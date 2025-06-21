@@ -26,45 +26,53 @@
 
 <!-- Main content -->
 <section class="content container-fluid">
-  <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+  <div class="grid grid-cols-1 md:grid-cols-5 gap-4"> <!-- 改为5列并行排列，缩小间距 -->
     {% for dept in departments %}
-    <div class="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden transition-all duration-200 hover:shadow">
+    <div class="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden transition-all duration-200 
+                hover:shadow-lg"> <!-- 在部门卡片上应用group -->
       <!-- 部门头部 -->
-      <div class="p-6 bg-primary/5 border-b border-gray-100">
-        <h3 class="text-lg font-semibold text-dark flex items-center">
+      <div class="p-4 bg-primary/5 border-b border-gray-100"> <!-- 缩小内边距 -->
+        <h3 class="text-base font-semibold text-dark flex items-center"> <!-- 调整标题字号 -->
           <i class="fa fa-building-o text-primary mr-2"></i>
           {{ dept.name }}
         </h3>
       </div>
       
       <!-- 部门员工列表 -->
-      <div class="p-6">
+      <div class="p-4 space-y-2"> <!-- 缩小内边距 -->
         {% if dept.employeeprofile_set.all %}
-        <div class="space-y-4">
           {% for emp in dept.employeeprofile_set.all %}
-          <div class="p-4 bg-gray-50 rounded-lg hover:bg-gray-100 transition-colors duration-150">
-            <div class="flex items-start">
-              <div class="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center text-primary mr-3">
-                <i class="fa fa-user"></i>
-              </div>
-              <div>
-                <h4 class="font-medium text-dark">{{ emp.user.get_full_name|default:emp.user.username }}</h4>
-                <div class="text-sm text-gray-500 mt-1">
-                  <p>工号：{{ emp.work_no }}</p>
-                  <p>电话：{{ emp.phone|default:"-" }}</p>
-                  <p>岗位：{{ emp.post|default:"-" }}</p>
-                </div>
-              </div>
-            </div>
+          <!-- 为每个员工创建一个独立的悬停效果模块 -->
+          <div class="flex flex-col bg-gray-50 rounded-lg px-3 py-2 transition-all duration-200 
+                      group hover:scale-105 transform"> <!-- 每个员工项悬停放大效果 -->
+            <span class="font-medium text-dark">
+              {{ emp.user.get_full_name|default:emp.user.username }}
+            </span>
+            <!-- 合并“电话：”与号码显示，工号和电话用 | 分隔 -->
+            <span class="text-sm text-gray-500">
+              工号：{{ emp.work_no }} | 电话：{{ emp.phone|default:"-" }}
+            </span>
+            <span class="text-sm text-gray-600">
+              岗位：{{ emp.post|default:"-" }}
+            </span>
+            <!-- 新增状态标签（需模型配合） -->
+            {% if emp.status == '在岗' %}
+            <span class="inline-block px-2 py-1 text-xs bg-green-100 text-green-600 rounded mt-1">
+              {{ emp.status }}
+            </span>
+            {% elif emp.status == '离职' %}
+            <span class="inline-block px-2 py-1 text-xs bg-red-100 text-red-600 rounded mt-1">
+              {{ emp.status }}
+            </span>
+            {% endif %}
           </div>
           {% endfor %}
-        </div>
         {% else %}
-        <div class="py-8 text-center">
-          <div class="w-12 h-12 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-3">
-            <i class="fa fa-users text-gray-400"></i>
+        <div class="py-4 text-center"> <!-- 调整内边距 -->
+          <div class="w-8 h-8 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-2"> <!-- 缩小图标容器 -->
+            <i class="fa fa-users text-gray-400 text-sm"></i> <!-- 缩小图标字号 -->
           </div>
-          <p class="text-gray-500">暂无员工</p>
+          <p class="text-gray-500 text-sm">暂无员工</p> <!-- 调整文字大小 -->
         </div>
         {% endif %}
       </div>
@@ -72,4 +80,30 @@
     {% endfor %}
   </div>
 </section>
-{% endblock %}    
+
+<script>
+// 新增部门弹窗
+function openAddDepartmentModal() {
+  alert('点击新增部门，可在此实现弹窗表单');
+}
+</script>
+
+<style>
+/* 部门卡片整体样式优化 */
+.grid .bg-white {
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+/* 员工项悬停效果 */
+.group:hover {
+  transform: scale(1.05);
+}
+/* 员工模块悬停效果 */
+.group:hover .bg-gray-50 {
+  transform: scale(1.05);
+}
+/* 隐藏/显示过渡优化 */
+.opacity-0 {
+  transition: opacity 0.2s ease;
+}
+</style>
+{% endblock %}

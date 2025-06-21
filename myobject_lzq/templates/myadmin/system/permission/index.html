@@ -1,6 +1,5 @@
 {% extends 'myadmin/base.html' %}
 {% block main_body %}
-{% load labels %}
 <!-- 优化后的内容头部区域 -->
 <section class="content-header bg-white rounded-xl shadow-sm p-6 mb-6">
   <div class="flex flex-col md:flex-row md:items-center justify-between">
@@ -8,8 +7,6 @@
       <h1 class="text-[clamp(1.5rem,3vw,2rem)] font-semibold text-dark">权限组管理</h1>
       <p class="text-gray-500 text-sm">管理系统中的权限组与权限分配</p>
     </div>
-
-
   </div>
   
   <!-- 面包屑导航 -->
@@ -31,7 +28,7 @@
         <span class="absolute inset-y-0 left-0 flex items-center pl-3">
           <i class="fa fa-search text-gray-400"></i>
         </span>
-        <input type="text" placeholder="搜索权限组..." class="pl-10 pr-4 py-2 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary text-sm w-full sm:w-64">
+        <input type="text" id="search-input" placeholder="搜索权限组..." class="pl-10 pr-4 py-2 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary text-sm w-full sm:w-64">
       </div>
     </div>
     <div class="flex space-x-2">
@@ -56,7 +53,7 @@
       </thead>
       <tbody class="divide-y divide-gray-100">
         {% for group in groups %}
-        <tr class="hover:bg-gray-50 transition-colors duration-100">
+        <tr class="hover:bg-gray-50 transition-colors duration-100 group-row">
           <td class="px-6 py-4 whitespace-nowrap">
             <div class="flex items-center">
               <div class="w-8 h-8 bg-primary/10 rounded-md flex items-center justify-center text-primary mr-3">
@@ -68,8 +65,9 @@
           <td class="px-6 py-4">
             <div class="flex flex-wrap gap-2">
               {% for perm in group.permissions.all %}
+                <!-- 显示权限代码名称 -->
                 <span class="px-2 py-1 bg-primary/10 text-primary text-xs rounded-full">
-                  {{ perm.codename|perm_label }}
+                  {{ perm.codename }}
                 </span>
               {% empty %}
                 <span class="text-gray-400 text-sm">暂无权限</span>
@@ -81,7 +79,6 @@
               <a href="{% url 'myadmin_system_permission_edit' group.group.id %}" class="p-2 bg-primary/10 text-primary rounded-md hover:bg-primary/20 transition-colors duration-150">
                 <i class="fa fa-edit"></i>
               </a>
-
             </div>
           </td>
         </tr>
@@ -112,4 +109,25 @@
     </div>
   </div>
 </div>
+
+<script>
+  // 获取搜索框和权限组行
+  const searchInput = document.getElementById('search-input');
+  const groupRows = document.querySelectorAll('.group-row');
+
+  // 监听搜索框的输入事件
+  searchInput.addEventListener('input', function() {
+    const query = searchInput.value.toLowerCase();  // 获取搜索框内容并转小写
+
+    // 遍历所有权限组行，根据内容过滤显示
+    groupRows.forEach(row => {
+      const groupName = row.querySelector('td').textContent.toLowerCase(); // 获取组名
+      if (groupName.includes(query)) {
+        row.style.display = '';  // 显示匹配项
+      } else {
+        row.style.display = 'none';  // 隐藏不匹配项
+      }
+    });
+  });
+</script>
 {% endblock %}
