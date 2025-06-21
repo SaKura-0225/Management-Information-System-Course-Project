@@ -1,0 +1,59 @@
+{% extends 'myadmin/base.html' %}
+{% block main_body %}
+<h2>库存总览</h2>
+<form method="get" class="form-inline mb-3">
+    <input type="text" name="product_id" value="{{ search_pid }}" class="form-control mr-2" placeholder="产品编号">
+    <input type="text" name="fabric_type" value="{{ search_fabric }}" class="form-control mr-2" placeholder="布料品种">
+    <input type="text" name="color" value="{{ search_color }}" class="form-control mr-2" placeholder="颜色">
+    
+    <select name="status" class="form-control mr-2">
+      <option value="">全部状态</option>
+      <option value="normal" {% if search_status == 'normal' %}selected{% endif %}>正常</option>
+      <option value="warning" {% if search_status == 'warning' %}selected{% endif %}>低于预警</option>
+    </select>
+  
+    <button type="submit" class="btn btn-primary">搜索</button>
+    <a href="{% url 'myadmin_stock_index' %}" class="btn btn-default ml-2">重置</a>
+</form>
+<table class="table table-bordered">
+  <thead>
+    <tr>
+      <th>产品编号</th>
+      <th>品种</th>
+      <th>颜色</th>
+      <th>库存数量</th>
+      <th>状态</th>
+      <th>操作</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for item in page_obj %}
+    <tr class="{% if item.is_warning %}table-danger{% endif %}">
+      <td>{{ item.product.product_id }}</td>
+      <td>{{ item.product.fabric_type.fabric_type_name }}</td>
+      <td>{{ item.product.color.color_name }}</td>
+      <td>{{ item.quantity }}</td>
+      <td>
+        {% if item.is_warning %}
+          <span class="label label-danger">低于预警</span>
+        {% else %}
+          <span class="label label-success">正常</span>
+        {% endif %}
+      </td>
+      <td>
+        <a href="{% url 'myadmin_stock_check' item.product.product_id %}" class="btn btn-sm btn-primary">盘点</a>
+      </td>
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
+<div class="pagination">
+  {% if page_obj.has_previous %}
+    <a href="?page={{ page_obj.previous_page_number }}">上一页</a>
+  {% endif %}
+  <span>第 {{ page_obj.number }} 页 / 共 {{ page_obj.paginator.num_pages }} 页</span>
+  {% if page_obj.has_next %}
+    <a href="?page={{ page_obj.next_page_number }}">下一页</a>
+  {% endif %}
+</div>
+{% endblock %}

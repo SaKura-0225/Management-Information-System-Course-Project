@@ -127,7 +127,8 @@ class WmsProduct(models.Model):
 class WmsProductColor(models.Model):
     color_id = models.CharField(unique=True, max_length=10, blank=True, null=True, db_comment='颜色编号')
     color_name = models.CharField(max_length=10, blank=True, null=True, db_comment='颜色名称')
-
+    def __str__(self):
+        return self.color_name or self.color_id
     class Meta:
         managed = False
         db_table = 'wms_product_color'
@@ -137,7 +138,8 @@ class WmsProductColor(models.Model):
 class WmsProductFabricType(models.Model):
     fabric_type_id = models.CharField(unique=True, max_length=10, blank=True, null=True, db_comment='布料品种id')
     fabric_type_name = models.CharField(max_length=10, blank=True, null=True, db_comment='布料品种名称')
-
+    def __str__(self):
+        return self.fabric_type_name or self.fabric_type_id
     class Meta:
         managed = False
         db_table = 'wms_product_fabric_type'
@@ -152,7 +154,9 @@ class WmsBinStorage(models.Model):
     bin_column = models.IntegerField(blank=True, null=True, db_comment='列')
     product_id = models.CharField(max_length=50, blank=True, null=True, db_comment='物料id')
     quantity = models.IntegerField(blank=True, null=True, db_comment='存储数量')
-
+    min_threshold = models.IntegerField(blank=True, null=True, db_comment='最小库存预警阈值')
+    def __str__(self):
+        return self.loc_id or self.id
     class Meta:
         managed = False
         db_table = 'wms_bin_storage'
@@ -174,3 +178,19 @@ class WmsCustomer(models.Model):
         managed = False
         db_table = 'wms_customer'
         db_table_comment = '客户'
+
+
+# 库存盘点信息表
+class WmsStockCheck(models.Model):
+    product = models.ForeignKey('WmsProduct', models.DO_NOTHING, to_field='product_id', blank=True, null=True)
+    expected_qty = models.IntegerField()
+    actual_qty = models.IntegerField()
+    difference = models.IntegerField(blank=True, null=True)
+    checked_by = models.CharField(max_length=50, blank=True, null=True)
+    check_time = models.DateTimeField(blank=True, null=True)
+    remarks = models.TextField(blank=True, null=True)
+
+    class Meta:
+        managed = False
+        db_table = 'wms_stock_check'
+        db_table_comment = '库存盘点记录表'

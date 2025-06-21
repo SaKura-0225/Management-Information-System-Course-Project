@@ -1,0 +1,20 @@
+<script src="https://cdn.jsdelivr.net/npm/echarts/dist/echarts.min.js"></script>
+<div id="sales_chart" style="height:400px;"></div>
+<script>
+  var chart = echarts.init(document.getElementById('sales_chart'));
+  var option = {
+    title: { text: '销售订单趋势' },
+    tooltip: {},
+    xAxis: {
+      type: 'category',
+      data: {{ dates|safe }}
+    },
+    yAxis: {},
+    series: [{
+      name: '订单数',
+      type: 'line',
+      data: {{ counts|safe }}
+    }]
+  };
+  chart.setOption(option);
+</script>

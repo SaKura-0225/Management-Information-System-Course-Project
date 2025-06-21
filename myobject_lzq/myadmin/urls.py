@@ -4,7 +4,7 @@ from django.contrib import admin
 from myadmin.views import index
 from myadmin.views import orders
 from myadmin.views import member
-from myadmin.views import report,warehouse,warehouse_flow,system
+from myadmin.views import report,warehouse,warehouse_flow,system,customer,product,inventory
 
 urlpatterns = [
     path('', index.index, name="myadmin_index"),  # 后台首页
@@ -60,5 +60,20 @@ urlpatterns = [
     path('system/permission/<int:group_id>/edit', system.edit_permissions, name='myadmin_system_permission_edit'), #权限编辑
     #path('system/permission/<int:id>/delete', system.permission_delete, name='myadmin_system_permission_delete'), #权限删除
 
+    # 客户管理路由
+    path('customer', customer.index, name='myadmin_customer_index'), #客户管理
+    path('customer/add', customer.add_customer, name='myadmin_customer_add'), #客户添加
+    path('customer/<int:id>/edit', customer.edit_customer, name='myadmin_customer_edit'), #客户编辑
+    path('customer/<int:id>/delete', customer.customer_delete, name='myadmin_customer_delete'), #客户删除
 
+    #产品信息管理路由
+    path('product', product.index, name='myadmin_product_index'), #产品信息管理
+    path('product/add', product.add_product, name='myadmin_product_add'), #产品信息添加
+    path('product/<int:id>/edit', product.edit_product, name='myadmin_product_edit'), #产品信息编辑
+    path('product/<int:id>/delete', product.product_delete, name='myadmin_product_delete'), #产品信息删除
+
+
+    # 库存信息路由
+    path('inventory', inventory.stock_index, name='myadmin_stock_index'),
+    path('inventory/<str:product_id>/check', inventory.check_inventory, name='myadmin_stock_check'),
 ]

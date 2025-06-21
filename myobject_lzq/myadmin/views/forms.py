@@ -2,7 +2,7 @@
 from django import forms
 from myadmin.models import WmsOrders,WmsOutbound,WmsOrdersDetail
 from django.contrib.auth.models import User, Group
-from myadmin.models import EmployeeProfile, Department
+from myadmin.models import EmployeeProfile, Department, WmsCustomer, WmsProduct, WmsStockCheck
 
 class AddOrdersInfoForm(forms.ModelForm):
     class Meta:
@@ -71,4 +71,41 @@ class OrderDetailForm(forms.ModelForm):
             'price': forms.NumberInput(attrs={'class': 'form-control'}),
             'total_price': forms.NumberInput(attrs={'class': 'form-control'}),
             'status': forms.TextInput(attrs={'class': 'form-control'}),
+        }
+
+
+class CustomerForm(forms.ModelForm):
+    class Meta:
+        model = WmsCustomer
+        fields = ['customers_id', 'company_name', 'area', 'level', 'principal', 'phone', 'email', 'gender', 'create_at']
+        widgets = {
+            'create_at': forms.DateInput(attrs={'type': 'date'}),
+        }
+
+    def clean_customers_id(self):
+        cid = self.cleaned_data.get('customers_id')
+        if not cid:
+            raise forms.ValidationError("客户代号不能为空")
+        return cid
+
+
+class ProductForm(forms.ModelForm):
+    class Meta:
+        model = WmsProduct
+        fields = ['product_id', 'fabric_type', 'color', 'loc', 'price']
+        widgets = {
+            'product_id': forms.TextInput(attrs={'class': 'form-control'}),
+            'fabric_type': forms.Select(attrs={'class': 'form-control'}),
+            'color': forms.Select(attrs={'class': 'form-control'}),
+            'loc': forms.Select(attrs={'class': 'form-control'}),
+            'price': forms.NumberInput(attrs={'class': 'form-control'}),
+        }
+
+
+class StockCheckForm(forms.ModelForm):
+    class Meta:
+        model = WmsStockCheck
+        fields = ['actual_qty', 'checked_by', 'remarks']
+        widgets = {
+            'remarks': forms.Textarea(attrs={'rows': 3}),
         }
