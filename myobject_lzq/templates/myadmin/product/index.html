@@ -1,45 +1,155 @@
 {% extends 'myadmin/base.html' %}
 {% block main_body %}
-<h2>产品信息</h2>
-<table class="table">
-  <thead>
-    <tr>
-      <th>产品编号</th>
-      <th>布料品种</th>
-      <th>颜色</th>
-      <th>库位编码</th>
-      <th>单价</th>
-      <th>在库数量</th>
-      <th>操作</th>
-    </tr>
-  </thead>
-  <tbody>
-    {% for p in page_obj %}
-    <tr>
-      <td>{{ p.product_id }}</td>
-      <td>{{ p.fabric_type.fabric_type_name }}</td>
-      <td>{{ p.color.color_name }}</td>
-      <td>{{ p.loc.loc_id }}</td>
-      <td>{{ p.price }}</td>
-      <td>{{ p.loc.quantity }}</td>
-      <td>
-        <a href="{% url 'myadmin_product_edit' p.id %}">编辑</a>
-        <a href="{% url 'myadmin_product_delete' p.id %}">删除</a>
-      </td>
-    </tr>
-    {% endfor %}
-  </tbody>
-</table>
+<!-- 内容头部区域 -->
+<section class="content-header bg-white rounded-xl shadow-sm p-6 mb-6">
+  <div class="flex flex-col md:flex-row md:items-center justify-between">
+    <div>
+      <h1 class="text-[clamp(1.5rem,3vw,2rem)] font-semibold text-dark">产品信息</h1>
+      <p class="text-gray-500 text-sm">管理系统中的所有产品库存信息</p>
+    </div>
+    <div class="mt-4 md:mt-0">
+      <a href="{% url 'myadmin_product_add' %}" class="bg-primary hover:bg-primary/90 text-white px-4 py-3 rounded-lg flex items-center space-x-2 transition-all duration-200 shadow-sm hover:shadow">
+        <i class="fa fa-plus"></i>
+        <span class="hidden sm:inline">添加产品</span>
+      </a>
+    </div>
+  </div>
+  
+  <!-- 面包屑导航 -->
+  <div class="mt-4 flex items-center text-sm text-gray-500">
+    <a href="#" class="hover:text-primary flex items-center">
+      <i class="fa fa-dashboard mr-1"></i> 首页
+    </a>
+    <i class="fa fa-angle-right mx-2 text-xs"></i>
+    <span class="text-dark font-medium">产品信息</span>
+  </div>
+</section>
 
-<div class="pagination">
-  {% if page_obj.has_previous %}
-    <a href="?page=1">&laquo; 首页</a>
-    <a href="?page={{ page_obj.previous_page_number }}">上一页</a>
-  {% endif %}
-  <span>第 {{ page_obj.number }} 页 / 共 {{ page_obj.paginator.num_pages }} 页</span>
-  {% if page_obj.has_next %}
-    <a href="?page={{ page_obj.next_page_number }}">下一页</a>
-    <a href="?page={{ page_obj.paginator.num_pages }}">尾页 &raquo;</a>
-  {% endif %}
+<!-- 搜索筛选区域 -->
+<div class="bg-white rounded-xl shadow-sm border border-gray-100 p-6 mb-6">
+  <form method="get" action="{% url 'myadmin_product_index' %}" class="grid grid-cols-1 md:grid-cols-4 gap-4">
+    <div>
+      <label class="block text-sm font-medium text-gray-700 mb-1">产品编号</label>
+      <input type="text" name="keyword" value="{{ request.GET.keyword }}" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:border-primary focus:ring focus:ring-primary/20 focus:outline-none" placeholder="搜索编号">
+    </div>
+    <div>
+      <label class="block text-sm font-medium text-gray-700 mb-1">布料品种</label>
+      <select name="fabric_type" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:border-primary focus:ring focus:ring-primary/20 focus:outline-none">
+        <option value="">全部品种</option>
+        {% for type in fabric_types %}
+        <option value="{{ type.id }}" {% if type.id == request.GET.fabric_type %}selected{% endif %}>{{ type.fabric_type_name }}</option>
+        {% endfor %}
+      </select>
+    </div>
+    <div>
+      <label class="block text-sm font-medium text-gray-700 mb-1">颜色</label>
+      <select name="color" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:border-primary focus:ring focus:ring-primary/20 focus:outline-none">
+        <option value="">全部颜色</option>
+        {% for color in colors %}
+        <option value="{{ color.id }}" {% if color.id == request.GET.color %}selected{% endif %}>{{ color.color_name }}</option>
+        {% endfor %}
+      </select>
+    </div>
+    <div class="flex items-end">
+      <button type="submit" class="w-full bg-primary text-white px-4 py-2 rounded-lg hover:bg-primary/90 transition-colors duration-200 flex items-center justify-center">
+        <i class="fa fa-search mr-2"></i> 搜索
+      </button>
+    </div>
+  </form>
+</div>
+
+<!-- 产品信息表格 -->
+<div class="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
+  <div class="overflow-x-auto">
+    <table class="w-full">
+      <thead>
+        <tr class="bg-gray-50 text-left">
+          <th class="px-6 py-3 text-xs font-medium text-gray-500 uppercase tracking-wider">产品编号</th>
+          <th class="px-6 py-3 text-xs font-medium text-gray-500 uppercase tracking-wider">布料品种</th>
+          <th class="px-6 py-3 text-xs font-medium text-gray-500 uppercase tracking-wider">颜色</th>
+          <th class="px-6 py-3 text-xs font-medium text-gray-500 uppercase tracking-wider">库位编码</th>
+          <th class="px-6 py-3 text-xs font-medium text-gray-500 uppercase tracking-wider">单价</th>
+          <th class="px-6 py-3 text-xs font-medium text-gray-500 uppercase tracking-wider">在库数量</th>
+          <th class="px-6 py-3 text-xs font-medium text-gray-500 uppercase tracking-wider text-right">操作</th>
+        </tr>
+      </thead>
+      <tbody class="divide-y divide-gray-200">
+        {% for p in page_obj %}
+        <tr class="hover:bg-gray-50 transition-colors duration-150">
+          <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">{{ p.product_id }}</td>
+          <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-700">{{ p.fabric_type.fabric_type_name }}</td>
+          <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-700">{{ p.color.color_name }}</td>
+          <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-700">{{ p.loc.loc_id }}</td>
+          <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-700">¥ {{ p.price|floatformat:2 }}</td>
+          <td class="px-6 py-4 whitespace-nowrap">
+            <span class="px-2 py-1 text-xs {% if p.loc.quantity < 10 %}bg-red-100 text-red-800{% else %}bg-green-100 text-green-800{% endif %} rounded-full">
+              {{ p.loc.quantity }}
+            </span>
+          </td>
+          <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-right">
+            <a href="{% url 'myadmin_product_edit' p.id %}" class="text-primary hover:text-primary/80 mr-3 transition-colors duration-150">
+              <i class="fa fa-pencil mr-1"></i> 编辑
+            </a>
+            <a href="{% url 'myadmin_product_delete' p.id %}" class="text-danger hover:text-danger/80 transition-colors duration-150">
+              <i class="fa fa-trash mr-1"></i> 删除
+            </a>
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+  
+  <!-- 分页导航 -->
+  <div class="px-6 py-4 border-t border-gray-200 flex flex-col sm:flex-row justify-between items-center">
+    <div class="text-sm text-gray-700 mb-4 sm:mb-0">
+      显示第 <span class="font-medium">{{ page_obj.start_index }}</span> 至 <span class="font-medium">{{ page_obj.end_index }}</span> 条，共 <span class="font-medium">{{ page_obj.paginator.count }}</span> 条记录
+    </div>
+    <div class="flex items-center space-x-2">
+      {% if page_obj.has_previous %}
+        <a href="?page=1" class="px-3 py-1 rounded-md border border-gray-300 text-sm font-medium text-gray-700 hover:bg-gray-50 transition-colors duration-150">
+          <i class="fa fa-angle-double-left"></i>
+        </a>
+        <a href="?page={{ page_obj.previous_page_number }}" class="px-3 py-1 rounded-md border border-gray-300 text-sm font-medium text-gray-700 hover:bg-gray-50 transition-colors duration-150">
+          <i class="fa fa-angle-left"></i>
+        </a>
+      {% else %}
+        <span class="px-3 py-1 rounded-md border border-gray-300 text-sm font-medium text-gray-400 cursor-not-allowed">
+          <i class="fa fa-angle-double-left"></i>
+        </span>
+        <span class="px-3 py-1 rounded-md border border-gray-300 text-sm font-medium text-gray-400 cursor-not-allowed">
+          <i class="fa fa-angle-left"></i>
+        </span>
+      {% endif %}
+      
+      {% for i in page_obj.paginator.page_range %}
+        {% if page_obj.number == i %}
+          <span class="px-3 py-1 rounded-md bg-primary text-white text-sm font-medium">
+            {{ i }}
+          </span>
+        {% elif i > page_obj.number|add:'-3' and i < page_obj.number|add:'3' %}
+          <a href="?page={{ i }}" class="px-3 py-1 rounded-md border border-gray-300 text-sm font-medium text-gray-700 hover:bg-gray-50 transition-colors duration-150">
+            {{ i }}
+          </a>
+        {% endif %}
+      {% endfor %}
+      
+      {% if page_obj.has_next %}
+        <a href="?page={{ page_obj.next_page_number }}" class="px-3 py-1 rounded-md border border-gray-300 text-sm font-medium text-gray-700 hover:bg-gray-50 transition-colors duration-150">
+          <i class="fa fa-angle-right"></i>
+        </a>
+        <a href="?page={{ page_obj.paginator.num_pages }}" class="px-3 py-1 rounded-md border border-gray-300 text-sm font-medium text-gray-700 hover:bg-gray-50 transition-colors duration-150">
+          <i class="fa fa-angle-double-right"></i>
+        </a>
+      {% else %}
+        <span class="px-3 py-1 rounded-md border border-gray-300 text-sm font-medium text-gray-400 cursor-not-allowed">
+          <i class="fa fa-angle-right"></i>
+        </span>
+        <span class="px-3 py-1 rounded-md border border-gray-300 text-sm font-medium text-gray-400 cursor-not-allowed">
+          <i class="fa fa-angle-double-right"></i>
+        </span>
+      {% endif %}
+    </div>
+  </div>
 </div>
 {% endblock %}
