@@ -131,12 +131,6 @@
           </a>
         </li>
         <li>
-          <a href="{% url 'myadmin_order_index'%}" class="sidebar-item text-gray-700 hover:bg-primary/5 hover:text-primary" data-level="1" data-module="storage">
-            <i class="fa fa-users w-5 text-center"></i>
-            <span>储位管理</span>
-          </a>
-        </li>
-        <li>
           <a href="{% url 'myadmin_customer_index'%}" class="sidebar-item-hover flex items-center px-3 py-2.5 rounded-md text-sm font-medium text-gray-700 hover:text-primary">
             <i class="fa fa-users w-5 text-center"></i>
             <span>客户管理</span>
@@ -153,7 +147,7 @@
               <i class="fa fa-angle-down transition-transform duration-200 nav-icon"></i>
             </button>
             <div class="nav-dropdown-content hidden pl-6 mt-1 space-y-1" data-module="warehouse">
-              <a href="{% url 'myadmin_warehouse-flow_outbound'%}" class="block px-3 py-2 rounded-md text-sm text-gray-600 hover:bg-gray-100 hover:text-primary transition-colors duration-200">
+              <a href="{% url 'myadmin_bin_visualization'%}" class="block px-3 py-2 rounded-md text-sm text-gray-600 hover:bg-gray-100 hover:text-primary transition-colors duration-200">
                 <i class="fa fa-circle-o mr-1"></i> 储位信息
               </a>
               <a href="{% url 'myadmin_product_index'%}" class="block px-3 py-2 rounded-md text-sm text-gray-600 hover:bg-gray-100 hover:text-primary transition-colors duration-200">

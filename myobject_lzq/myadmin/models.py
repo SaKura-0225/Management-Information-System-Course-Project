@@ -152,7 +152,7 @@ class WmsBinStorage(models.Model):
     bin_level = models.IntegerField(blank=True, null=True, db_comment='层')
     bin_row = models.IntegerField(blank=True, null=True, db_comment='排')
     bin_column = models.IntegerField(blank=True, null=True, db_comment='列')
-    product_id = models.CharField(max_length=50, blank=True, null=True, db_comment='物料id')
+    product = models.ForeignKey('WmsProduct', models.DO_NOTHING, to_field='product_id', blank=True, null=True, db_comment='物料id')
     quantity = models.IntegerField(blank=True, null=True, db_comment='存储数量')
     min_threshold = models.IntegerField(blank=True, null=True, db_comment='最小库存预警阈值')
     def __str__(self):

@@ -43,7 +43,7 @@ urlpatterns = [
 
 
     #仓位可视化路由
-    path('warehouse', warehouse.index, name='myadmin_warehouse_index'), #主页浏览
+    path("warehouse", warehouse.bin_visualization, name="myadmin_bin_visualization"), #仓位可视化
 
 
     # 系统管理路由
