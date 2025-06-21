@@ -98,7 +98,7 @@
     <!-- Logo区域 -->
     <div class="flex items-center justify-between h-16 px-4 border-b border-gray-200">
       <div class="flex items-center space-x-2">
-        <div class="w-8 h-8 rounded-md bg-primary flex items-center justify-center text-white font-bold">餐</div>
+        <div class="w-8 h-8 rounded-md bg-primary flex items-center justify-center text-white font-bold">布</div> <!-- 修改为"布" -->
         <span class="text-lg font-semibold">F布行后台管理系统</span>
       </div>
       <button id="sidebar-toggle" class="lg:hidden text-gray-500 hover:text-primary">
@@ -109,7 +109,8 @@
     <!-- 用户信息 -->
     <div class="p-4 border-b border-gray-200">
       <div class="flex items-center space-x-3">
-        <img src="{% static 'myadmin/dist/img/222.jpg'%}" alt="用户头像" class="w-10 h-10 rounded-full object-cover border-2 border-primary scale-hover">
+        <!-- 修改为你的图片路径 -->
+        <img src="{% static 'uploads/Avatar/微信图片_20250503211615.jpg' %}" alt="用户头像" class="w-10 h-10 rounded-full object-cover border-2 border-primary scale-hover">
         <div>
           <p class="font-medium">{{request.session.adminuser.nickname}}</p>
           <div class="flex items-center text-xs text-success">
@@ -246,12 +247,7 @@
         <button id="mobile-sidebar-toggle" class="mr-4 text-gray-500 lg:hidden">
           <i class="fa fa-bars"></i>
         </button>
-        <div class="relative">
-          <span class="absolute inset-y-0 left-0 flex items-center pl-3">
-            <i class="fa fa-search text-gray-400"></i>
-          </span>
-          <input type="text" placeholder="搜索..." class="pl-10 pr-4 py-2 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary text-sm w-64">
-        </div>
+        <!-- 搜索栏已移除 -->
       </div>
       
       <div class="flex items-center space-x-4">
@@ -282,7 +278,8 @@
         <!-- 用户菜单 -->
         <div class="relative group">
           <button class="flex items-center space-x-2 focus:outline-none">
-            <img src="{% static 'dist/img/user2-160x160.jpg'%}" alt="用户头像" class="w-8 h-8 rounded-full object-cover scale-hover">
+            <!-- 修改为你的图片路径 -->
+            <img src="{% static 'uploads/Avatar/微信图片_20250503211615.jpg' %}" alt="用户头像" class="w-8 h-8 rounded-full object-cover scale-hover">
             <span class="text-sm font-medium hidden md:block">{{request.session.adminuser.nickname}}</span>
             <i class="fa fa-angle-down text-gray-500"></i>
           </button>
