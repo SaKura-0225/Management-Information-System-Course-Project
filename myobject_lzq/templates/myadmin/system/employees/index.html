@@ -24,10 +24,15 @@
   </div>
 </section>
 
+<!-- 搜索框 -->
+<div class="bg-white rounded-xl shadow-sm p-4 mb-6">
+  <input type="text" id="employee-search" class="w-full px-4 py-2 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary" placeholder="搜索员工..." />
+</div>
+
 <!-- 员工表格 -->
 <div class="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
   <div class="overflow-x-auto">
-    <table class="w-full text-sm text-left">
+    <table class="w-full text-sm text-left" id="employee-table">
       <thead class="bg-gray-50 text-xs uppercase text-gray-500">
         <tr>
           <th class="px-6 py-4">序号</th>
@@ -40,9 +45,9 @@
           <th class="px-6 py-4">操作</th>
         </tr>
       </thead>
-      <tbody>
+      <tbody id="employee-list">
         {% for e in employees %}
-        <tr class="border-b border-gray-100 hover:bg-gray-50 transition-colors duration-150">
+        <tr class="border-b border-gray-100 hover:bg-gray-50 transition-colors duration-150 employee-row">
           <td class="px-6 py-4 font-medium text-dark">{{ e.id }}</td>
           <td class="px-6 py-4">{{ e.work_no }}</td>
           <td class="px-6 py-4">
@@ -77,4 +82,26 @@
     </table>
   </div>
 </div>
-{% endblock %}    
+
+<script>
+  // 获取搜索框和员工列表
+  const searchInput = document.getElementById('employee-search');
+  const employeeRows = document.querySelectorAll('.employee-row');
+
+  // 监听搜索框的输入事件
+  searchInput.addEventListener('input', function() {
+    const searchQuery = searchInput.value.toLowerCase();
+
+    // 遍历员工列表，显示匹配的行，隐藏不匹配的行
+    employeeRows.forEach(row => {
+      const rowText = row.textContent.toLowerCase();
+      if (rowText.includes(searchQuery)) {
+        row.style.display = ''; // 显示匹配项
+      } else {
+        row.style.display = 'none'; // 隐藏不匹配项
+      }
+    });
+  });
+</script>
+
+{% endblock %}

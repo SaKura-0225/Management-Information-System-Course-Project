@@ -46,7 +46,70 @@
       
       <!-- 表单字段 -->
       <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-        {{ form.as_p }}
+        <!-- 使用Tailwind CSS自定义表单样式 -->
+        <style type="text/tailwindcss">
+          @layer utilities {
+            .form-input-focus {
+              @apply focus:border-primary focus:ring-2 focus:ring-primary/20 transition-all duration-200;
+            }
+            .input-hover-effect {
+              @apply hover:shadow-md hover:scale-[1.01] transition-all duration-200;
+            }
+          }
+        </style>
+        
+        <!-- 自定义表单渲染 -->
+        {% for field in form %}
+        <div class="form-group">
+          <label for="{{ field.id_for_label }}" class="block text-sm font-medium text-gray-700 mb-1">
+            {{ field.label }}
+            {% if field.field.required %}
+              <span class="text-danger">*</span>
+            {% endif %}
+          </label>
+          
+          <!-- 应用边框和悬停效果 -->
+          {% if field.field.widget.input_type == 'select' %}
+            <select id="{{ field.id_for_label }}" name="{{ field.name }}" 
+                    class="w-full px-4 py-2 border border-gray-300 rounded-lg input-hover-effect form-input-focus 
+                           {% if field.errors %}border-danger{% endif %}">
+              {% for value, text in field.field.choices %}
+                <option value="{{ value }}" {% if field.value == value %}selected{% endif %}>{{ text }}</option>
+              {% endfor %}
+            </select>
+          {% elif field.field.widget.input_type == 'checkbox' %}
+            <div class="flex items-center mt-2">
+              <input type="checkbox" id="{{ field.id_for_label }}" name="{{ field.name }}" 
+                     class="w-4 h-4 text-primary border-gray-300 rounded focus:ring-primary/20 
+                            {% if field.errors %}border-danger{% endif %}"
+                     {% if field.value %}checked{% endif %}>
+              <label for="{{ field.id_for_label }}" class="ml-2 text-sm text-gray-700">
+                {{ field.label }}
+              </label>
+            </div>
+          {% else %}
+            <input type="{{ field.field.widget.input_type }}" id="{{ field.id_for_label }}" name="{{ field.name }}" 
+                   value="{{ field.value|default:'' }}" 
+                   class="w-full px-4 py-2 border border-gray-300 rounded-lg input-hover-effect form-input-focus 
+                          {% if field.errors %}border-danger{% endif %}"
+                   placeholder="{{ field.label }}">
+          {% endif %}
+          
+          <!-- 错误提示 -->
+          {% if field.errors %}
+            <div class="mt-1 text-sm text-danger">
+              {{ field.errors|join:", " }}
+            </div>
+          {% endif %}
+          
+          <!-- 帮助文本 -->
+          {% if field.help_text %}
+            <p class="mt-1 text-xs text-gray-500">
+              {{ field.help_text|safe }}
+            </p>
+          {% endif %}
+        </div>
+        {% endfor %}
       </div>
       
       <!-- 表单按钮 -->
@@ -61,4 +124,4 @@
     </form>
   </div>
 </section>
-{% endblock %}    
+{% endblock %}
