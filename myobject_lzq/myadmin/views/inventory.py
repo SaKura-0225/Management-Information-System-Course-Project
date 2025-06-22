@@ -3,8 +3,12 @@ from myadmin.models import WmsProduct, WmsBinStorage, WmsStockCheck
 from .forms import StockCheckForm
 from django.db.models import F, Sum, Q
 from django.core.paginator import Paginator
+from django.contrib.auth.decorators import login_required, permission_required
+
 
 # 库存总览 + 预警
+@login_required
+@permission_required('myadmin.view_wmsbinstorage', raise_exception=True)
 def stock_index(request):
     search_pid = request.GET.get("product_id", "").strip()
     search_fabric = request.GET.get("fabric_type", "").strip()
@@ -57,7 +61,11 @@ def stock_index(request):
         'search_color': search_color,
         'search_status': search_status,
     })
+
+
 # 发起盘点
+@login_required
+@permission_required('myadmin.view_wmsbinstorage', raise_exception=True)
 def check_inventory(request, product_id):
     product = get_object_or_404(WmsProduct, product_id=product_id)
     loc = WmsBinStorage.objects.filter(product_id=product_id).first()

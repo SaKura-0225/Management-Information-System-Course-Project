@@ -136,13 +136,7 @@
             <span>首页</span>
           </a>
         </li>
-        <li>
-          <a href="{% url 'myadmin_customer_index'%}" class="sidebar-item sidebar-item-hover text-gray-700">
-            <i class="fa fa-users w-5 text-center"></i>
-            <span>客户管理</span>
-          </a>
-        </li>
-        {% if perms.myadmin.view_wmsoutbound %}
+        {% if perms.myadmin.view_wmsbinstorage or perms.myadmin.view_wmsproduct or perms.myadmin.view_wmsoutbound or perms.auth.is_supervisor %}
         <li>
           <div class="nav-dropdown">
             <button class="sidebar-item sidebar-item-hover text-gray-700 flex items-center justify-between w-full" data-level="1" data-module="warehouse">
@@ -153,26 +147,36 @@
               <i class="fa fa-angle-down transition-transform duration-200 nav-icon"></i>
             </button>
             <div class="nav-dropdown-content hidden pl-6 mt-1 space-y-1" data-module="warehouse">
-              <a href="{% url 'myadmin_bin_visualization'%}" class="sidebar-subitem sidebar-subitem-hover text-gray-600">
+              {% if perms.myadmin.view_wmsbinstorage %}
+              <a href="{% url 'myadmin_bin_visualization'%}" class="block px-3 py-2 rounded-md text-sm text-gray-600 hover:bg-gray-100 hover:text-primary transition-colors duration-200">
                 <i class="fa fa-circle-o mr-1"></i> 储位信息
               </a>
-              <a href="{% url 'myadmin_product_index'%}" class="sidebar-subitem sidebar-subitem-hover text-gray-600">
+              {% endif %}
+              {% if perms.myadmin.view_wmsproduct %}
+              <a href="{% url 'myadmin_product_index'%}" class="block px-3 py-2 rounded-md text-sm text-gray-600 hover:bg-gray-100 hover:text-primary transition-colors duration-200">
                 <i class="fa fa-circle-o mr-1"></i> 产品信息
               </a>
-              <a href="{% url 'myadmin_stock_index'%}" class="sidebar-subitem sidebar-subitem-hover text-gray-600">
+              {% endif %}
+              {% if perms.myadmin.view_wmsbinstorage %}
+              <a href="{% url 'myadmin_stock_index'%}" class="block px-3 py-2 rounded-md text-sm text-gray-600 hover:bg-gray-100 hover:text-primary transition-colors duration-200">
                 <i class="fa fa-circle-o mr-1"></i> 库存信息
               </a>
-              <a href="{% url 'myadmin_warehouse-flow_outbound'%}" class="sidebar-subitem sidebar-subitem-hover text-gray-600" data-level="2" data-module="warehouse">
+              {% endif %}
+              {% if perms.myadmin.view_wmsoutbound %}
+              <a href="{% url 'myadmin_warehouse-flow_outbound'%}" class="sidebar-subitem text-gray-600 hover:bg-primary/10 hover:text-primary" data-level="2" data-module="warehouse">
                 <i class="fa fa-circle-o mr-1"></i> 出库管理
               </a>
-              <a href="{% url 'myadmin_warehouse-flow_inbound'%}" class="sidebar-subitem sidebar-subitem-hover text-gray-600" data-level="2" data-module="warehouse">
+              {% endif %}
+              {% if perms.auth.is_supervisor %}
+              <a href="{% url 'myadmin_warehouse-flow_inbound'%}" class="sidebar-subitem text-gray-600 hover:bg-primary/10 hover:text-primary" data-level="2" data-module="warehouse">
                 <i class="fa fa-circle-o mr-1"></i> 入库管理
               </a>
+              {% endif %}
             </div>
           </div>
         </li>
         {% endif %}
-        {% if perms.myadmin.view_wmsorders %}
+        {% if perms.myadmin.view_wmsorders or perms.auth.is_supervisor %}
         <li>
           <div class="nav-dropdown">
             <button class="sidebar-item sidebar-item-hover text-gray-700 flex items-center justify-between w-full" data-level="1" data-module="orders">
@@ -183,18 +187,22 @@
               <i class="fa fa-angle-down transition-transform duration-200 nav-icon"></i>
             </button>
             <div class="nav-dropdown-content hidden pl-6 mt-1 space-y-1" data-module="orders">
-              <a href="{% url 'myadmin_order_index'%}" class="sidebar-subitem sidebar-subitem-hover text-gray-600" data-level="2" data-module="orders">
+              {% if perms.myadmin.view_wmsorders %}
+              <a href="{% url 'myadmin_order_index'%}" class="sidebar-subitem text-gray-600 hover:bg-primary/10 hover:text-primary" data-level="2" data-module="orders">
                 <i class="fa fa-circle-o mr-1"></i> 销售订单管理
               </a>
               <a href="{% url 'myadmin_order_detail_view'%}" class="sidebar-subitem sidebar-subitem-hover text-gray-600" data-level="2" data-module="orders">
                 <i class="fa fa-circle-o mr-1"></i> 销售订单详情
               </a>
-              <a href="{% url 'myadmin_order_index'%}" class="sidebar-subitem sidebar-subitem-hover text-gray-600" data-level="2" data-module="orders">
+              {% endif %}
+              {% if perms.auth.is_supervisor %}
+              <a href="{% url 'myadmin_order_index'%}" class="sidebar-subitem text-gray-600 hover:bg-primary/10 hover:text-primary" data-level="2" data-module="orders">
                 <i class="fa fa-circle-o mr-1"></i> 采购订单管理
               </a>
               <a href="{% url 'myadmin_order_index'%}" class="sidebar-subitem sidebar-subitem-hover text-gray-600" data-level="2" data-module="orders">
                 <i class="fa fa-circle-o mr-1"></i> 采购订单详情
               </a>
+              {% endif %}
             </div>
           </div>
         </li>
@@ -205,6 +213,15 @@
             <span>报表分析</span>
           </a>
         </li>
+        {% if perms.myadmin.view_customer %}
+        <li>
+          <a href="{% url 'myadmin_customer_index'%}" class="sidebar-item-hover flex items-center px-3 py-2.5 rounded-md text-sm font-medium text-gray-700 hover:text-primary">
+            <i class="fa fa-users w-5 text-center"></i>
+            <span>客户管理</span>
+          </a>
+        </li>
+        {% endif %}
+        {% if perms.myadmin.view_myadminemployeeprofile or perms.myadmin.view_myadmindepartment or perms.auth.is_supervisor %}        
         <li>
           <div class="nav-dropdown">
             <button class="sidebar-item sidebar-item-hover text-gray-700 flex items-center justify-between w-full" data-level="1" data-module="system">
@@ -215,18 +232,25 @@
               <i class="fa fa-angle-down transition-transform duration-200 nav-icon"></i>
             </button>
             <div class="nav-dropdown-content hidden pl-6 mt-1 space-y-1" data-module="system">
-              <a href="{% url 'myadmin_system_employee_index'%}" class="sidebar-subitem sidebar-subitem-hover text-gray-600" data-level="2" data-module="system">
+              {% if perms.myadmin.view_myadminemployeeprofile %}
+              <a href="{% url 'myadmin_system_employee_index'%}" class="sidebar-subitem text-gray-600 hover:bg-primary/10 hover:text-primary" data-level="2" data-module="system">
                 <i class="fa fa-user-o mr-1"></i> 员工管理
               </a>
-              <a href="{% url 'myadmin_system_department_index'%}" class="sidebar-subitem sidebar-subitem-hover text-gray-600" data-level="2" data-module="system">
+              {% endif %}
+              {% if perms.myadmin.view_myadmindepartment %}
+              <a href="{% url 'myadmin_system_department_index'%}" class="sidebar-subitem text-gray-600 hover:bg-primary/10 hover:text-primary" data-level="2" data-module="system">
                 <i class="fa fa-sitemap mr-1"></i> 部门管理
               </a>
-              <a href="{% url 'myadmin_system_permission_index'%}" class="sidebar-subitem sidebar-subitem-hover text-gray-600" data-level="2" data-module="system">
+              {% endif %}
+              {% if perms.auth.is_supervisor %}
+              <a href="{% url 'myadmin_system_permission_index'%}" class="sidebar-subitem text-gray-600 hover:bg-primary/10 hover:text-primary" data-level="2" data-module="system">
                 <i class="fa fa-key mr-1"></i> 权限管理
               </a>
+              {% endif %}
             </div>
           </div>
         </li>
+        {% endif %}
       </ul>
     </nav>
   </aside>

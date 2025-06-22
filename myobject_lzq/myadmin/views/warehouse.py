@@ -1,7 +1,10 @@
 from django.shortcuts import render
 from myadmin.models import WmsBinStorage
 from collections import defaultdict
+from django.contrib.auth.decorators import login_required, permission_required
 
+@login_required
+@permission_required('myadmin.view_wmsbinstorage', raise_exception=True)
 def bin_visualization(request):
     bins = (
         WmsBinStorage.objects
