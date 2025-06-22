@@ -113,6 +113,8 @@ class WmsProduct(models.Model):
     color = models.ForeignKey('WmsProductColor', models.DO_NOTHING, to_field='color_id', blank=True, null=True, db_comment='布料颜色id')
     loc = models.ForeignKey('WmsBinStorage', models.DO_NOTHING, to_field='loc_id', blank=True, null=True, db_comment='库位编码')
     price = models.IntegerField(blank=True, null=True, db_comment='单价')
+    barcode_file = models.CharField(max_length=100, blank=True, null=True, db_comment='条码图片文件名')
+
 
     class Meta:
         managed = True

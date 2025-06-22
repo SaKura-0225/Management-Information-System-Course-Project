@@ -1,5 +1,6 @@
 {% extends 'myadmin/base.html' %}
 {% block main_body %}
+{% load static %}
 <!-- 内容头部区域 -->
 <section class="content-header bg-white rounded-xl shadow-sm p-6 mb-6">
   <div class="flex flex-col md:flex-row md:items-center justify-between">
@@ -70,6 +71,8 @@
           <th class="px-6 py-3 text-xs font-medium text-gray-500 uppercase tracking-wider">库位编码</th>
           <th class="px-6 py-3 text-xs font-medium text-gray-500 uppercase tracking-wider">单价</th>
           <th class="px-6 py-3 text-xs font-medium text-gray-500 uppercase tracking-wider">在库数量</th>
+          <th class="px-6 py-4">二维码</th>
+
           <th class="px-6 py-3 text-xs font-medium text-gray-500 uppercase tracking-wider text-right">操作</th>
         </tr>
       </thead>
@@ -86,6 +89,14 @@
               {{ p.loc.quantity }}
             </span>
           </td>
+          <td class="px-6 py-4">
+            {% if p.barcode_file %}
+              <img src="/static/qrcodes/product/{{ p.barcode_file }}" alt="二维码" class="h-16">
+            {% else %}
+              <span class="text-gray-400 text-xs">无</span>
+            {% endif %}
+          </td>
+          
           <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-right">
             <a href="{% url 'myadmin_product_edit' p.id %}" class="text-primary hover:text-primary/80 mr-3 transition-colors duration-150">
               <i class="fa fa-pencil mr-1"></i> 编辑
