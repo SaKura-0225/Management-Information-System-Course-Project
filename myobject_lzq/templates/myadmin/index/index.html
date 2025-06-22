@@ -25,41 +25,83 @@
     </div>
   </div>
 
-
-   <!-- 出库数据图表 -->
-  <div class="bg-white rounded-xl shadow-sm p-4 mt-6">
-    <h3 class="text-lg font-semibold mb-2">本月每日出库量</h3>
-    <div id="monthly_outbound_chart" style="height: 400px;"></div>
+  <!-- 新增数据概览小卡片，调整为2*2布局并放大 -->
+  <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mt-6">
+    <div class="bg-primary/5 rounded-lg p-6 flex items-center hover:bg-primary/10 transition-colors duration-300 transform hover:scale-105">
+      <div class="w-10 h-10 rounded bg-primary/10 flex items-center justify-center text-primary mr-4">
+        <i class="fa fa-clock-o text-xl"></i>
+      </div>
+      <div>
+        <p class="text-sm text-gray-500">今日订单</p>
+        <p class="text-xl font-medium text-dark">{{ today_orders }}</p>
+      </div>
+    </div>
+    <div class="bg-success/5 rounded-lg p-6 flex items-center hover:bg-success/10 transition-colors duration-300 transform hover:scale-105">
+      <div class="w-10 h-10 rounded bg-success/10 flex items-center justify-center text-success mr-4">
+        <i class="fa fa-check-circle text-xl"></i>
+      </div>
+      <div>
+        <p class="text-sm text-gray-500">今日出库</p>
+        <p class="text-xl font-medium text-dark">{{ today_outbound }}</p>
+      </div>
+    </div>
+    <div class="bg-warning/5 rounded-lg p-6 flex items-center hover:bg-warning/10 transition-colors duration-300 transform hover:scale-105">
+      <div class="w-10 h-10 rounded bg-warning/10 flex items-center justify-center text-warning mr-4">
+        <i class="fa fa-exclamation-triangle text-xl"></i>
+      </div>
+      <div>
+        <p class="text-sm text-gray-500">今日待出库</p>
+        <p class="text-xl font-medium text-dark">{{ today_pending_outbound }}</p>
+      </div>
+    </div>
+    <div class="bg-danger/5 rounded-lg p-6 flex items-center hover:bg-danger/10 transition-colors duration-300 transform hover:scale-105">
+      <div class="w-10 h-10 rounded bg-danger/10 flex items-center justify-center text-danger mr-4">
+        <i class="fa fa-exclamation-circle text-xl"></i>
+      </div>
+      <div>
+        <p class="text-sm text-gray-500">库存预警</p>
+        <p class="text-xl font-medium text-dark">{{ low_stock_count }}</p>
+      </div>
+    </div>
   </div>
-  
+
+  <!-- 图表模块横向排列 -->
+  <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mt-6">
+    <!-- 本月每日出库量卡片模块 -->
+    <div class="bg-white rounded-xl shadow-sm p-4 transition-all duration-300 hover:shadow-md hover:-translate-y-1 hover:scale-102 border border-gray-200 hover:border-blue-300">
+      <h3 class="text-lg font-semibold mb-3">本月每日出库量</h3>
+      <div id="monthly_outbound_chart" style="height: 250px;"></div>
+    </div>
+
+    <!-- 本月销售量 Top5 型号卡片模块 -->
+    <div class="bg-white rounded-xl shadow-sm p-4 transition-all duration-300 hover:shadow-md hover:-translate-y-1 hover:scale-102 border border-gray-200 hover:border-blue-300">
+      <h3 class="text-lg font-semibold mb-3">本月销售量 Top5 型号</h3>
+      <div id="top5_chart_bar" style="height: 250px;"></div>
+    </div>
+  </div>
+
   <script src="https://cdn.jsdelivr.net/npm/echarts@5"></script>
   <script>
-  const monthlyChart = echarts.init(document.getElementById('monthly_outbound_chart'));
-  monthlyChart.setOption({
-    tooltip: { trigger: 'axis' },
-    xAxis: {
-      type: 'category',
-      data: {{ monthly_outbound_chart.dates|safe }},
-      axisLabel: { rotate: 45 }
-    },
-    yAxis: { type: 'value' },
-    series: [{
-      name: '出库量',
-      type: 'line',
-      smooth: true,
-      data: {{ monthly_outbound_chart.quantities|safe }},
-      itemStyle: { color: '#60a5fa' }
-    }]
-  });
-  </script>
-
-  <!-- 销售量Top5型号图表 -->
-  <div class="bg-white rounded-xl shadow-sm p-4 mt-6">
-    <h3 class="text-lg font-semibold mb-2">本月销售量 Top5 型号</h3>
-    <div id="top5_chart_bar" style="height: 400px;"></div>
-  </div>
-
-  <script>
+    // 本月每日出库量图表
+    const monthlyChart = echarts.init(document.getElementById('monthly_outbound_chart'));
+    monthlyChart.setOption({
+      tooltip: { trigger: 'axis' },
+      xAxis: {
+        type: 'category',
+        data: {{ monthly_outbound_chart.dates|safe }},
+        axisLabel: { rotate: 45 }
+      },
+      yAxis: { type: 'value' },
+      series: [{
+        name: '出库量',
+        type: 'line',
+        smooth: true,
+        data: {{ monthly_outbound_chart.quantities|safe }},
+        itemStyle: { color: '#60a5fa' }
+      }]
+    });
+    
+    // 本月销售量Top5型号图表
     const top5Chart = echarts.init(document.getElementById('top5_chart_bar'));
     top5Chart.setOption({
       tooltip: {
@@ -83,164 +125,119 @@
         label: { show: true, position: 'top' }
       }]
     });
-    </script>
-
-
-
   </script>
-  <!-- 新增数据概览小卡片 -->
-  <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mt-6">
-    <div class="bg-primary/5 rounded-lg p-3 flex items-center hover:bg-primary/10 transition-colors duration-300">
-      <div class="w-8 h-8 rounded bg-primary/10 flex items-center justify-center text-primary mr-3">
-        <i class="fa fa-clock-o"></i>
-      </div>
-      <div>
-        <p class="text-xs text-gray-500">今日订单</p>
-        <p class="text-sm font-medium text-dark">{{ today_orders }}</p>
-      </div>
-    </div>
-    <div class="bg-success/5 rounded-lg p-3 flex items-center hover:bg-success/10 transition-colors duration-300">
-      <div class="w-8 h-8 rounded bg-success/10 flex items-center justify-center text-success mr-3">
-        <i class="fa fa-check-circle"></i>
-      </div>
-      <div>
-        <p class="text-xs text-gray-500">今日出库</p>
-        <p class="text-sm font-medium text-dark">{{ today_outbound }}</p>
-      </div>
-    </div>
-    <div class="bg-warning/5 rounded-lg p-3 flex items-center hover:bg-warning/10 transition-colors duration-300">
-      <div class="w-8 h-8 rounded bg-warning/10 flex items-center justify-center text-warning mr-3">
-        <i class="fa fa-exclamation-triangle"></i>
-      </div>
-      <div>
-        <p class="text-xs text-gray-500">今日待出库</p>
-        <p class="text-sm font-medium text-dark">{{ today_pending_outbound }}</p>
-      </div>
-    </div>
-    <div class="bg-danger/5 rounded-lg p-3 flex items-center hover:bg-danger/10 transition-colors duration-300">
-      <div class="w-8 h-8 rounded bg-danger/10 flex items-center justify-center text-danger mr-3">
-        <i class="fa fa-exclamation-circle"></i>
-      </div>
-      <div>
-        <p class="text-xs text-gray-500">库存预警</p>
-        <p class="text-sm font-medium text-dark">{{ low_stock_count }}</p>
-      </div>
-    </div>
-  </div>
-</section>
 
-<!-- Main content -->
-<section class="content container-fluid">
-  <!-- Small boxes (Stat box) -->
-  <div class="grid grid-cols-1 md:grid-cols-2 gap-6 lg:gap-8">
-    <!-- 订单数量卡片 -->
-    <div class="bg-white rounded-xl shadow-sm border border-gray-100 hover:shadow-md hover:border-primary/30 hover:bg-primary/5 transition-all duration-300 overflow-hidden transform hover:-translate-y-1">
-      <div class="p-6">
-        <div class="flex justify-between items-start">
-          <div>
-            <p class="text-gray-500 text-sm mb-1">订单数量</p>
-            <h3 class="text-3xl font-bold text-dark">{{ total_orders }}</h3>
+  <!-- Main content -->
+  <section class="content container-fluid mt-6">
+    <!-- Small boxes (Stat box) -->
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-6 lg:gap-8">
+      <!-- 订单数量卡片 -->
+      <div class="bg-white rounded-xl shadow-sm border border-gray-100 hover:shadow-md hover:border-primary/30 hover:bg-primary/5 transition-all duration-300 overflow-hidden transform hover:-translate-y-1">
+        <div class="p-6">
+          <div class="flex justify-between items-start">
+            <div>
+              <p class="text-gray-500 text-sm mb-1">订单数量</p>
+              <h3 class="text-3xl font-bold text-dark">{{ total_orders }}</h3>
+            </div>
+            <div class="w-14 h-14 rounded-lg bg-primary/10 flex items-center justify-center text-primary">
+              <i class="fa fa-shopping-bag text-xl"></i>
+            </div>
           </div>
-          <div class="w-14 h-14 rounded-lg bg-primary/10 flex items-center justify-center text-primary">
-            <i class="fa fa-shopping-bag text-xl"></i>
+          <div class="mt-4 flex items-center text-sm">
+            <span class="text-success flex items-center"><i class="fa fa-arrow-up mr-1"></i> 12%</span>
+            <span class="text-gray-500 ml-2">相比上月</span>
           </div>
         </div>
-        <div class="mt-4 flex items-center text-sm">
-          <span class="text-success flex items-center"><i class="fa fa-arrow-up mr-1"></i> 12%</span>
-          <span class="text-gray-500 ml-2">相比上月</span>
+        <div class="px-6 py-3 bg-gray-50 border-t border-gray-100 hover:bg-primary/5 transition-colors duration-300">
+          <a href="{% url 'myadmin_order_index' %}" class="text-primary text-sm hover:text-primary/80 flex items-center">
+            查看详情 <i class="fa fa-angle-right ml-1"></i>
+          </a>
         </div>
       </div>
-      <div class="px-6 py-3 bg-gray-50 border-t border-gray-100 hover:bg-primary/5 transition-colors duration-300">
-        <a href="{% url 'myadmin_order_index' %}" class="text-primary text-sm hover:text-primary/80 flex items-center">
-          查看详情 <i class="fa fa-angle-right ml-1"></i>
-        </a>
+
+      <!-- 销售总金额卡片 -->
+      <div class="bg-white rounded-xl shadow-sm border border-gray-100 hover:shadow-md hover:border-primary/30 hover:bg-primary/5 transition-all duration-300 overflow-hidden transform hover:-translate-y-1">
+        <div class="p-6">
+          <!-- 顶部：标题 + 下拉选择 -->
+          <div class="flex justify-between items-center mb-4">
+            <p class="text-gray-500 text-sm">销售总金额</p>
+            <form method="get">
+              <select name="range" onchange="this.form.submit()" class="text-sm border border-gray-200 rounded px-2 py-1">
+                <option value="day" {% if range_mode == 'day' %}selected{% endif %}>本日</option>
+                <option value="week" {% if range_mode == 'week' %}selected{% endif %}>本周</option>
+                <option value="month" {% if range_mode == 'month' %}selected{% endif %}>本月</option>
+                <option value="total" {% if range_mode == 'total' %}selected{% endif %}>历史总计</option>
+              </select>
+            </form>
+          </div>
+      
+          <!-- 中间：金额展示 -->
+          <h3 class="text-3xl font-bold text-dark">{{ sales_total }}<sup class="text-base">元</sup></h3>
+      
+          <!-- 底部：同比说明 -->
+          <div class="mt-4 flex items-center text-sm">
+            <span class="text-success flex items-center">
+              <i class="fa fa-arrow-up mr-1"></i> 8%
+            </span>
+            <span class="text-gray-500 ml-2">相比上月</span>
+          </div>
+        </div>
+      
+        <!-- 卡片底部按钮 -->
+        <div class="px-6 py-3 bg-gray-50 border-t border-gray-100 hover:bg-primary/5 transition-colors duration-300">
+          <a href="#" class="text-primary text-sm hover:text-primary/80 flex items-center">
+            查看详情 <i class="fa fa-angle-right ml-1"></i>
+          </a>
+        </div>
+      </div>
+
+      <!-- 员工数量卡片 -->
+      <div class="bg-white rounded-xl shadow-sm border border-gray-100 hover:shadow-md hover:border-primary/30 hover:bg-primary/5 transition-all duration-300 overflow-hidden transform hover:-translate-y-1">
+        <div class="p-6">
+          <div class="flex justify-between items-start">
+            <div>
+              <p class="text-gray-500 text-sm mb-1">员工数量</p>
+              <h3 class="text-3xl font-bold text-dark">{{ employee_count }}</h3>
+            </div>
+            <div class="w-14 h-14 rounded-lg bg-success/10 flex items-center justify-center text-success">
+              <i class="fa fa-users text-xl"></i>
+            </div>
+          </div>
+          <div class="mt-4 flex items-center text-sm">
+            <span class="text-success flex items-center"><i class="fa fa-arrow-up mr-1"></i> 5%</span>
+            <span class="text-gray-500 ml-2">相比上月</span>
+          </div>
+        </div>
+        <div class="px-6 py-3 bg-gray-50 border-t border-gray-100 hover:bg-primary/5 transition-colors duration-300">
+          <a href="{% url 'myadmin_system_employee_index' %}" class="text-primary text-sm hover:text-primary/80 flex items-center">
+            查看详情 <i class="fa fa-angle-right ml-1"></i>
+          </a>
+        </div>
+      </div>
+
+      <!-- 企业客户数量卡片 -->
+      <div class="bg-white rounded-xl shadow-sm border border-gray-100 hover:shadow-md hover:border-primary/30 hover:bg-primary/5 transition-all duration-300 overflow-hidden transform hover:-translate-y-1">
+        <div class="p-6">
+          <div class="flex justify-between items-start">
+            <div>
+              <p class="text-gray-500 text-sm mb-1">企业客户数量</p>
+              <h3 class="text-3xl font-bold text-dark">{{ customer_count }}</h3>
+            </div>
+            <div class="w-14 h-14 rounded-lg bg-warning/10 flex items-center justify-center text-warning">
+              <i class="fa fa-store text-xl"></i>
+            </div>
+          </div>
+          <div class="mt-4 flex items-center text-sm">
+            <span class="text-danger flex items-center"><i class="fa fa-arrow-down mr-1"></i> 2%</span>
+            <span class="text-gray-500 ml-2">相比上月</span>
+          </div>
+        </div>
+        <div class="px-6 py-3 bg-gray-50 border-t border-gray-100 hover:bg-primary/5 transition-colors duration-300">
+          <a href="{% url 'myadmin_customer_index' %}" class="text-primary text-sm hover:text-primary/80 flex items-center">
+            查看详情 <i class="fa fa-angle-right ml-1"></i>
+          </a>
+        </div>
       </div>
     </div>
-
-    <!-- 销售总金额卡片 -->
-    <div class="bg-white rounded-xl shadow-sm border border-gray-100 hover:shadow-md hover:border-primary/30 hover:bg-primary/5 transition-all duration-300 overflow-hidden transform hover:-translate-y-1">
-      <div class="p-6">
-        <!-- 顶部：标题 + 下拉选择 -->
-        <div class="flex justify-between items-center mb-4">
-          <p class="text-gray-500 text-sm">销售总金额</p>
-          <form method="get">
-            <select name="range" onchange="this.form.submit()" class="text-sm border border-gray-200 rounded px-2 py-1">
-              <option value="day" {% if range_mode == 'day' %}selected{% endif %}>本日</option>
-              <option value="week" {% if range_mode == 'week' %}selected{% endif %}>本周</option>
-              <option value="month" {% if range_mode == 'month' %}selected{% endif %}>本月</option>
-              <option value="total" {% if range_mode == 'total' %}selected{% endif %}>历史总计</option>
-            </select>
-          </form>
-        </div>
-    
-        <!-- 中间：金额展示 -->
-        <h3 class="text-3xl font-bold text-dark">{{ sales_total }}<sup class="text-base">元</sup></h3>
-    
-        <!-- 底部：同比说明 -->
-        <div class="mt-4 flex items-center text-sm">
-          <span class="text-success flex items-center">
-            <i class="fa fa-arrow-up mr-1"></i> 8%
-          </span>
-          <span class="text-gray-500 ml-2">相比上月</span>
-        </div>
-      </div>
-    
-      <!-- 卡片底部按钮 -->
-      <div class="px-6 py-3 bg-gray-50 border-t border-gray-100 hover:bg-primary/5 transition-colors duration-300">
-        <a href="#" class="text-primary text-sm hover:text-primary/80 flex items-center">
-          查看详情 <i class="fa fa-angle-right ml-1"></i>
-        </a>
-      </div>
-    </div>
-
-    <!-- 员工数量卡片 -->
-    <div class="bg-white rounded-xl shadow-sm border border-gray-100 hover:shadow-md hover:border-primary/30 hover:bg-primary/5 transition-all duration-300 overflow-hidden transform hover:-translate-y-1">
-      <div class="p-6">
-        <div class="flex justify-between items-start">
-          <div>
-            <p class="text-gray-500 text-sm mb-1">员工数量</p>
-            <h3 class="text-3xl font-bold text-dark">{{ employee_count }}</h3>
-          </div>
-          <div class="w-14 h-14 rounded-lg bg-success/10 flex items-center justify-center text-success">
-            <i class="fa fa-users text-xl"></i>
-          </div>
-        </div>
-        <div class="mt-4 flex items-center text-sm">
-          <span class="text-success flex items-center"><i class="fa fa-arrow-up mr-1"></i> 5%</span>
-          <span class="text-gray-500 ml-2">相比上月</span>
-        </div>
-      </div>
-      <div class="px-6 py-3 bg-gray-50 border-t border-gray-100 hover:bg-primary/5 transition-colors duration-300">
-        <a href="{% url 'myadmin_system_employee_index' %}" class="text-primary text-sm hover:text-primary/80 flex items-center">
-          查看详情 <i class="fa fa-angle-right ml-1"></i>
-        </a>
-      </div>
-    </div>
-
-    <!-- 企业客户数量卡片 -->
-    <div class="bg-white rounded-xl shadow-sm border border-gray-100 hover:shadow-md hover:border-primary/30 hover:bg-primary/5 transition-all duration-300 overflow-hidden transform hover:-translate-y-1">
-      <div class="p-6">
-        <div class="flex justify-between items-start">
-          <div>
-            <p class="text-gray-500 text-sm mb-1">企业客户数量</p>
-            <h3 class="text-3xl font-bold text-dark">{{ customer_count }}</h3>
-          </div>
-          <div class="w-14 h-14 rounded-lg bg-warning/10 flex items-center justify-center text-warning">
-            <i class="fa fa-store text-xl"></i>
-          </div>
-        </div>
-        <div class="mt-4 flex items-center text-sm">
-          <span class="text-danger flex items-center"><i class="fa fa-arrow-down mr-1"></i> 2%</span>
-          <span class="text-gray-500 ml-2">相比上月</span>
-        </div>
-      </div>
-      <div class="px-6 py-3 bg-gray-50 border-t border-gray-100 hover:bg-primary/5 transition-colors duration-300">
-        <a href="{% url 'myadmin_customer_index' %}" class="text-primary text-sm hover:text-primary/80 flex items-center">
-          查看详情 <i class="fa fa-angle-right ml-1"></i>
-        </a>
-      </div>
-    </div>
-  </div>
-
-</section>
+  </section>
 {% endblock %}
