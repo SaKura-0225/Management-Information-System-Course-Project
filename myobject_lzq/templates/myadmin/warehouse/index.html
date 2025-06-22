@@ -28,21 +28,21 @@
 <script src="https://cdn.jsdelivr.net/npm/echarts-gl@2/dist/echarts-gl.min.js"></script>
 <script>
   const grouped = {{ grouped_bins|safe }};
-  const charts = {};        // 存储图表实例
-  let activeModule = null;  // 当前激活的模块ID
+  const charts = {};
+  let activeModule = null;
   const container = document.getElementById('bin-container');
   const modules = document.querySelectorAll('.module');
-  let isAnimating = false;  // 动画状态标记
+  let isAnimating = false;
 
-  // 初始化图表（确保所有图表清晰）
+  // 初始化图表
   Object.entries(grouped).forEach(([level, bins]) => {
     const chartDiv = document.getElementById("bin_layer_" + level);
     charts[level] = echarts.init(chartDiv);
     renderChart(charts[level], bins);
-    charts[level].resize(); // 初始resize
+    charts[level].resize();
   });
 
-  // 鼠标悬停效果（忽略正在动画的模块）
+  // 鼠标悬停效果
   modules.forEach(module => {
     module.addEventListener('mouseenter', () => {
       if (module.id !== activeModule && !isAnimating) {
@@ -54,20 +54,18 @@
     });
   });
 
-  // 左键点击：激活模块（无延迟版本）
+  // 左键点击：激活模块
   modules.forEach(module => {
     module.addEventListener('click', (e) => {
-      if (e.button === 0 && !isAnimating) { 
+      if (e.button === 0 && !isAnimating) {
         const level = module.dataset.level;
         const moduleId = module.id;
-
-        // 激活当前模块（直接切换，无延迟）
         activateModuleDirectly(module, level, moduleId);
       }
     });
   });
 
-  // 右键点击：还原所有模块（优化动画）
+  // 右键点击：还原所有模块
   document.addEventListener('contextmenu', (e) => {
     e.preventDefault();
     const targetModule = e.target.closest('.module');
@@ -113,14 +111,13 @@
     });
   }
 
-  // 直接激活模块（无延迟，主体更大）
+  // 直接激活模块
   function activateModuleDirectly(module, level, moduleId) {
     isAnimating = true;
 
-    // 1. 若已有激活模块，先快速还原
     if (activeModule) {
       const oldModule = document.getElementById(activeModule);
-      oldModule.style.transition = 'all 0.2s ease'; // 加速还原动画
+      oldModule.style.transition = 'all 0.2s ease';
       oldModule.style.transform = 'scale(1)';
       oldModule.style.transformOrigin = 'center center';
       oldModule.style.zIndex = '0';
@@ -130,52 +127,46 @@
       charts[oldModule.dataset.level].resize();
     }
 
-    // 2. 激活新模块（立即执行，scale(1.8) 更大）
     activeModule = moduleId;
     
-    // 判断模块位置，设置 transform-origin
     const rect = module.getBoundingClientRect();
-    let origin = 'center center'; 
+    let origin = 'center center';
     if (rect.left < window.innerWidth / 2 && rect.top < window.innerHeight / 2) origin = 'top left';
     else if (rect.left > window.innerWidth / 2 && rect.top < window.innerHeight / 2) origin = 'top right';
     else if (rect.left < window.innerWidth / 2 && rect.top > window.innerHeight / 2) origin = 'bottom left';
     else origin = 'bottom right';
 
-    // 模块样式（放大+清晰，scale(1.8)）
     module.style.transition = 'all 0.3s ease';
-    module.style.transform = 'scale(1.8)';       
-    module.style.transformOrigin = origin;       
+    module.style.transform = 'scale(1.8)';
+    module.style.transformOrigin = origin;
     module.style.zIndex = '100';
     module.style.boxShadow = '0 10px 25px -5px rgba(0, 0, 0, 0.1)';
-    module.style.filter = 'blur(0)';           
+    module.style.filter = 'blur(0)';
     module.style.opacity = '1';
 
-    // 其他模块样式（缩小+不模糊，scale(0.8) 适配更大主体）
     modules.forEach(otherModule => {
       if (otherModule.id !== activeModule) {
         otherModule.style.transition = 'all 0.3s ease';
-        otherModule.style.transform = 'scale(0.8)'; 
+        otherModule.style.transform = 'scale(0.8)';
         otherModule.style.zIndex = '50';
-        otherModule.style.filter = 'none';     // 去除模糊
+        otherModule.style.filter = 'none';
         otherModule.style.opacity = '0.7';
       }
     });
 
-    // 图表resize
     charts[level].resize();
 
-    // 3. 动画结束后重置状态
     setTimeout(() => {
       isAnimating = false;
-    }, 300); // 与动画时长一致
+    }, 300);
   }
 
-  // 还原所有模块（优化动画速度）
+  // 还原所有模块
   function resetAllModules() {
     isAnimating = true;
 
     modules.forEach(module => {
-      module.style.transition = 'all 0.2s ease'; // 加速还原动画
+      module.style.transition = 'all 0.2s ease';
       module.style.transform = 'scale(1)';
       module.style.transformOrigin = 'center center';
       module.style.zIndex = '0';
@@ -183,47 +174,52 @@
       module.style.filter = 'blur(0)';
       module.style.opacity = '1';
       
-      // 图表resize
       const level = module.dataset.level;
       charts[level] && charts[level].resize();
     });
 
     activeModule = null;
 
-    // 动画结束后重置状态
     setTimeout(() => {
       isAnimating = false;
-    }, 200); // 与动画时长一致
+    }, 200);
   }
 
-  // 视图切换函数 - 修复偏移问题
+  // 视图切换函数 - 修复运动问题
   function switchToTopView(level) {
     if (charts[level]) {
       const module = document.getElementById(`bin-${level}`);
       if (!module) return;
-      
-      // 强制ECharts重新计算尺寸（关键修复点）
-      charts[level].resize();
-      
-      // 延迟设置视图参数，确保resize完成
+
+      // 保存当前变换状态
+      const transform = window.getComputedStyle(module).getPropertyValue('transform');
+      const matrix = new DOMMatrix(transform);
+      const scale = matrix.a;
+
+      // 锁定模块位置，防止运动
+      module.style.transition = 'none'; // 禁用过渡动画以避免位移
+      module.style.transform = transform; // 显式设置当前变换状态
+
+      // 延迟执行视图切换，确保位置稳定
       setTimeout(() => {
-        // 获取模块当前变换状态
-        const transform = window.getComputedStyle(module).getPropertyValue('transform');
-        const matrix = new DOMMatrix(transform);
-        const scale = matrix.a; // 假设均匀缩放，a为x方向缩放比例
-        
-        // 设置俯视图参数，考虑缩放比例
+        // 仅调整视图参数，不触发完整重绘
         charts[level].setOption({
           grid3D: {
             viewControl: {
               alpha: 90,
               beta: 0,
-              distance: 100 * scale, // 根据缩放比例调整距离
-              center: [0, 0, 0] // 重置视图中心
+              distance: 100 * scale,
+              center: [0, 0, 0]
             }
           }
         });
-      }, 50); // 给resize留出时间
+
+        // 恢复过渡动画
+        module.style.transition = 'all 0.3s ease';
+
+        // 触发resize，仅在必要时调整图表尺寸
+        charts[level].resize();
+      }, 10); // 极短延迟确保样式应用
     }
   }
 
@@ -233,15 +229,13 @@
       const module = document.getElementById(`bin-${level}`);
       if (!module) return;
       
-      // 强制ECharts重新计算尺寸
+      const transform = window.getComputedStyle(module).getPropertyValue('transform');
+      const matrix = new DOMMatrix(transform);
+      const scale = matrix.a;
+      
       charts[level].resize();
       
-      // 延迟设置视图参数
       setTimeout(() => {
-        const transform = window.getComputedStyle(module).getPropertyValue('transform');
-        const matrix = new DOMMatrix(transform);
-        const scale = matrix.a;
-        
         charts[level].setOption({
           grid3D: {
             viewControl: {

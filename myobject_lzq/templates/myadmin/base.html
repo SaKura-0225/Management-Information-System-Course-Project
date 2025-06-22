@@ -88,6 +88,12 @@
       .pulse-hover:hover::before {
         @apply opacity-100;
       }
+      .sidebar-item-hover:hover {
+        @apply bg-blue-900 text-white;
+      }
+      .sidebar-subitem-hover:hover {
+        @apply bg-blue-900 text-white;
+      }
     }
   </style>
 </head>
@@ -98,7 +104,7 @@
     <!-- Logo区域 -->
     <div class="flex items-center justify-between h-16 px-4 border-b border-gray-200">
       <div class="flex items-center space-x-2">
-        <div class="w-8 h-8 rounded-md bg-primary flex items-center justify-center text-white font-bold">布</div> <!-- 修改为"布" -->
+        <div class="w-8 h-8 rounded-md bg-primary flex items-center justify-center text-white font-bold">布</div>
         <span class="text-lg font-semibold">F布行后台管理系统</span>
       </div>
       <button id="sidebar-toggle" class="lg:hidden text-gray-500 hover:text-primary">
@@ -109,7 +115,6 @@
     <!-- 用户信息 -->
     <div class="p-4 border-b border-gray-200">
       <div class="flex items-center space-x-3">
-        <!-- 修改为你的图片路径 -->
         <img src="{% static 'uploads/Avatar/微信图片_20250503211615.jpg' %}" alt="用户头像" class="w-10 h-10 rounded-full object-cover border-2 border-primary scale-hover">
         <div>
           <p class="font-medium">{{request.session.adminuser.nickname}}</p>
@@ -126,13 +131,13 @@
       <div class="text-xs font-semibold text-gray-500 uppercase tracking-wider px-3 py-2 mb-1">主要导航</div>
       <ul class="space-y-1">
         <li>
-          <a href="{% url 'myadmin_index' %}" class="sidebar-item text-gray-700 hover:bg-primary/5 hover:text-primary" data-level="1" data-module="home">
+          <a href="{% url 'myadmin_index' %}" class="sidebar-item sidebar-item-hover text-gray-700" data-level="1" data-module="home">
             <i class="fa fa-home w-5 text-center"></i>
             <span>首页</span>
           </a>
         </li>
         <li>
-          <a href="{% url 'myadmin_customer_index'%}" class="sidebar-item-hover flex items-center px-3 py-2.5 rounded-md text-sm font-medium text-gray-700 hover:text-primary">
+          <a href="{% url 'myadmin_customer_index'%}" class="sidebar-item sidebar-item-hover text-gray-700">
             <i class="fa fa-users w-5 text-center"></i>
             <span>客户管理</span>
           </a>
@@ -140,7 +145,7 @@
         {% if perms.myadmin.view_wmsoutbound %}
         <li>
           <div class="nav-dropdown">
-            <button class="sidebar-item text-gray-700 hover:bg-primary/5 hover:text-primary flex items-center justify-between w-full" data-level="1" data-module="warehouse">
+            <button class="sidebar-item sidebar-item-hover text-gray-700 flex items-center justify-between w-full" data-level="1" data-module="warehouse">
               <div class="flex items-center">
                 <i class="fa fa-cutlery w-5 text-center"></i>
                 <span>库存管理</span>
@@ -148,19 +153,19 @@
               <i class="fa fa-angle-down transition-transform duration-200 nav-icon"></i>
             </button>
             <div class="nav-dropdown-content hidden pl-6 mt-1 space-y-1" data-module="warehouse">
-              <a href="{% url 'myadmin_bin_visualization'%}" class="block px-3 py-2 rounded-md text-sm text-gray-600 hover:bg-gray-100 hover:text-primary transition-colors duration-200">
+              <a href="{% url 'myadmin_bin_visualization'%}" class="sidebar-subitem sidebar-subitem-hover text-gray-600">
                 <i class="fa fa-circle-o mr-1"></i> 储位信息
               </a>
-              <a href="{% url 'myadmin_product_index'%}" class="block px-3 py-2 rounded-md text-sm text-gray-600 hover:bg-gray-100 hover:text-primary transition-colors duration-200">
+              <a href="{% url 'myadmin_product_index'%}" class="sidebar-subitem sidebar-subitem-hover text-gray-600">
                 <i class="fa fa-circle-o mr-1"></i> 产品信息
               </a>
-              <a href="{% url 'myadmin_stock_index'%}" class="block px-3 py-2 rounded-md text-sm text-gray-600 hover:bg-gray-100 hover:text-primary transition-colors duration-200">
+              <a href="{% url 'myadmin_stock_index'%}" class="sidebar-subitem sidebar-subitem-hover text-gray-600">
                 <i class="fa fa-circle-o mr-1"></i> 库存信息
               </a>
-              <a href="{% url 'myadmin_warehouse-flow_outbound'%}" class="sidebar-subitem text-gray-600 hover:bg-primary/10 hover:text-primary" data-level="2" data-module="warehouse">
+              <a href="{% url 'myadmin_warehouse-flow_outbound'%}" class="sidebar-subitem sidebar-subitem-hover text-gray-600" data-level="2" data-module="warehouse">
                 <i class="fa fa-circle-o mr-1"></i> 出库管理
               </a>
-              <a href="{% url 'myadmin_warehouse-flow_inbound'%}" class="sidebar-subitem text-gray-600 hover:bg-primary/10 hover:text-primary" data-level="2" data-module="warehouse">
+              <a href="{% url 'myadmin_warehouse-flow_inbound'%}" class="sidebar-subitem sidebar-subitem-hover text-gray-600" data-level="2" data-module="warehouse">
                 <i class="fa fa-circle-o mr-1"></i> 入库管理
               </a>
             </div>
@@ -170,7 +175,7 @@
         {% if perms.myadmin.view_wmsorders %}
         <li>
           <div class="nav-dropdown">
-            <button class="sidebar-item text-gray-700 hover:bg-primary/5 hover:text-primary flex items-center justify-between w-full" data-level="1" data-module="orders">
+            <button class="sidebar-item sidebar-item-hover text-gray-700 flex items-center justify-between w-full" data-level="1" data-module="orders">
               <div class="flex items-center">
                 <i class="fa fa-cutlery w-5 text-center"></i>
                 <span>订单管理</span>
@@ -178,16 +183,16 @@
               <i class="fa fa-angle-down transition-transform duration-200 nav-icon"></i>
             </button>
             <div class="nav-dropdown-content hidden pl-6 mt-1 space-y-1" data-module="orders">
-              <a href="{% url 'myadmin_order_index'%}" class="sidebar-subitem text-gray-600 hover:bg-primary/10 hover:text-primary" data-level="2" data-module="orders">
+              <a href="{% url 'myadmin_order_index'%}" class="sidebar-subitem sidebar-subitem-hover text-gray-600" data-level="2" data-module="orders">
                 <i class="fa fa-circle-o mr-1"></i> 销售订单管理
               </a>
-              <a href="{% url 'myadmin_order_detail_view'%}" class="sidebar-subitem text-gray-600 hover:bg-primary/10 hover:text-primary" data-level="2" data-module="orders">
+              <a href="{% url 'myadmin_order_detail_view'%}" class="sidebar-subitem sidebar-subitem-hover text-gray-600" data-level="2" data-module="orders">
                 <i class="fa fa-circle-o mr-1"></i> 销售订单详情
               </a>
-              <a href="{% url 'myadmin_order_index'%}" class="sidebar-subitem text-gray-600 hover:bg-primary/10 hover:text-primary" data-level="2" data-module="orders">
+              <a href="{% url 'myadmin_order_index'%}" class="sidebar-subitem sidebar-subitem-hover text-gray-600" data-level="2" data-module="orders">
                 <i class="fa fa-circle-o mr-1"></i> 采购订单管理
               </a>
-              <a href="{% url 'myadmin_order_index'%}" class="sidebar-subitem text-gray-600 hover:bg-primary/10 hover:text-primary" data-level="2" data-module="orders">
+              <a href="{% url 'myadmin_order_index'%}" class="sidebar-subitem sidebar-subitem-hover text-gray-600" data-level="2" data-module="orders">
                 <i class="fa fa-circle-o mr-1"></i> 采购订单详情
               </a>
             </div>
@@ -195,14 +200,14 @@
         </li>
         {% endif %}
         <li>
-          <a href="{% url 'myadmin_report_index'%}" class="sidebar-item-hover flex items-center px-3 py-2.5 rounded-md text-sm font-medium text-gray-700 hover:text-primary">
+          <a href="{% url 'myadmin_report_index'%}" class="sidebar-item sidebar-item-hover text-gray-700">
             <i class="fa fa-users w-5 text-center"></i>
             <span>报表分析</span>
           </a>
         </li>
         <li>
           <div class="nav-dropdown">
-            <button class="sidebar-item text-gray-700 hover:bg-primary/5 hover:text-primary flex items-center justify-between w-full" data-level="1" data-module="system">
+            <button class="sidebar-item sidebar-item-hover text-gray-700 flex items-center justify-between w-full" data-level="1" data-module="system">
               <div class="flex items-center">
                 <i class="fa fa-cog w-5 text-center"></i>
                 <span>系统管理</span>
@@ -210,13 +215,13 @@
               <i class="fa fa-angle-down transition-transform duration-200 nav-icon"></i>
             </button>
             <div class="nav-dropdown-content hidden pl-6 mt-1 space-y-1" data-module="system">
-              <a href="{% url 'myadmin_system_employee_index'%}" class="sidebar-subitem text-gray-600 hover:bg-primary/10 hover:text-primary" data-level="2" data-module="system">
+              <a href="{% url 'myadmin_system_employee_index'%}" class="sidebar-subitem sidebar-subitem-hover text-gray-600" data-level="2" data-module="system">
                 <i class="fa fa-user-o mr-1"></i> 员工管理
               </a>
-              <a href="{% url 'myadmin_system_department_index'%}" class="sidebar-subitem text-gray-600 hover:bg-primary/10 hover:text-primary" data-level="2" data-module="system">
+              <a href="{% url 'myadmin_system_department_index'%}" class="sidebar-subitem sidebar-subitem-hover text-gray-600" data-level="2" data-module="system">
                 <i class="fa fa-sitemap mr-1"></i> 部门管理
               </a>
-              <a href="{% url 'myadmin_system_permission_index'%}" class="sidebar-subitem text-gray-600 hover:bg-primary/10 hover:text-primary" data-level="2" data-module="system">
+              <a href="{% url 'myadmin_system_permission_index'%}" class="sidebar-subitem sidebar-subitem-hover text-gray-600" data-level="2" data-module="system">
                 <i class="fa fa-key mr-1"></i> 权限管理
               </a>
             </div>
@@ -234,7 +239,6 @@
         <button id="mobile-sidebar-toggle" class="mr-4 text-gray-500 lg:hidden">
           <i class="fa fa-bars"></i>
         </button>
-        <!-- 搜索栏已移除 -->
       </div>
       
       <div class="flex items-center space-x-4">
@@ -265,7 +269,6 @@
         <!-- 用户菜单 -->
         <div class="relative group">
           <button class="flex items-center space-x-2 focus:outline-none">
-            <!-- 修改为你的图片路径 -->
             <img src="{% static 'uploads/Avatar/微信图片_20250503211615.jpg' %}" alt="用户头像" class="w-8 h-8 rounded-full object-cover scale-hover">
             <span class="text-sm font-medium hidden md:block">{{request.session.adminuser.nickname}}</span>
             <i class="fa fa-angle-down text-gray-500"></i>
@@ -275,7 +278,7 @@
           <div class="absolute right-0 mt-2 w-48 bg-white rounded-lg shadow-lg py-1 z-50 hidden group-hover:block fade-in">
             <div class="px-4 py-2 border-b border-gray-100">
               <p class="text-sm font-medium">{{request.session.adminuser.nickname}}</p>
-              <p class="text-xs text-gray-500">{{request.session.adminuser.creat_at|date:"Y/m/d"}}</p> <!-- 修改日期格式 -->
+              <p class="text-xs text-gray-500">{{request.session.adminuser.creat_at|date:"Y/m/d"}}</p>
             </div>
             <a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 nav-link-hover">
               <i class="fa fa-user-o mr-2"></i> 个人信息
@@ -298,7 +301,7 @@
     <footer class="bg-white border-t border-gray-200 py-4 px-6 text-sm text-gray-600">
       <div class="flex flex-col md:flex-row justify-between items-center">
         <div>
-          <strong>Copyright &copy; 2020 <a href="#" class="text-primary hover:underline nav-link-hover">北京****有限公司</a>.</strong> 版权所有
+          <strong>Copyright © 2020 <a href="#" class="text-primary hover:underline nav-link-hover">北京****有限公司</a>.</strong> 版权所有
         </div>
         <div class="mt-2 md:mt-0">
           系统版本: v1.0.0
@@ -338,9 +341,8 @@
   // 侧边栏下拉菜单
   document.querySelectorAll('.nav-dropdown button').forEach(button => {
     button.addEventListener('click', (event) => {
-      event.preventDefault(); // 阻止按钮的默认行为（防止刷新）
+      event.preventDefault();
       
-      // 先关闭所有其他下拉菜单
       document.querySelectorAll('.nav-dropdown-content').forEach(content => {
         if (content !== button.nextElementSibling) {
           content.classList.add('hidden');
@@ -349,31 +351,25 @@
         }
       });
       
-      // 切换当前下拉菜单显示状态
       const dropdownContent = button.nextElementSibling;
       const icon = button.querySelector('.fa-angle-down');
       
       dropdownContent.classList.toggle('hidden');
       
-      // 旋转箭头图标
       if (!dropdownContent.classList.contains('hidden')) {
         icon.style.transform = 'rotate(-90deg)';
       } else {
         icon.style.transform = 'rotate(0)';
       }
       
-      // 设置当前菜单项为激活状态
       setActiveMenuItem(button);
     });
   });
   
-  // 处理二级菜单点击事件 - 不阻止默认行为，让链接正常跳转
   document.querySelectorAll('.sidebar-subitem').forEach(item => {
     item.addEventListener('click', () => {
-      // 设置当前菜单项为激活状态
       setActiveMenuItem(item);
       
-      // 展开父级菜单
       const parentDropdown = item.closest('.nav-dropdown-content');
       if (parentDropdown && parentDropdown.classList.contains('hidden')) {
         parentDropdown.classList.remove('hidden');
@@ -381,19 +377,15 @@
         const icon = parentButton.querySelector('.fa-angle-down');
         icon.style.transform = 'rotate(-90deg)';
         
-        // 设置父级菜单项为激活状态
         setActiveMenuItem(parentButton);
       }
     });
   });
   
-  // 处理一级菜单链接点击事件 - 不阻止默认行为，让链接正常跳转
   document.querySelectorAll('[data-level="1"][href]').forEach(item => {
     item.addEventListener('click', () => {
-      // 设置当前菜单项为激活状态
       setActiveMenuItem(item);
       
-      // 关闭所有下拉菜单
       document.querySelectorAll('.nav-dropdown-content').forEach(content => {
         content.classList.add('hidden');
         const icon = content.previousElementSibling.querySelector('.fa-angle-down');
@@ -402,9 +394,7 @@
     });
   });
   
-  // 设置活动菜单项
   function setActiveMenuItem(item) {
-    // 移除所有菜单项的激活状态
     document.querySelectorAll('.sidebar-item-active').forEach(el => {
       el.classList.remove('sidebar-item-active');
     });
@@ -412,19 +402,16 @@
       el.classList.remove('sidebar-subitem-active');
     });
     
-    // 添加当前菜单项的激活状态
     if (item.classList.contains('sidebar-item')) {
       item.classList.add('sidebar-item-active');
     } else if (item.classList.contains('sidebar-subitem')) {
       item.classList.add('sidebar-subitem-active');
       
-      // 确保父级菜单项保持激活状态
       const parentButton = item.closest('.nav-dropdown').querySelector('.sidebar-item');
       parentButton.classList.add('sidebar-item-active');
     }
   }
   
-  // 移动端侧边栏切换
   document.getElementById('mobile-sidebar-toggle').addEventListener('click', () => {
     const sidebar = document.getElementById('sidebar');
     const mainContent = document.getElementById('main-content');
@@ -438,7 +425,6 @@
     }
   });
   
-  // 侧边栏切换（大屏幕）
   document.getElementById('sidebar-toggle').addEventListener('click', () => {
     const sidebar = document.getElementById('sidebar');
     const mainContent = document.getElementById('main-content');
@@ -456,7 +442,6 @@
     }
   });
   
-  // 模态框功能
   function doDel(url) {
     const modal = document.getElementById('edu-alert');
     const modalTitle = document.getElementById('modal-title');
@@ -464,22 +449,18 @@
     const modalOk = document.getElementById('modal-ok');
     const modalCancel = document.getElementById('modal-cancel');
     
-    // 设置模态框内容
     modalTitle.textContent = '信息提示';
     modalMessage.innerHTML = '<p>确定要删除吗？</p>';
     modalOk.textContent = '确定';
     modalCancel.textContent = '取消';
     
-    // 显示模态框
     modal.classList.remove('hidden');
     
-    // 点击确定按钮
     modalOk.onclick = () => {
       window.location.href = url;
       modal.classList.add('hidden');
     };
     
-    // 点击取消按钮或关闭图标
     const closeButtons = document.querySelectorAll('[data-dismiss="modal"]');
     closeButtons.forEach(button => {
       button.onclick = () => {
@@ -488,7 +469,6 @@
     });
   }
   
-  // 页面加载时处理响应式
   window.addEventListener('resize', () => {
     const sidebar = document.getElementById('sidebar');
     const mainContent = document.getElementById('main-content');
@@ -502,7 +482,6 @@
     }
   });
   
-  // 初始化页面
   window.addEventListener('load', () => {
     if (window.innerWidth < 1024) {
       const sidebar = document.getElementById('sidebar');
@@ -512,19 +491,15 @@
       mainContent.style.marginLeft = '0';
     }
     
-    // 添加页面加载动画
     document.body.classList.add('loaded');
     
-    // 初始化当前页面高亮
     const currentPath = window.location.pathname;
     const navLinks = document.querySelectorAll('nav a');
     
     navLinks.forEach(link => {
       if (link.getAttribute('href') === currentPath) {
-        // 设置激活状态
         setActiveMenuItem(link);
         
-        // 展开父级菜单（如果有）
         const parentDropdown = link.closest('.nav-dropdown-content');
         if (parentDropdown) {
           parentDropdown.classList.remove('hidden');
@@ -532,7 +507,6 @@
           const icon = parentButton.querySelector('.fa-angle-down');
           icon.style.transform = 'rotate(-90deg)';
           
-          // 设置父级菜单项为激活状态
           setActiveMenuItem(parentButton);
         }
       }

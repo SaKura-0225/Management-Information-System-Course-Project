@@ -1,185 +1,349 @@
 {% extends 'myadmin/base.html' %}
 {% block main_body %}
+<!-- 优化后的内容头部区域 -->
+<section class="content-header bg-white rounded-xl shadow-sm p-6 mb-6">
+  <div class="flex flex-col md:flex-row md:items-center justify-between">
+    <div>
+      <h1 class="text-[clamp(1.5rem,3vw,2rem)] font-semibold text-dark">数据分析报表</h1>
+      <p class="text-gray-500 text-sm">F布行数据可视化中心</p>
+    </div>
+    <div class="mt-4 md:mt-0 flex items-center space-x-4">
+      <!-- 优化后的图表选择按钮 -->
+      <div class="relative">
+        <button id="chartSelectButton" class="flex items-center w-48 pl-4 pr-3 py-3 rounded-lg border border-blue-300 bg-gray-50 text-sm text-gray-700 hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary transition-all duration-200">
+          <span id="selectedChartText">选择图表</span>
+          <i class="fa fa-chevron-down ml-auto"></i>
+        </button>
+        <div id="chartDropdown" class="absolute hidden mt-2 w-48 bg-white border border-gray-200 rounded-lg shadow-lg z-10">
+          <a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-blue-50 hover:text-blue-600 hover:scale-105 transition-all duration-200 transform chart-option" data-chart="all">显示所有图表</a>
+          <a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-blue-50 hover:text-blue-600 hover:scale-105 transition-all duration-200 transform chart-option" data-chart="daily_orders">每日订单数量</a>
+          <a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-blue-50 hover:text-blue-600 hover:scale-105 transition-all duration-200 transform chart-option" data-chart="top_products">历史以来出货型号前十</a>
+          <a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-blue-50 hover:text-blue-600 hover:scale-105 transition-all duration-200 transform chart-option" data-chart="customer_levels">客户等级分布</a>
+          <a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-blue-50 hover:text-blue-600 hover:scale-105 transition-all duration-200 transform chart-option" data-chart="monthly_top_products1">按月份出货前十产品</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
 
-<h2 class="text-xl font-bold mb-4">数据分析报表</h2>
-
-<!-- 图表选择器 -->
-<form method="get" class="mb-4">
-  <label class="block mb-1 font-medium">选择要显示的图表：</label>
-  <select name="charts" multiple class="w-full md:w-1/3 border border-gray-300 rounded px-3 py-2" size="4">
-    <option value="daily_orders" {% if show_all or 'daily_orders' in selected_charts %}selected{% endif %}>每日订单趋势</option>
-    <option value="top_products" {% if show_all or 'top_products' in selected_charts %}selected{% endif %}>出货型号前十</option>
-    <option value="customer_levels" {% if show_all or 'customer_levels' in selected_charts %}selected{% endif %}>客户等级分布</option>
-    <option value="monthly_top_products1" {% if show_all or 'monthly_top_products1' in selected_charts %}selected{% endif %}>按月的出货前十产品（动态）</option>
-
-  </select>
-  <button type="submit" class="ml-2 bg-primary text-white px-4 py-2 rounded">应用</button>
-</form>
-
-<!-- 图表容器 -->
+<!-- 图表展示区域 -->
 <div class="grid grid-cols-1 gap-6">
-
-  {% if show_all or 'daily_orders' in selected_charts %}
-  <div class="bg-white p-4 shadow rounded">
-    <h3 class="text-lg font-semibold mb-2">每日订单数量</h3>
-    <div id="daily_chart" style="height: 400px;"></div>
+  <!-- 每日订单趋势 -->
+  <div id="daily_orders_chart" class="bg-white rounded-xl shadow-sm p-4 transition-all duration-300 hover:shadow-md hover:-translate-y-1 hover:scale-102 border border-gray-200 hover:border-blue-300">
+    <div class="flex justify-between items-center mb-3">
+      <h3 class="text-lg font-semibold">每日订单数量</h3>
+      <div class="text-sm text-gray-500">最近 {{ daily_chart.dates|length }} 天</div>
+    </div>
+    <div id="daily_chart" style="height: 350px;"></div>
   </div>
-  {% endif %}
 
-  {% if show_all or 'top_products' in selected_charts %}
-  <div class="bg-white p-4 shadow rounded">
-    <h3 class="text-lg font-semibold mb-2">历史以来出货型号前十</h3>
-    <div id="top_chart" style="height: 400px;"></div>
+  <!-- 出货型号前十 -->
+  <div id="top_products_chart" class="bg-white rounded-xl shadow-sm p-4 transition-all duration-300 hover:shadow-md hover:-translate-y-1 hover:scale-102 border border-gray-200 hover:border-blue-300">
+    <h3 class="text-lg font-semibold mb-3">历史以来出货型号前十</h3>
+    <div id="top_chart" style="height: 350px;"></div>
   </div>
-  {% endif %}
 
-
-  {% if show_all or 'customer_levels' in selected_charts %}
-  <div class="bg-white p-4 shadow rounded">
-    <h3 class="text-lg font-semibold mb-2">客户等级分布</h3>
-    <div id="level_chart" style="height: 400px;"></div>
+  <!-- 客户等级分布 -->
+  <div id="customer_levels_chart" class="bg-white rounded-xl shadow-sm p-4 transition-all duration-300 hover:shadow-md hover:-translate-y-1 hover:scale-102 border border-gray-200 hover:border-blue-300">
+    <h3 class="text-lg font-semibold mb-3">客户等级分布</h3>
+    <div id="level_chart" style="height: 350px;"></div>
   </div>
-  {% endif %}
 
-  {% if show_all or 'monthly_top_products1' in selected_charts %}
-  <div class="bg-white p-4 shadow rounded">
-    <div class="flex items-center justify-between mb-2">
+  <!-- 按月的出货前十产品 -->
+  <div id="monthly_top_products1_chart" class="bg-white rounded-xl shadow-sm p-4 transition-all duration-300 hover:shadow-md hover:-translate-y-1 hover:scale-102 border border-gray-200 hover:border-blue-300">
+    <div class="flex justify-between items-center mb-3">
       <h3 class="text-lg font-semibold">按月份出货前十产品</h3>
-      <select id="monthlyChartSelect" class="border border-gray-300 rounded px-3 py-1">
+      <select id="monthlyChartSelect" class="border border-gray-300 rounded px-3 py-1 text-sm">
         {% for month in all_months %}
-        <option value="{{ month }}">{{ month }}</option>
+        <option value="{{ month }}" {% if forloop.first %}selected{% endif %}>{{ month }}</option>
         {% endfor %}
       </select>
     </div>
-    <div id="monthly_chart_v2" style="height: 400px;"></div>
+    <div id="monthly_chart_v2" style="height: 350px;"></div>
   </div>
-  {% endif %}
-
-
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/echarts@5"></script>
 <script>
-  {% if show_all or 'daily_orders' in selected_charts %}
-  const dailyChart = echarts.init(document.getElementById('daily_chart'));
-  dailyChart.setOption({
-    xAxis: { type: 'category', data: {{ daily_chart.dates|safe }} },
-    yAxis: { type: 'value' },
-    tooltip: { trigger: 'axis' },
-    series: [{
-      name: '订单数',
-      type: 'line',
-      data: {{ daily_chart.counts|safe }},
-      smooth: true
-    }]
-  });
-  {% endif %}
+  // 存储所有图表实例
+  const chartInstances = {
+    daily_chart: null,
+    top_chart: null,
+    level_chart: null,
+    monthly_chart_v2: null
+  };
 
-  {% if show_all or 'top_products' in selected_charts %}
-  const topChart = echarts.init(document.getElementById('top_chart'));
-  topChart.setOption({
-    tooltip: {
-      trigger: 'item',
-      formatter: function (params) {
-        return `<strong>${params.name}</strong><br/>累计销售量: ${params.value}`;
-      }
-    },
-    xAxis: {
-      type: 'value',
-      name: '数量'
-    },
-    yAxis: {
-      type: 'category',
-      data: {{ top_chart_labels|safe }},
-      axisLabel: {
-        interval: 0,
-        formatter: function (value) {
-          return value.length > 20 ? value.slice(0, 20) + '…' : value;
+  // 图表选择功能
+  document.addEventListener('DOMContentLoaded', function() {
+    const chartSelectButton = document.getElementById('chartSelectButton');
+    const chartDropdown = document.getElementById('chartDropdown');
+    const selectedChartText = document.getElementById('selectedChartText');
+    const chartOptions = document.querySelectorAll('.chart-option');
+    const chartContainers = {
+      'daily_orders': document.getElementById('daily_orders_chart'),
+      'top_products': document.getElementById('top_products_chart'),
+      'customer_levels': document.getElementById('customer_levels_chart'),
+      'monthly_top_products1': document.getElementById('monthly_top_products1_chart')
+    };
+
+    // 切换下拉菜单显示/隐藏
+    chartSelectButton.addEventListener('click', function() {
+      chartDropdown.classList.toggle('hidden');
+    });
+
+    // 点击下拉选项
+    chartOptions.forEach(option => {
+      option.addEventListener('click', function(e) {
+        e.preventDefault();
+        const selectedChart = this.getAttribute('data-chart');
+        selectedChartText.textContent = this.textContent;
+
+        // 显示/隐藏图表
+        Object.keys(chartContainers).forEach(chart => {
+          chartContainers[chart].classList.add('hidden');
+        });
+
+        if (selectedChart === 'all') {
+          Object.keys(chartContainers).forEach(chart => {
+            chartContainers[chart].classList.remove('hidden');
+          });
+        } else {
+          chartContainers[selectedChart].classList.remove('hidden');
         }
+
+        chartDropdown.classList.add('hidden');
+
+        // 触发图表重绘
+        Object.keys(chartInstances).forEach(chart => {
+          if (chartInstances[chart]) {
+            chartInstances[chart].resize();
+          }
+        });
+      });
+    });
+
+    // 点击页面其他地方关闭下拉菜单
+    document.addEventListener('click', function(e) {
+      if (!chartSelectButton.contains(e.target) && !chartDropdown.contains(e.target)) {
+        chartDropdown.classList.add('hidden');
       }
-    },
-    series: [{
-      name: '销售量',
-      type: 'bar',
-      data: {{ top_chart_values|safe }},
-      itemStyle: {
-        color: '#60a5fa'
+    });
+
+    // 初始化图表
+    // 每日订单趋势
+    chartInstances.daily_chart = echarts.init(document.getElementById('daily_chart'));
+    chartInstances.daily_chart.setOption({
+      tooltip: {
+        trigger: 'axis',
+        backgroundColor: 'rgba(255, 255, 255, 0.9)',
+        borderColor: '#ddd',
+        borderWidth: 1,
+        textStyle: { color: '#333' },
+        formatter: function(params) {
+          return `<strong>${params[0].name}</strong><br/>订单数: ${params[0].value}`;
+        }
       },
-      label: {
-        show: true,
-        position: 'right'
-      }
-    }],
-    grid: {
-      left: '120px',
-      containLabel: true
-    }
-  });
-  {% endif %}
-
-  {% if show_all or 'customer_levels' in selected_charts %}
-  const levelChart = echarts.init(document.getElementById('level_chart'));
-  levelChart.setOption({
-    tooltip: {
-      trigger: 'item',
-      formatter: '{b}<br/>数量: {c} ({d}%)'
-    },
-    legend: {
-      orient: 'vertical',
-      left: 'left'
-    },
-    series: [{
-      name: '客户等级',
-      type: 'pie',
-      radius: '60%',
-      data: {{ level_chart_data|safe }},
-      emphasis: {
-        itemStyle: {
-          shadowBlur: 10,
-          shadowOffsetX: 0,
-          shadowColor: 'rgba(0, 0, 0, 0.5)'
+      xAxis: {
+        type: 'category',
+        data: {{ daily_chart.dates|safe }},
+        axisLabel: {
+          rotate: 45,
+          interval: Math.ceil({{ daily_chart.dates|length }} / 10)
         }
-      }
-    }]
-  });
-  {% endif %}
+      },
+      yAxis: { type: 'value' },
+      grid: { left: '3%', right: '4%', bottom: '15%', containLabel: true },
+      series: [{
+        name: '订单数',
+        type: 'line',
+        data: {{ daily_chart.counts|safe }},
+        smooth: true,
+        itemStyle: { color: '#3b82f6' },
+        lineStyle: { width: 2 },
+        areaStyle: {
+          color: {
+            type: 'linear',
+            x: 0, y: 0, x2: 0, y2: 1,
+            colorStops: [{
+              offset: 0, color: 'rgba(59, 130, 246, 0.2)'
+            }, {
+              offset: 1, color: 'rgba(59, 130, 246, 0)'
+            }]
+          }
+        }
+      }]
+    });
 
-  {% if show_all or 'monthly_top_products1' in selected_charts %}
-  const monthlyChartMap = {{ monthly_chart_map|safe }};
-  const monthlyChartV2 = echarts.init(document.getElementById('monthly_chart_v2'));
-  
-  function renderMonthlyV2Chart(month) {
-    const data = monthlyChartMap[month] || [];
-    monthlyChartV2.setOption({
+    // 出货型号前十
+    chartInstances.top_chart = echarts.init(document.getElementById('top_chart'));
+    chartInstances.top_chart.setOption({
       tooltip: {
         trigger: 'item',
-        formatter: p => `<strong>${p.name}</strong><br>累计出货量：${p.value}`
+        backgroundColor: 'rgba(255, 255, 255, 0.9)',
+        borderColor: '#ddd',
+        borderWidth: 1,
+        textStyle: { color: '#333' },
+        formatter: function(params) {
+          return `<strong>${params.name}</strong><br/>累计销售量: ${params.value}`;
+        }
       },
-      xAxis: { type: 'value', name: '数量' },
+      xAxis: {
+        type: 'value',
+        name: '数量',
+        axisLabel: {
+          formatter: function(value) {
+            if (value >= 1000) {
+              return (value / 1000) + 'k';
+            }
+            return value;
+          }
+        }
+      },
       yAxis: {
         type: 'category',
-        data: data.map(item => item.name),
-        axisLabel: { interval: 0 }
+        data: {{ top_chart_labels|safe }},
+        axisLabel: {
+          interval: 0,
+          formatter: function(value) {
+            return value.length > 15 ? value.slice(0, 15) + '...' : value;
+          }
+        }
       },
       series: [{
+        name: '销售量',
         type: 'bar',
-        data: data.map(item => item.value),
-        label: { show: true, position: 'right' },
-        itemStyle: { color: '#60a5fa' }
+        data: {{ top_chart_values|safe }},
+        itemStyle: {
+          color: '#60a5fa',
+          borderRadius: [3, 3, 3, 3]
+        },
+        label: {
+          show: true,
+          position: 'right',
+          formatter: function(params) {
+            return params.value >= 1000 ? (params.value / 1000) + 'k' : params.value;
+          }
+        }
       }],
-      grid: { left: '120px', containLabel: true }
+      grid: {
+        left: '25%',
+        right: '5%',
+        bottom: '5%',
+        top: '5%',
+        containLabel: true
+      }
     });
-  }
-  
-  const monthSelect = document.getElementById("monthlyChartSelect");
-  if (monthSelect) {
-    renderMonthlyV2Chart(monthSelect.value);
-    monthSelect.addEventListener("change", () => {
+
+    // 客户等级分布
+    chartInstances.level_chart = echarts.init(document.getElementById('level_chart'));
+    chartInstances.level_chart.setOption({
+      tooltip: {
+        trigger: 'item',
+        backgroundColor: 'rgba(255, 255, 255, 0.9)',
+        borderColor: '#ddd',
+        borderWidth: 1,
+        textStyle: { color: '#333' },
+        formatter: '{b}<br/>数量: {c} ({d}%)'
+      },
+      legend: {
+        orient: 'vertical',
+        right: '5%',
+        top: '10%',
+        bottom: '10%',
+        textStyle: {
+          fontSize: 12
+        }
+      },
+      series: [{
+        name: '客户等级',
+        type: 'pie',
+        radius: ['40%', '70%'],
+        center: ['35%', '50%'],
+        data: {{ level_chart_data|safe }},
+        itemStyle: {
+          borderRadius: 4,
+          borderColor: '#fff',
+          borderWidth: 2
+        },
+        label: {
+          formatter: '{b}: {d}%'
+        },
+        emphasis: {
+          itemStyle: {
+            shadowBlur: 10,
+            shadowOffsetX: 0,
+            shadowColor: 'rgba(0, 0, 0, 0.2)'
+          }
+        }
+      }]
+    });
+
+    // 按月的出货前十产品
+    chartInstances.monthly_chart_v2 = echarts.init(document.getElementById('monthly_chart_v2'));
+    
+    function renderMonthlyV2Chart(month) {
+      const data = {{ monthly_chart_map|safe }}[month] || [];
+      chartInstances.monthly_chart_v2.setOption({
+        tooltip: {
+          trigger: 'item',
+          backgroundColor: 'rgba(255, 255, 255, 0.9)',
+          borderColor: '#ddd',
+          borderWidth: 1,
+          textStyle: { color: '#333' },
+          formatter: p => `<strong>${p.name}</strong><br>累计出货量：${p.value}`
+        },
+        xAxis: {
+          type: 'value',
+          name: '数量',
+          axisLabel: {
+            formatter: function(value) {
+              if (value >= 1000) {
+                return (value / 1000) + 'k';
+              }
+              return value;
+            }
+          }
+        },
+        yAxis: {
+          type: 'category',
+          data: data.map(item => item.name),
+          axisLabel: {
+            interval: 0,
+            formatter: function(value) {
+              return value.length > 15 ? value.slice(0, 15) + '...' : value;
+            }
+          }
+        },
+        series: [{
+          type: 'bar',
+          data: data.map(item => item.value),
+          label: {
+            show: true,
+            position: 'right',
+            formatter: function(params) {
+              return params.value >= 1000 ? (params.value / 1000) + 'k' : params.value;
+            }
+          },
+          itemStyle: {
+            color: '#60a5fa',
+            borderRadius: [3, 3, 3, 3]
+          }
+        }],
+        grid: {
+          left: '25%',
+          right: '5%',
+          bottom: '5%',
+          top: '5%',
+          containLabel: true
+        }
+      });
+    }
+    
+    const monthSelect = document.getElementById("monthlyChartSelect");
+    if (monthSelect) {
       renderMonthlyV2Chart(monthSelect.value);
-    });
-  }
-  {% endif %}
-
+      monthSelect.addEventListener("change", () => renderMonthlyV2Chart(monthSelect.value));
+    }
+  });
 </script>
-
 {% endblock %}
