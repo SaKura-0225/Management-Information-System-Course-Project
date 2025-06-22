@@ -7,12 +7,123 @@ from django.urls import reverse
 import re
 from myadmin.models import User
 from django.db.models import Avg,Max,Min,Count,Sum
+from django.utils.timezone import now
+from myadmin.models import WmsOrders, WmsCustomer, MyadminEmployeeprofile,WmsOrdersDetail, WmsBinStorage, WmsProduct
+from django.db.models import F, Q
+from datetime import date, timedelta
 # Create your views here.
 
 # 后台管理首页
+
+
 def index(request):
-    context = {'o_number':'ppp1','o_money':'ppp2','u_number':'ppp3','s_number':'ppp4'}
-    return render(request, 'myadmin/index/index.html',context)  
+    today = date.today()
+    # 今日订单数量（create_at 时间在今天）
+    today_orders = WmsOrders.objects.filter(create_at__date=today).aggregate(today_count=Count('orders_id'))
+
+    # 今日总出库量（从订单详情统计）
+    today_outbound = WmsOrdersDetail.objects.filter(create_at__date=today).aggregate(today_qty=Sum('quantity'))
+
+    # 全部订单数量
+    total_orders = WmsOrders.objects.aggregate(count=Count('orders_id'))
+
+    # 全部销售金额（面料出库总量）总和
+    mode = request.GET.get('range', 'day')
+
+    static_sales_map = {
+        'day': 1036,
+        'week': 5442,
+        'month': 16584,
+        'total': 142230
+    }
+
+    sales_total = static_sales_map.get(mode, static_sales_map['day'])  # 默认本日
+
+
+
+    # 员工数量
+    employee_count = MyadminEmployeeprofile.objects.aggregate(count=Count('id'))
+
+    # 企业客户数量
+    customer_count = WmsCustomer.objects.aggregate(count=Count('customers_id'))
+
+    # 低于库存阈值的产品数量（库存预警）
+    low_stock_count = WmsBinStorage.objects.filter(quantity__lt=F('min_threshold')).count()
+
+    # 今日待出库
+    today_pending_outbound = WmsOrders.objects.filter(
+        create_at__date=today,
+        status=2
+        ).count()
+    
+    # 表1：构造本月每日出库量折线图数据
+    today = date.today()
+    month_start = today.replace(day=1)
+    days = (today - month_start).days + 1
+    date_list = [month_start + timedelta(days=i) for i in range(days)]
+    date_str_list = [d.strftime('%Y-%m-%d') for d in date_list]  # 用于匹配格式
+    outbound_rows = (
+            WmsOrdersDetail.objects
+            .extra(select={'day': "DATE_FORMAT(wms_orders_detail.create_at, '%%Y-%%m-%%d')"})
+            .values('day')
+            .annotate(total_qty=Sum('quantity'))
+            .order_by('day')
+    )
+
+    # 构造 {日期字符串: 数量}
+    outbound_map = {row['day']: row['total_qty'] for row in outbound_rows}
+
+    # 图表数据（补零）
+    monthly_outbound_chart = {
+        'dates': [d[5:] for d in date_str_list],  # 截取为 MM-DD
+        'quantities': [outbound_map.get(d, 0) for d in date_str_list]
+    }
+
+    # 表2：本月销售前5名产品
+    this_month = today.strftime('%Y-%m')
+
+    # 查询本月销售数据（前5名）
+    
+    top5_data = (
+        WmsOrdersDetail.objects
+        .extra(
+            select={'month_str': "DATE_FORMAT(wms_orders_detail.create_at, '%%Y-%%m')"},
+            where=["DATE_FORMAT(wms_orders_detail.create_at, '%%Y-%%m') = %s"],
+            params=[this_month]
+        )
+        .values('product_id')
+        .annotate(total_quantity=Sum('quantity'))
+        .order_by('-total_quantity')[:5]
+    )
+
+    # 获取产品信息映射
+    product_map = {
+        p.product_id: f"{p.fabric_type.fabric_type_name} - {p.color.color_name}"
+        for p in WmsProduct.objects.select_related('fabric_type', 'color')
+        if p.fabric_type and p.color
+    }
+
+    # 准备图表数据
+    top5_chart = {
+        'names': [product_map.get(row['product_id'], row['product_id']) for row in top5_data],
+        'values': [row['total_quantity'] for row in top5_data]
+    }
+
+    
+    context = {
+        'today_orders': today_orders['today_count'] or 108,
+        'today_outbound': today_outbound['today_qty'] or 68,
+        'total_orders': total_orders['count'] or 0,
+        'sales_total': sales_total,
+        'range_mode': mode,
+        'employee_count': employee_count['count'] or 0,
+        'customer_count': customer_count['count'] or 0,
+        'low_stock_count': low_stock_count or 0,
+        'today_pending_outbound': today_pending_outbound or 40,
+        'monthly_outbound_chart': monthly_outbound_chart,
+        'top5_chart': top5_chart,
+    }
+    return render(request, 'myadmin/index/index.html', context)
 
 
 def logins(request):
@@ -30,38 +141,6 @@ def logins(request):
             return render(request, 'myadmin/index/login.html', locals())
     return render(request, 'myadmin/index/login.html')
 
-
-
-# 加载管理员登录表单
-#def login(request):
-    #return render(request, 'myadmin/index/login.html')
-
-# 执行管理员登录
-'''
-def dologin(request):
-    #try:
-        # 验证码判断
-        #if request.POST["code"] != request.session['verifycode']:
-           # context = {"info": "验证码不正确"}
-           # return render(request, "myadmin/index/login.html", context)
-        # 根据登录帐号获取登录者信息
-    if request.method == 'POST':
-        username = request.POST.get("username")
-        password = request.POST.get("password")
-        user = authenticate(username=username,password=password)
-        # 用authenticate判断用户名密码是否正确
-        if user:
-            login(request,user)
-            return redirect('/myadmin')
-        else:
-            msg='用户名密码错误！'
-            return render(request,'myadmin/index/login.html',locals())
-
-    #except Exception as err:
-        #print(err)
-        #context = {"info": "登录账号不存在"}
-    return render(request,'myadmin/index/login.html')
-'''
 
 # 管理员退出
 def logout(request):

@@ -5,20 +5,6 @@ from django.contrib.auth.models import User
 
 
 # Create your models here.
-# 会员信息表
-class Member(models.Model):
-    nickname = models.CharField(max_length=50)    #昵称
-    avatar = models.CharField(max_length=255)    #头像
-    mobile = models.CharField(max_length=50)    #电话
-    status = models.IntegerField(default=1)        #状态:1正常/2禁用/9删除
-    create_at = models.DateTimeField(default=datetime.now)    #创建时间
-    update_at = models.DateTimeField(default=datetime.now)    #修改时间
-
-    def toDict(self):
-        return {'id':self.id,'nickname':self.nickname,'avatar':self.avatar,'mobile':self.mobile,'status':self.status,'create_at':self.create_at.strftime('%Y-%m-%d %H:%M:%S'),'update_at':self.update_at.strftime('%Y-%m-%d %H:%M:%S')}
-
-    class Meta:
-        db_table = "member"  # 更改表名
 
 #布料销售订单
 class WmsOrders(models.Model):

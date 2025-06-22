@@ -30,34 +30,8 @@ def index(request):
         .annotate(total_quantity=Sum('quantity'))
         .order_by('-total_quantity')[:10]
     )
-    # 图表3：按月份出货量前十产品
-    monthly_top_chart = []
-    monthly_top_labels = []
 
-    if 'monthly_top_products' in selected_charts:
-        monthly_data = (
-            WmsOrdersDetail.objects
-            .select_related('orders')  # JOIN 用于 extra 引用 create_at
-            .extra(select={'month': "DATE_FORMAT(wms_orders_detail.create_at, '%%Y-%%m')"})
-            .values('month', 'product_id')
-            .annotate(total_quantity=Sum('quantity'))
-            .order_by('-total_quantity')[:10]
-        )
-
-        # 获取产品名称（SKU + 品种 + 颜色）
-        product_map = {
-            p.product_id: f"{p.fabric_type.fabric_type_name}-{p.color.color_name}"
-            for p in WmsProduct.objects.select_related('fabric_type', 'color')
-            if p.product_id
-        }
-
-        for row in monthly_data:
-            prod_name = product_map.get(row['product_id'], row['product_id'])
-            label = f"{row['month']} | {prod_name}"
-            monthly_top_chart.append({'name': label, 'value': row['total_quantity']})
-            monthly_top_labels.append(label)
-
-    # 图表4：客户等级分布
+    # 图表3：客户等级分布
     level_chart_data = []
     if show_all or 'customer_levels' in selected_charts:
         level_map = {
@@ -82,7 +56,7 @@ def index(request):
             for row in level_counts if row['level'] is not None
         ]
 
-    # 图表5：支持筛选的月份前十出货产品
+    # 图表4：支持筛选的月份前十出货产品
     monthly_grouped_data = defaultdict(list)
     if show_all or 'monthly_top_products1' in selected_charts:
         monthly_data = (
@@ -128,8 +102,6 @@ def index(request):
     top_chart_values = [row['total_quantity'] for row in top_raw]
 
     return render(request, 'myadmin/report/index.html', {
-        'monthly_top_chart': monthly_top_chart,
-        'monthly_top_labels': monthly_top_labels,
         'selected_charts': selected_charts,
         'show_all': show_all,
         'daily_chart': daily_chart,
