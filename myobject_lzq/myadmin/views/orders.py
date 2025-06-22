@@ -4,12 +4,12 @@ from django.core.paginator import Paginator
 from collections import defaultdict
 from datetime import datetime, timedelta
 from django.db.models import Q
-from django.contrib.auth.decorators import permission_required
+from django.contrib.auth.decorators import permission_required, login_required
 
 from myadmin.models import WmsOrders, WmsOrdersDetail
 from .forms import AddOrdersInfoForm, OrderDetailForm
 
-
+@login_required
 @permission_required('myadmin.view_wmsorders', raise_exception=True)
 def index(request):
     order_list = WmsOrders.objects.all().order_by("orders_id")
@@ -17,19 +17,40 @@ def index(request):
     # 查询过滤
     kw = request.GET.get("keyword")
     if kw:
-        order_list = order_list.filter(orders_id__icontains=kw)
+        order_list = order_list.filter(
+            Q(orders_id__icontains=kw) |
+            Q(work_no1__work_no__icontains=kw) |
+            Q(work_no2__work_no__icontains=kw) |
+            Q(work_no3__work_no__icontains=kw) |
+            Q(work_no4__work_no__icontains=kw) |
+            Q(work_no5__work_no__icontains=kw) |
+            Q(work_no6__work_no__icontains=kw)
+        )
     
+    # 筛选：拣货状态
+    status = request.GET.get("status")
+    if status in ['1', '2']:
+        order_list = order_list.filter(status=status)
+
+    # 筛选：紧急程度
+    urgency = request.GET.get("urgency")
+    if urgency in ['1', '2', '3']:
+        order_list = order_list.filter(emergency_status=urgency)
+
     paginator = Paginator(order_list, 50)
     page_number = request.GET.get("page")
     page_obj = paginator.get_page(page_number)
 
     return render(request, "myadmin/orders/index.html", {
         "orders_list": page_obj.object_list,
-        "page_obj": page_obj
+        "page_obj": page_obj,
+        "filter_status": status,
+        "filter_urgency": urgency,
     })
 
 
-
+@login_required
+@permission_required('myadmin.view_wmsorders', raise_exception=True)
 def wms_orders_detail(request, orders_id):
     order = get_object_or_404(WmsOrders, orders_id=orders_id)
     order_details = WmsOrdersDetail.objects.filter(orders__orders_id=orders_id)
@@ -52,7 +73,8 @@ def add_orders(request):
     return render(request, 'myadmin/orders/add.html', {'form': form})
 
 
-
+@login_required
+@permission_required('myadmin.view_wmsorders', raise_exception=True)
 def edit_orders(request, orders_id):
     order = get_object_or_404(WmsOrders, orders_id=orders_id)
     if request.method == "POST":
@@ -68,7 +90,8 @@ def edit_orders(request, orders_id):
     })
 
 
-
+@login_required
+@permission_required('myadmin.view_wmsorders', raise_exception=True)
 def delete_orders(request, orders_id):
     order = get_object_or_404(WmsOrders, orders_id=orders_id)
     if request.method == "POST":
@@ -77,7 +100,8 @@ def delete_orders(request, orders_id):
     return render(request, 'myadmin/orders/delete.html', {'order': order})
 
 
-
+@login_required
+@permission_required('myadmin.view_wmsorders', raise_exception=True)
 def order_detail_view(request):
     keyword = request.GET.get('keyword', '').strip()
     year = request.GET.get('year')
@@ -140,6 +164,8 @@ def order_detail_view(request):
         'page_obj': page_obj,
     })
 
+@login_required
+@permission_required('myadmin.view_wmsorders', raise_exception=True)
 def order_detail_add(request, orders_id):
     order = get_object_or_404(WmsOrders, orders_id=orders_id)
     if request.method == 'POST':
@@ -153,7 +179,8 @@ def order_detail_add(request, orders_id):
         form = OrderDetailForm()
     return render(request, 'myadmin/orders/detail_form.html', {'form': form, 'order': order})
 
-
+@login_required
+@permission_required('myadmin.view_wmsorders', raise_exception=True)
 def order_detail_edit(request, detail_id):
     detail = get_object_or_404(WmsOrdersDetail, pk=detail_id)
     if request.method == 'POST':
@@ -165,7 +192,8 @@ def order_detail_edit(request, detail_id):
         form = OrderDetailForm(instance=detail)
     return render(request, 'myadmin/orders/detail_form.html', {'form': form, 'order': detail.orders})
 
-
+@login_required
+@permission_required('myadmin.view_wmsorders', raise_exception=True)
 def order_detail_delete(request, detail_id):
     detail = get_object_or_404(WmsOrdersDetail, pk=detail_id)
     if request.method == 'POST':

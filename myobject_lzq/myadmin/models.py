@@ -13,7 +13,13 @@ class WmsOrders(models.Model):
     category = models.IntegerField(blank=True, null=True, db_comment='1：镇内订单  2：镇外订单')
     payment_status = models.IntegerField(blank=True, null=True, db_comment='财务状态:1未到账/2已到账')
     customer = models.ForeignKey('WmsCustomer', models.DO_NOTHING, to_field='customers_id', blank=True, null=True, db_comment='采购企业代号')
-    work_no = models.ForeignKey('MyadminEmployeeprofile', models.DO_NOTHING, db_column='work_no', to_field='work_no', blank=True, null=True, db_comment='拣货员工号')
+    work_no1 = models.ForeignKey('MyadminEmployeeprofile', models.DO_NOTHING, db_column='work_no1', to_field='work_no', blank=True, null=True, db_comment='拣货员工号1')
+    work_no2 = models.ForeignKey('MyadminEmployeeprofile', models.DO_NOTHING, db_column='work_no2', to_field='work_no', related_name='wmsorders_work_no2_set', blank=True, null=True, db_comment='拣货员工号2')
+    work_no3 = models.ForeignKey('MyadminEmployeeprofile', models.DO_NOTHING, db_column='work_no3', to_field='work_no', related_name='wmsorders_work_no3_set', blank=True, null=True, db_comment='拣货员工号3')
+    work_no4 = models.ForeignKey('MyadminEmployeeprofile', models.DO_NOTHING, db_column='work_no4', to_field='work_no', related_name='wmsorders_work_no4_set', blank=True, null=True, db_comment='拣货员工号4')
+    work_no5 = models.ForeignKey('MyadminEmployeeprofile', models.DO_NOTHING, db_column='work_no5', to_field='work_no', related_name='wmsorders_work_no5_set', blank=True, null=True, db_comment='拣货员工号5')
+    work_no6 = models.ForeignKey('MyadminEmployeeprofile', models.DO_NOTHING, db_column='work_no6', to_field='work_no', related_name='wmsorders_work_no6_set', blank=True, null=True, db_comment='拣货员工号6')
+    emergency_status = models.IntegerField(blank=True, null=True, db_comment='紧急程度1正常2加急3紧急')
     status = models.IntegerField(blank=True, null=True, db_comment='1:已拣货  2:未拣货')
     qrcode = models.CharField(max_length=100, blank=True, null=True, db_comment='拣货单二维码')
     create_at = models.DateTimeField(blank=True, null=True, db_comment='下单时间')
@@ -69,7 +75,7 @@ class MyadminDepartment(models.Model):
     code = models.CharField(unique=True, max_length=20)
 
     class Meta:
-        managed = False
+        managed = True
         db_table = 'myadmin_department'
 
         
@@ -97,7 +103,7 @@ class MyadminEmployeeprofile(models.Model):
     user_id = models.BigIntegerField(unique=True)
 
     class Meta:
-        managed = False
+        managed = True
         db_table = 'myadmin_employeeprofile'
     
 # 产品信息表

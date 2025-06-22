@@ -2,7 +2,11 @@ from django.shortcuts import render, get_object_or_404, redirect
 from myadmin.models import WmsCustomer
 from myadmin.views.forms import CustomerForm
 from django.core.paginator import Paginator
+from django.contrib.auth.decorators import login_required, permission_required
 
+
+@login_required
+@permission_required('myadmin.view_wmscustomer', raise_exception=True)
 def index(request):
     customer_list = WmsCustomer.objects.order_by('-create_at')  # 按加入时间倒序排列
     paginator = Paginator(customer_list, 10)  # 每页 10 条
@@ -14,6 +18,8 @@ def index(request):
         'page_obj': page_obj,
     })
 
+@login_required
+@permission_required('myadmin.view_wmscustomer', raise_exception=True)
 def add_customer(request):
     if request.method == 'POST':
         form = CustomerForm(request.POST)
@@ -24,6 +30,8 @@ def add_customer(request):
         form = CustomerForm()
     return render(request, 'myadmin/customer/add.html', {'form': form})
 
+@login_required
+@permission_required('myadmin.view_wmscustomer', raise_exception=True)
 def edit_customer(request, id):
     customer = get_object_or_404(WmsCustomer, pk=id)
     if request.method == 'POST':
@@ -35,6 +43,8 @@ def edit_customer(request, id):
         form = CustomerForm(instance=customer)
     return render(request, 'myadmin/customer/edit.html', {'form': form, 'customer': customer})
 
+@login_required
+@permission_required('myadmin.view_wmscustomer', raise_exception=True)
 def customer_delete(request, id):
     customer = get_object_or_404(WmsCustomer, pk=id)
     if request.method == 'POST':

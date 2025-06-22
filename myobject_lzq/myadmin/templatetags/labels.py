@@ -2,22 +2,12 @@ from django import template
 
 register = template.Library()
 
-PERM_LABELS = {
-    'view_category': '查看分类',
-    'view_department': '查看部门',
-    'view_employeeprofile': '查看员工档案',
-    'view_member': '查看会员',
-    'view_order2': '查看订单2',
-    'view_orders': '查看订单',
-    'view_ordersdetailwithdates': '查看订单明细',
-    'view_product': '查看商品',
-    'view_shop': '查看门店',
-    
+PERM_LABELS = {   
     # 以下为你贴出的真实 model 权限
     'view_myadmindepartment': '查看部门',
     'view_myadminemployeeprofile': '查看员工档案',
-    'view_wmsbinstorage': '查看门店',
-    'view_wmscustomer': '查看会员',
+    'view_wmsbinstorage': '查看库存',
+    'view_wmscustomer': '查看客户信息',
     'view_wmsorders': '查看销售订单',
     'view_wmsordersdetail': '查看订单明细',
     'view_wmsoutbound': '查看出库记录',

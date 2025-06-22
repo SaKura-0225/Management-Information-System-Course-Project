@@ -3,7 +3,10 @@ from django.shortcuts import render, get_object_or_404, redirect
 from django.core.paginator import Paginator
 from myadmin.models import WmsProduct, WmsProductColor, WmsProductFabricType, WmsBinStorage
 from .forms import ProductForm
+from django.contrib.auth.decorators import login_required, permission_required
 
+@login_required
+@permission_required('myadmin.view_wmsproduct', raise_exception=True)
 def index(request):
     query = WmsProduct.objects.select_related('fabric_type', 'color', 'loc')
 
@@ -34,6 +37,8 @@ def index(request):
         'colors': WmsProductColor.objects.all(),
     })
 
+@login_required
+@permission_required('myadmin.view_wmsproduct', raise_exception=True)
 def add_product(request):
     if request.method == 'POST':
         form = ProductForm(request.POST)
@@ -44,6 +49,8 @@ def add_product(request):
         form = ProductForm()
     return render(request, 'myadmin/product/add.html', {'form': form})
 
+@login_required
+@permission_required('myadmin.view_wmsproduct', raise_exception=True)
 def edit_product(request, id):
     product = get_object_or_404(WmsProduct, id=id)
     if request.method == 'POST':
@@ -55,6 +62,8 @@ def edit_product(request, id):
         form = ProductForm(instance=product)
     return render(request, 'myadmin/product/edit.html', {'form': form})
 
+@login_required
+@permission_required('myadmin.view_wmsproduct', raise_exception=True)
 def product_delete(request, id):
     product = get_object_or_404(WmsProduct, id=id)
     if request.method == 'POST':
