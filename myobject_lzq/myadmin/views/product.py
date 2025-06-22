@@ -6,10 +6,33 @@ from .forms import ProductForm
 
 def index(request):
     query = WmsProduct.objects.select_related('fabric_type', 'color', 'loc')
-    paginator = Paginator(query.order_by('id'), 10)  # 每页10条
+
+    # 获取搜索参数
+    keyword = request.GET.get('keyword', '').strip()
+    fabric_type_id = request.GET.get('fabric_type')
+    color_id = request.GET.get('color')
+
+    # 组合过滤条件
+    if keyword:
+        query = query.filter(product_id__icontains=keyword)
+
+    if fabric_type_id:
+        query = query.filter(fabric_type__id=fabric_type_id)
+
+    if color_id:
+        query = query.filter(color__id=color_id)
+
+    # 分页
+    paginator = Paginator(query.order_by('id'), 10)
     page_number = request.GET.get('page')
     page_obj = paginator.get_page(page_number)
-    return render(request, 'myadmin/product/index.html', {'page_obj': page_obj})
+
+    # 渲染模板
+    return render(request, 'myadmin/product/index.html', {
+        'page_obj': page_obj,
+        'fabric_types': WmsProductFabricType.objects.all(),
+        'colors': WmsProductColor.objects.all(),
+    })
 
 def add_product(request):
     if request.method == 'POST':
