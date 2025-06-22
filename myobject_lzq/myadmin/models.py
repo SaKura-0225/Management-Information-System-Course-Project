@@ -5,20 +5,6 @@ from django.contrib.auth.models import User
 
 
 # Create your models here.
-# 会员信息表
-class Member(models.Model):
-    nickname = models.CharField(max_length=50)    #昵称
-    avatar = models.CharField(max_length=255)    #头像
-    mobile = models.CharField(max_length=50)    #电话
-    status = models.IntegerField(default=1)        #状态:1正常/2禁用/9删除
-    create_at = models.DateTimeField(default=datetime.now)    #创建时间
-    update_at = models.DateTimeField(default=datetime.now)    #修改时间
-
-    def toDict(self):
-        return {'id':self.id,'nickname':self.nickname,'avatar':self.avatar,'mobile':self.mobile,'status':self.status,'create_at':self.create_at.strftime('%Y-%m-%d %H:%M:%S'),'update_at':self.update_at.strftime('%Y-%m-%d %H:%M:%S')}
-
-    class Meta:
-        db_table = "member"  # 更改表名
 
 #布料销售订单
 class WmsOrders(models.Model):
@@ -34,7 +20,7 @@ class WmsOrders(models.Model):
     update_at = models.DateTimeField(blank=True, null=True, db_comment='更新时间')
 
     class Meta:
-        managed = False
+        managed = True
         db_table = 'wms_orders'
         db_table_comment = '销售订单表'
 
@@ -48,7 +34,7 @@ class WmsOrdersDetail(models.Model):
     create_at = models.DateTimeField(blank=True, null=True, db_comment='下单日期')
 
     class Meta:
-        managed = False
+        managed = True
         db_table = 'wms_orders_detail'
 
 #出库表
@@ -63,7 +49,7 @@ class WmsOutbound(models.Model):
     update_at = models.DateTimeField(blank=True, null=True, db_comment='更新时间')
 
     class Meta:
-        managed = False
+        managed = True
         db_table = 'wms_outbound'
 
 
@@ -74,6 +60,8 @@ class Department(models.Model):
 
     def __str__(self):
         return self.name
+    class Meta:
+        managed = False
 
 class MyadminDepartment(models.Model):
     id = models.BigAutoField(primary_key=True)
@@ -97,7 +85,9 @@ class EmployeeProfile(models.Model):
 
     def __str__(self):
         return self.user.username
-    
+    class Meta:
+        managed = False
+        
 class MyadminEmployeeprofile(models.Model):
     id = models.BigAutoField(primary_key=True)
     work_no = models.CharField(unique=True, max_length=100)
@@ -119,7 +109,7 @@ class WmsProduct(models.Model):
     price = models.IntegerField(blank=True, null=True, db_comment='单价')
 
     class Meta:
-        managed = False
+        managed = True
         db_table = 'wms_product'
         db_table_comment = '产品信息表'
 
@@ -130,7 +120,7 @@ class WmsProductColor(models.Model):
     def __str__(self):
         return self.color_name or self.color_id
     class Meta:
-        managed = False
+        managed = True
         db_table = 'wms_product_color'
         db_table_comment = '布料颜色表'
 
@@ -141,7 +131,7 @@ class WmsProductFabricType(models.Model):
     def __str__(self):
         return self.fabric_type_name or self.fabric_type_id
     class Meta:
-        managed = False
+        managed = True
         db_table = 'wms_product_fabric_type'
         db_table_comment = '布料品种表'
 
@@ -158,7 +148,7 @@ class WmsBinStorage(models.Model):
     def __str__(self):
         return self.loc_id or self.id
     class Meta:
-        managed = False
+        managed = True
         db_table = 'wms_bin_storage'
         db_table_comment = '库位物料'
 
@@ -175,7 +165,7 @@ class WmsCustomer(models.Model):
     create_at = models.DateTimeField(blank=True, null=True, db_comment='加入时间')
 
     class Meta:
-        managed = False
+        managed = True
         db_table = 'wms_customer'
         db_table_comment = '客户'
 
@@ -191,6 +181,6 @@ class WmsStockCheck(models.Model):
     remarks = models.TextField(blank=True, null=True)
 
     class Meta:
-        managed = False
+        managed = True
         db_table = 'wms_stock_check'
         db_table_comment = '库存盘点记录表'

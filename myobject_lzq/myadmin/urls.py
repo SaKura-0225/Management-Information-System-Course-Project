@@ -3,7 +3,6 @@ from django.urls import path
 from django.contrib import admin
 from myadmin.views import index
 from myadmin.views import orders
-from myadmin.views import member
 from myadmin.views import report,warehouse,warehouse_flow,system,customer,product,inventory
 
 urlpatterns = [
@@ -15,8 +14,6 @@ urlpatterns = [
     path('logout', index.logout, name="myadmin_logout"),  # 退出
     path('verify', index.verify, name="myadmin_verify"),  # 输出验证码
     # 会员管理路由
-    path('member/', member.index, name="myadmin_member_index"),  # 浏览会员信息
-    path('member/del/<int:mid>', member.delete, name="myadmin_member_del"),  # 执行删除
 
     # 订单信息管理路由
     path('orders/', orders.index, name="myadmin_order_index"),  # 浏览
