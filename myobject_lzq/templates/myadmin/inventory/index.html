@@ -70,7 +70,9 @@
           <th class="px-6 py-3 text-xs font-medium text-gray-500 uppercase tracking-wider">颜色</th>
           <th class="px-6 py-3 text-xs font-medium text-gray-500 uppercase tracking-wider">库存数量</th>
           <th class="px-6 py-3 text-xs font-medium text-gray-500 uppercase tracking-wider">状态</th>
+          {% if perms.myadmin.change_wmsbinstorage %}
           <th class="px-6 py-3 text-xs font-medium text-gray-500 uppercase tracking-wider text-right">操作</th>
+          {% endif %}
         </tr>
       </thead>
       <tbody class="divide-y divide-gray-200">
@@ -91,11 +93,13 @@
               <span class="px-2 py-1 text-xs rounded-full bg-green-100 text-green-800">正常</span>
             {% endif %}
           </td>
+          {% if perms.myadmin.change_wmsbinstorage %}
           <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-right">
             <a href="{% url 'myadmin_stock_check' item.product.product_id %}" class="text-primary hover:text-primary/80 transition-colors duration-150 px-3 py-1 bg-blue-50 rounded-lg">
               <i class="fa fa-clipboard-check mr-1"></i> 盘点
             </a>
           </td>
+          {% endif %}
         </tr>
         {% endfor %}
       </tbody>

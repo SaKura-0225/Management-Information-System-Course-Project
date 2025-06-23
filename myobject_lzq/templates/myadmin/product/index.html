@@ -1,5 +1,6 @@
 {% extends 'myadmin/base.html' %}
 {% block main_body %}
+{% load static %}
 <!-- 内容头部区域 -->
 <section class="content-header bg-white rounded-xl shadow-sm p-6 mb-6">
   <div class="flex flex-col md:flex-row md:items-center justify-between">
@@ -7,12 +8,14 @@
       <h1 class="text-[clamp(1.5rem,3vw,2rem)] font-semibold text-dark">产品信息</h1>
       <p class="text-gray-500 text-sm">管理系统中的所有产品库存信息</p>
     </div>
+    {% if perms.myadmin.change_wmsbinstorage %}
     <div class="mt-4 md:mt-0">
       <a href="{% url 'myadmin_product_add' %}" class="bg-primary hover:bg-primary/90 text-white px-4 py-3 rounded-lg flex items-center space-x-2 transition-all duration-200 shadow-sm hover:shadow">
         <i class="fa fa-plus"></i>
         <span class="hidden sm:inline">添加产品</span>
       </a>
     </div>
+    {% endif %}
   </div>
   
   <!-- 面包屑导航 -->
@@ -70,7 +73,10 @@
           <th class="px-6 py-3 text-xs font-medium text-gray-500 uppercase tracking-wider">库位编码</th>
           <th class="px-6 py-3 text-xs font-medium text-gray-500 uppercase tracking-wider">单价</th>
           <th class="px-6 py-3 text-xs font-medium text-gray-500 uppercase tracking-wider">在库数量</th>
+          <th class="px-6 py-4">二维码</th>
+          {% if perms.myadmin.change_wmsbinstorage %}
           <th class="px-6 py-3 text-xs font-medium text-gray-500 uppercase tracking-wider text-right">操作</th>
+          {% endif %}
         </tr>
       </thead>
       <tbody class="divide-y divide-gray-200">
@@ -86,6 +92,14 @@
               {{ p.loc.quantity }}
             </span>
           </td>
+          <td class="px-6 py-4">
+            {% if p.barcode_file %}
+              <img src="/static/qrcodes/product/{{ p.barcode_file }}" alt="二维码" class="h-16">
+            {% else %}
+              <span class="text-gray-400 text-xs">无</span>
+            {% endif %}
+          </td>
+          {% if perms.myadmin.change_wmsbinstorage %}
           <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-right">
             <a href="{% url 'myadmin_product_edit' p.id %}" class="text-primary hover:text-primary/80 mr-3 transition-colors duration-150">
               <i class="fa fa-pencil mr-1"></i> 编辑
@@ -94,6 +108,7 @@
               <i class="fa fa-trash mr-1"></i> 删除
             </a>
           </td>
+          {% endif %}
         </tr>
         {% endfor %}
       </tbody>

@@ -7,12 +7,14 @@
       <h1 class="text-[clamp(1.5rem,3vw,2rem)] font-semibold text-dark">所有订单明细</h1>
       <p class="text-gray-500 text-sm">共 {{ grouped|length }} 个订单</p>
     </div>
+    {% if perms.myadmin.change_wmsorders %}
     <div class="mt-4 md:mt-0">
       <a href="{% url 'myadmin_orders_add' %}" class="bg-primary hover:bg-primary/90 text-white px-4 py-3 rounded-lg flex items-center space-x-2 transition-all duration-200 shadow-sm hover:shadow">
         <i class="fa fa-plus"></i>
         <span class="hidden sm:inline">添加订单</span>
       </a>
     </div>
+    {% endif %}
   </div>
   
   <!-- 面包屑导航 -->
@@ -94,7 +96,9 @@
           <th class="px-6 py-4">单价</th>
           <th class="px-6 py-4">小计</th>
           <th class="px-6 py-4">状态</th>
+          {% if perms.myadmin.change_wmsorders %}
           <th class="px-6 py-4">操作</th>
+          {% endif %}
         </tr>
       </thead>
       <tbody>
@@ -115,6 +119,7 @@
               {{ item.status }}
             {% endif %}
           </td>
+          {% if perms.myadmin.change_wmsorders %}
           <td class="px-6 py-4">
             <div class="flex space-x-2">
               <a href="{% url 'myadmin_order_detail_edit' item.id %}" class="px-3 py-1 bg-warning/10 text-warning rounded-lg text-xs hover:bg-warning/20 transition-colors duration-150">
@@ -125,6 +130,7 @@
               </a>
             </div>
           </td>
+          {% endif %}
         </tr>
         {% endfor %}
       </tbody>

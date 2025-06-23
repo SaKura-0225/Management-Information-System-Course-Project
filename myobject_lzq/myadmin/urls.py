@@ -3,7 +3,7 @@ from django.urls import path
 from django.contrib import admin
 from myadmin.views import index
 from myadmin.views import orders
-from myadmin.views import report,warehouse,warehouse_flow,system,customer,product,inventory
+from myadmin.views import report,warehouse,warehouse_flow,system,customer,product,inventory,profile
 
 urlpatterns = [
     path('', index.index, name="myadmin_index"),  # 后台首页
@@ -25,6 +25,9 @@ urlpatterns = [
     path('orders/detail/add/<int:orders_id>/', orders.order_detail_add, name='myadmin_order_detail_add'),
     path('orders/detail/edit/<int:detail_id>/', orders.order_detail_edit, name='myadmin_order_detail_edit'),
     path('orders/detail/delete/<int:detail_id>/', orders.order_detail_delete, name='myadmin_order_detail_delete'),
+    path('orders/<int:orders_id>/print/', orders.print_pick_list, name='myadmin_orders_print'), #打印拣货单
+    path('orders/barcode/delete/', orders.delete_barcode, name='myadmin_delete_barcode'),#删除条形码
+
 
 
 
@@ -73,4 +76,7 @@ urlpatterns = [
     # 库存信息路由
     path('inventory', inventory.stock_index, name='myadmin_stock_index'),
     path('inventory/<str:product_id>/check', inventory.check_inventory, name='myadmin_stock_check'),
+
+    # 个人页面路由
+    path('profile/', profile.my_profile, name='myadmin_profile'), #个人页面
 ]

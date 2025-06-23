@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <title>拣货单 - {{ order.orders_id }}</title>
+  <style>
+    body { font-family: "微软雅黑", sans-serif; padding: 20px; }
+    table { border-collapse: collapse; width: 100%; margin-top: 20px; }
+    th, td { border: 1px solid #ccc; padding: 8px; text-align: center; }
+    h1 { text-align: center; }
+    .info { margin-top: 20px; font-size: 14px; }
+    @media print {
+      .no-print { display: none; }
+    }
+  </style>
+</head>
+
+<script>
+    function cleanupBarcode() {
+      fetch("{% url 'myadmin_delete_barcode' %}", {
+        method: "POST",
+        headers: {
+          "X-CSRFToken": "{{ csrf_token }}",
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({ path: "{{ barcode_path }}" })
+      });
+    }
+  
+    window.onafterprint = cleanupBarcode;
+    window.onbeforeunload = cleanupBarcode;
+</script>
+
+<body>
+    <h1>拣货单</h1>
+  
+    <div class="info">
+      <p><strong>订单编号：</strong>{{ order.orders_id }}</p>
+      <p><strong>客户：</strong>{{ order.customer.company_name }}</p>
+      <p><strong>下单时间：</strong>{{ order.create_at|date:"Y-m-d H:i" }}</p>
+      <p><strong>打印时间：</strong>{{ print_time|date:"Y-m-d H:i" }}</p>
+      <p><strong>紧急程度：</strong>
+        {% if order.emergency_status == 2 %} 加急
+        {% elif order.emergency_status == 3 %} 紧急
+        {% else %} 正常 {% endif %}
+      </p>
+    </div>
+  
+    <table>
+      <thead>
+        <tr>
+          <th>序号</th>
+          <th>SKU编号</th>
+          <th>品种</th>
+          <th>颜色</th>
+          <th>数量</th>
+          <th>库位编码</th>
+          <th>单价</th>
+          <th>小计</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for d in details %}
+        <tr>
+          <td>{{ forloop.counter }}</td>
+          <td>{{ d.product.product_id }}</td>
+          <td>{{ d.product.fabric_type.fabric_type_name }}</td>
+          <td>{{ d.product.color.color_name }}</td>
+          <td>{{ d.quantity }}</td>
+          <td>{{ d.product.loc.loc_id }}</td>
+          <td>{{ d.price|floatformat:2 }}</td>
+          <td>{{ d.subtotal|floatformat:2 }}</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  
+    <div class="info">
+      <p><strong>总件数：</strong>{{ total_qty }}</p>
+      <p><strong>总金额：</strong>{{ total_money|floatformat:2 }} 元</p>
+      <p><strong>拣货员：</strong>
+        {% for emp in pickers %}
+        {{ emp.work_no }}
+        {% endfor %}     
+      </p>
+    </div>
+    <div style="text-align: right; margin-top: 20px;">
+        <img src="{{ barcode_url }}" alt="订单条码" width="180">
+    </div>
+    <div class="no-print" style="margin-top: 30px;">
+      <button onclick="window.print()">🖨️ 打印此页面</button>
+    </div>
+    <div class="no-print" style="margin-top: 15px;">
+        <button onclick="window.history.back()">🔙 返回</button>
+    </div>
+  </body>
+  </html>
+  
