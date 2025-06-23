@@ -53,10 +53,13 @@
         {% endfor %}
       </select>
     </div>
-    <div class="flex items-end">
+    <div class="flex items-end space-x-4">
       <button type="submit" class="w-full bg-primary text-white px-4 py-2 rounded-lg hover:bg-primary/90 transition-colors duration-200 flex items-center justify-center">
         <i class="fa fa-search mr-2"></i> 搜索
       </button>
+      <a href="{% url 'myadmin_product_index' %}" class="w-full bg-gray-300 text-black px-4 py-2 rounded-lg hover:bg-gray-400 transition-colors duration-200 flex items-center justify-center">
+        <i class="fa fa-refresh mr-2"></i> 重置
+      </a>
     </div>
   </form>
 </div>
