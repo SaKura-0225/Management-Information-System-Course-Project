@@ -64,6 +64,8 @@
           <th class="px-6 py-3 text-xs font-medium text-gray-500 uppercase tracking-wider">企业类型</th>
           <th class="px-6 py-3 text-xs font-medium text-gray-500 uppercase tracking-wider">评级</th>
           <th class="px-6 py-3 text-xs font-medium text-gray-500 uppercase tracking-wider">负责人</th>
+          <th class="px-6 py-3 text-xs font-medium text-gray-500 uppercase tracking-wider">负责人联系电话</th>
+          <th class="px-6 py-3 text-xs font-medium text-gray-500 uppercase tracking-wider">负责人邮箱</th>
           <th class="px-6 py-3 text-xs font-medium text-gray-500 uppercase tracking-wider text-right">操作</th>
         </tr>
       </thead>
@@ -114,6 +116,8 @@
             </div>
           </td>
           <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-700">{{ c.principal }}</td>
+          <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-700">{{ c.phone }}</td>
+          <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-700">{{ c.email }}</td>
           <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-right">
             <a href="{% url 'myadmin_customer_edit' c.id %}" class="text-primary hover:text-primary/80 mr-3 transition-colors duration-150">
               <i class="fa fa-pencil mr-1"></i> 编辑

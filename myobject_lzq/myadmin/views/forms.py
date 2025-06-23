@@ -107,6 +107,17 @@ class CustomerForm(forms.ModelForm):
         widgets = {
             'create_at': forms.DateInput(attrs={'type': 'date'}),
         }
+        labels = {
+            'customers_id': '客户代号',
+            'company_name': '客户名称',
+            'area': '地区类型',
+            'level': '客户等级',
+            'principal': '负责人',
+            'phone': '联系电话',
+            'email': '邮箱地址',
+            'gender': '性别',
+            'create_at': '加入时间',
+        }
 
     def clean_customers_id(self):
         cid = self.cleaned_data.get('customers_id')
