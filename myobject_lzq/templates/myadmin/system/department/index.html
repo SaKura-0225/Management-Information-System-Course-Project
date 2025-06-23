@@ -41,32 +41,101 @@
       <!-- 部门员工列表 -->
       <div class="p-4 space-y-2"> <!-- 缩小内边距 -->
         {% if dept.employeeprofile_set.all %}
-          {% for emp in dept.employeeprofile_set.all %}
-          <!-- 为每个员工创建一个独立的悬停效果模块 -->
-          <div class="flex flex-col bg-gray-50 rounded-lg px-3 py-2 transition-all duration-200 
-                      group hover:scale-105 transform"> <!-- 每个员工项悬停放大效果 -->
-            <span class="font-medium text-dark">
-              {{ emp.user.get_full_name|default:emp.user.username }}
-            </span>
-            <!-- 合并“电话：”与号码显示，工号和电话用 | 分隔 -->
-            <span class="text-sm text-gray-500">
-              工号：{{ emp.work_no }} | 电话：{{ emp.phone|default:"-" }}
-            </span>
-            <span class="text-sm text-gray-600">
-              岗位：{{ emp.post|default:"-" }}
-            </span>
-            <!-- 新增状态标签（需模型配合） -->
-            {% if emp.status == '在岗' %}
-            <span class="inline-block px-2 py-1 text-xs bg-green-100 text-green-600 rounded mt-1">
-              {{ emp.status }}
-            </span>
-            {% elif emp.status == '离职' %}
-            <span class="inline-block px-2 py-1 text-xs bg-red-100 text-red-600 rounded mt-1">
-              {{ emp.status }}
-            </span>
-            {% endif %}
-          </div>
-          {% endfor %}
+          {% if dept.name == '仓储部' and dept.employeeprofile_set.count > 5 %}
+            <!-- 仓储部且员工数超过5人时使用分页 -->
+            <div id="warehouse-staff-container" class="space-y-2">
+              {% for emp in dept.employeeprofile_set.all|slice:":5" %}
+              <div class="flex flex-col bg-gray-50 rounded-lg px-3 py-2 transition-all duration-200 
+                          hover:scale-105 transform">
+                <span class="font-medium text-dark">
+                  {{ emp.user.get_full_name|default:emp.user.username }}
+                </span>
+                <span class="text-sm text-gray-500">
+                  工号：{{ emp.work_no }} | 电话：{{ emp.phone|default:"-" }}
+                </span>
+                <span class="text-sm text-gray-600">
+                  岗位：{{ emp.post|default:"-" }}
+                </span>
+                {% if emp.status == '在岗' %}
+                <span class="inline-block px-2 py-1 text-xs bg-green-100 text-green-600 rounded mt-1">
+                  {{ emp.status }}
+                </span>
+                {% elif emp.status == '离职' %}
+                <span class="inline-block px-2 py-1 text-xs bg-red-100 text-red-600 rounded mt-1">
+                  {{ emp.status }}
+                </span>
+                {% endif %}
+              </div>
+              {% endfor %}
+            </div>
+            
+            <!-- 仓储部分页控件 -->
+            <div class="flex items-center justify-between pt-2 border-t border-gray-100">
+              <span class="text-xs text-gray-500">
+                显示 1-5 / {{ dept.employeeprofile_set.count }} 名员工
+              </span>
+              <div class="flex space-x-1">
+                <button id="warehouse-prev" class="px-2 py-1 rounded border border-gray-200 text-gray-400 disabled:opacity-50 disabled:cursor-not-allowed" disabled>
+                  <i class="fa fa-angle-left"></i>
+                </button>
+                <button id="warehouse-next" class="px-2 py-1 rounded border border-gray-200 text-gray-600 hover:bg-gray-50">
+                  <i class="fa fa-angle-right"></i>
+                </button>
+              </div>
+            </div>
+            
+            <!-- 仓储部员工数据（隐藏备用） -->
+            <div id="warehouse-all-staff" class="hidden">
+              {% for emp in dept.employeeprofile_set.all %}
+              <div class="flex flex-col bg-gray-50 rounded-lg px-3 py-2 transition-all duration-200 
+                          hover:scale-105 transform">
+                <span class="font-medium text-dark">
+                  {{ emp.user.get_full_name|default:emp.user.username }}
+                </span>
+                <span class="text-sm text-gray-500">
+                  工号：{{ emp.work_no }} | 电话：{{ emp.phone|default:"-" }}
+                </span>
+                <span class="text-sm text-gray-600">
+                  岗位：{{ emp.post|default:"-" }}
+                </span>
+                {% if emp.status == '在岗' %}
+                <span class="inline-block px-2 py-1 text-xs bg-green-100 text-green-600 rounded mt-1">
+                  {{ emp.status }}
+                </span>
+                {% elif emp.status == '离职' %}
+                <span class="inline-block px-2 py-1 text-xs bg-red-100 text-red-600 rounded mt-1">
+                  {{ emp.status }}
+                </span>
+                {% endif %}
+              </div>
+              {% endfor %}
+            </div>
+          {% else %}
+            <!-- 普通部门或员工数不超过5人 -->
+            {% for emp in dept.employeeprofile_set.all %}
+            <div class="flex flex-col bg-gray-50 rounded-lg px-3 py-2 transition-all duration-200 
+                        hover:scale-105 transform">
+              <span class="font-medium text-dark">
+                {{ emp.user.get_full_name|default:emp.user.username }}
+              </span>
+              <span class="text-sm text-gray-500">
+                工号：{{ emp.work_no }} | 电话：{{ emp.phone|default:"-" }}
+              </span>
+              <span class="text-sm text-gray-600">
+                岗位：{{ emp.post|default:"-" }}
+              </span>
+              {% if emp.status == '在岗' %}
+              <span class="inline-block px-2 py-1 text-xs bg-green-100 text-green-600 rounded mt-1">
+                {{ emp.status }}
+              </span>
+              {% elif emp.status == '离职' %}
+              <span class="inline-block px-2 py-1 text-xs bg-red-100 text-red-600 rounded mt-1">
+                {{ emp.status }}
+              </span>
+              {% endif %}
+            </div>
+            {% endfor %}
+          {% endif %}
         {% else %}
         <div class="py-4 text-center"> <!-- 调整内边距 -->
           <div class="w-8 h-8 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-2"> <!-- 缩小图标容器 -->
@@ -86,6 +155,66 @@
 function openAddDepartmentModal() {
   alert('点击新增部门，可在此实现弹窗表单');
 }
+
+// 仓储部分页功能
+document.addEventListener('DOMContentLoaded', function() {
+  // 检查是否有仓储部且员工超过5人
+  if (document.getElementById('warehouse-staff-container')) {
+    const staffContainer = document.getElementById('warehouse-staff-container');
+    const allStaff = document.getElementById('warehouse-all-staff');
+    const prevBtn = document.getElementById('warehouse-prev');
+    const nextBtn = document.getElementById('warehouse-next');
+    const staffItems = allStaff.querySelectorAll('div');
+    const totalPages = Math.ceil(staffItems.length / 5);
+    let currentPage = 1;
+    let staffDisplayCount = document.querySelector('#warehouse-staff-container + div .text-xs');
+    
+    // 更新分页显示
+    function updatePagination() {
+      // 清空当前显示
+      staffContainer.innerHTML = '';
+      
+      // 计算当前页要显示的员工
+      const startIdx = (currentPage - 1) * 5;
+      const endIdx = Math.min(startIdx + 5, staffItems.length);
+      
+      // 更新显示计数
+      staffDisplayCount.textContent = `显示 ${startIdx+1}-${endIdx} / ${staffItems.length} 名员工`;
+      
+      // 添加当前页的员工
+      for (let i = startIdx; i < endIdx; i++) {
+        staffContainer.appendChild(staffItems[i].cloneNode(true));
+      }
+      
+      // 更新按钮状态
+      prevBtn.disabled = currentPage === 1;
+      prevBtn.classList.toggle('text-gray-400', currentPage === 1);
+      prevBtn.classList.toggle('text-gray-600', currentPage !== 1);
+      prevBtn.classList.toggle('hover:bg-gray-50', currentPage !== 1);
+      
+      nextBtn.disabled = currentPage === totalPages;
+      nextBtn.classList.toggle('text-gray-400', currentPage === totalPages);
+      nextBtn.classList.toggle('text-gray-600', currentPage !== totalPages);
+      nextBtn.classList.toggle('hover:bg-gray-50', currentPage !== totalPages);
+    }
+    
+    // 上一页
+    prevBtn.addEventListener('click', function() {
+      if (currentPage > 1) {
+        currentPage--;
+        updatePagination();
+      }
+    });
+    
+    // 下一页
+    nextBtn.addEventListener('click', function() {
+      if (currentPage < totalPages) {
+        currentPage++;
+        updatePagination();
+      }
+    });
+  }
+});
 </script>
 
 <style>
@@ -94,16 +223,16 @@ function openAddDepartmentModal() {
   transition: transform 0.2s ease, box-shadow 0.2s ease;
 }
 /* 员工项悬停效果 */
-.group:hover {
+.grid .bg-white .bg-gray-50 {
+  transition: transform 0.2s ease;
+}
+.grid .bg-white .bg-gray-50:hover {
   transform: scale(1.05);
 }
-/* 员工模块悬停效果 */
-.group:hover .bg-gray-50 {
-  transform: scale(1.05);
-}
-/* 隐藏/显示过渡优化 */
-.opacity-0 {
-  transition: opacity 0.2s ease;
+/* 分页按钮样式 */
+button[disabled] {
+  cursor: not-allowed;
+  opacity: 0.5;
 }
 </style>
 {% endblock %}

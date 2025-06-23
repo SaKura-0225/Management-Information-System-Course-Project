@@ -41,7 +41,6 @@
           <th class="px-6 py-4">电话</th>
           <th class="px-6 py-4">邮箱</th>
           <th class="px-6 py-4">部门</th>
-          <th class="px-6 py-4">岗位</th>
           <th class="px-6 py-4">操作</th>
         </tr>
       </thead>
@@ -65,7 +64,6 @@
               {{ e.department.name }}
             </span>
           </td>
-          <td class="px-6 py-4">{{ e.post }}</td>
           <td class="px-6 py-4">
             <div class="flex space-x-2">
               <a href="{% url 'myadmin_system_employee_edit' e.user_id %}" class="px-3 py-1 bg-primary/10 text-primary rounded-lg text-xs hover:bg-primary/20 transition-colors duration-150">

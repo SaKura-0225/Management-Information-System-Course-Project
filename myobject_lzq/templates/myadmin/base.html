@@ -1,3 +1,4 @@
+<!-- templates/myadmin/base.html -->
 {% load static %}
 <!DOCTYPE html>
 <html>
@@ -66,10 +67,10 @@
         @apply w-full;
       }
       .fade-in {
-        animation: fadeIn 0.5s ease-in-out;
+        animation: fadeIn 0.3s ease-out forwards;
       }
       @keyframes fadeIn {
-        from { opacity: 0; transform: translateY(10px); }
+        from { opacity: 0; transform: translateY(-10px); }
         to { opacity: 1; transform: translateY(0); }
       }
       .scale-hover {
@@ -79,14 +80,14 @@
         @apply transform scale-105;
       }
       .pulse-hover {
-        @apply relative;
+        @apply relative overflow-hidden;
       }
       .pulse-hover::before {
         content: '';
-        @apply absolute inset-0 rounded-full bg-primary/20 opacity-0 transition-opacity duration-300;
+        @apply absolute inset-0 rounded-full bg-primary/20 opacity-0 transition-all duration-500;
       }
       .pulse-hover:hover::before {
-        @apply opacity-100;
+        @apply opacity-100 scale-150;
       }
       .sidebar-item-hover:hover {
         @apply bg-blue-900 text-white;
@@ -272,49 +273,27 @@
       </div>
       
       <div class="flex items-center space-x-4">
-        <!-- 消息通知 -->
-        <div class="relative">
-          <button class="p-2 rounded-full hover:bg-gray-100 relative pulse-hover">
-            <i class="fa fa-envelope-o text-gray-600"></i>
-            <span class="absolute top-1 right-1 w-4 h-4 bg-success rounded-full flex items-center justify-center text-white text-xs">4</span>
-          </button>
-        </div>
-        
-        <!-- 系统通知 -->
-        <div class="relative">
-          <button class="p-2 rounded-full hover:bg-gray-100 relative pulse-hover">
-            <i class="fa fa-bell-o text-gray-600"></i>
-            <span class="absolute top-1 right-1 w-4 h-4 bg-warning rounded-full flex items-center justify-center text-white text-xs">10</span>
-          </button>
-        </div>
-        
-        <!-- 任务通知 -->
-        <div class="relative">
-          <button class="p-2 rounded-full hover:bg-gray-100 relative pulse-hover">
-            <i class="fa fa-flag-o text-gray-600"></i>
-            <span class="absolute top-1 right-1 w-4 h-4 bg-danger rounded-full flex items-center justify-center text-white text-xs">9</span>
-          </button>
-        </div>
-        
-        <!-- 用户菜单 -->
-        <div class="relative group">
-          <button class="flex items-center space-x-2 focus:outline-none">
+        <!-- 用户菜单（点击触发） -->
+        <div class="relative" id="user-menu-container">
+          <button id="user-menu-button" class="flex items-center space-x-2 focus:outline-none">
             <img src="{% static 'uploads/Avatar/微信图片_20250503211615.jpg' %}" alt="用户头像" class="w-8 h-8 rounded-full object-cover scale-hover">
             <span class="text-sm font-medium hidden md:block">{{request.session.adminuser.nickname}}</span>
-            <i class="fa fa-angle-down text-gray-500"></i>
+            <i class="fa fa-angle-down text-gray-500 transition-transform duration-300 hover:scale-125" id="user-menu-icon">
+              <span class="sr-only">展开菜单</span>
+            </i>
           </button>
           
           <!-- 用户下拉菜单 -->
-          <div class="absolute right-0 mt-2 w-48 bg-white rounded-lg shadow-lg py-1 z-50 hidden group-hover:block fade-in">
+          <div id="user-dropdown" class="absolute right-0 mt-2 w-48 bg-white rounded-lg shadow-lg py-1 z-50 hidden transition-all duration-300 transform origin-top-right fade-in">
             <div class="px-4 py-2 border-b border-gray-100">
               <p class="text-sm font-medium">{{request.session.adminuser.nickname}}</p>
               <p class="text-xs text-gray-500">{{request.session.adminuser.creat_at|date:"Y/m/d"}}</p>
             </div>
-            <a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 nav-link-hover">
-              <i class="fa fa-user-o mr-2"></i> 个人信息
+            <a href="{% url 'myadmin_profile' %}" class="block px-4 py-2 text-sm text-gray-700 hover:bg-primary/10 hover:text-primary transition-colors duration-200 flex items-center">
+              <i class="fa fa-user-o mr-2 w-4 text-center"></i> 个人信息
             </a>
-            <a href="{% url 'myadmin_logout' %}" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 nav-link-hover">
-              <i class="fa fa-sign-out mr-2"></i> 退出登录
+            <a href="{% url 'myadmin_login' %}" class="block px-4 py-2 text-sm text-gray-700 hover:bg-primary/10 hover:text-primary transition-colors duration-200 flex items-center">
+              <i class="fa fa-sign-out mr-2 w-4 text-center"></i> 退出登录
             </a>
           </div>
         </div>
@@ -539,6 +518,30 @@
           
           setActiveMenuItem(parentButton);
         }
+      }
+    });
+    
+    // 初始化用户菜单点击事件
+    const userMenuButton = document.getElementById('user-menu-button');
+    const userDropdown = document.getElementById('user-dropdown');
+    const userMenuIcon = document.getElementById('user-menu-icon');
+    
+    userMenuButton.addEventListener('click', (e) => {
+      e.stopPropagation();
+      userDropdown.classList.toggle('hidden');
+      
+      if (!userDropdown.classList.contains('hidden')) {
+        userMenuIcon.style.transform = 'rotate(-180deg)';
+      } else {
+        userMenuIcon.style.transform = 'rotate(0)';
+      }
+    });
+    
+    // 点击其他区域关闭下拉菜单
+    document.addEventListener('click', (e) => {
+      if (!document.getElementById('user-menu-container').contains(e.target)) {
+        userDropdown.classList.add('hidden');
+        userMenuIcon.style.transform = 'rotate(0)';
       }
     });
   });

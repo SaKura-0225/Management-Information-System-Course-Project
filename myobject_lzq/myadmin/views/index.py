@@ -144,7 +144,6 @@ def logins(request):
 
 # 管理员退出
 def logout(request):
-    del request.session['adminuser']
     return redirect(reverse("myadmin_login"))
 
 # 会员登录表单（验证码）

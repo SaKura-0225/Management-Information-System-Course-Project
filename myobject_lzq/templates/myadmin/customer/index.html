@@ -73,22 +73,45 @@
           <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">{{ c.customers_id }}</td>
           <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-700">{{ c.company_name }}</td>
           <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-700">
-            {% if c.area == '供应商' %}
-              <span class="px-2 py-1 text-xs rounded-full bg-blue-100 text-blue-800">供应商</span>
-            {% elif c.area == '客户' %}
-              <span class="px-2 py-1 text-xs rounded-full bg-green-100 text-green-800">客户</span>
+            {% comment %} 企业类型：使用蓝色和绿色区分 {% endcomment %}
+            {% if c.area == 1 %}
+              <span class="inline-flex items-center justify-center px-3 py-1 rounded-full bg-blue-100 text-blue-800 text-xs font-medium">
+                <span class="w-2 h-2 rounded-full bg-blue-500 mr-2"></span>{{ c.area }}
+              </span>
+            {% elif c.area == 2 %}
+              <span class="inline-flex items-center justify-center px-3 py-1 rounded-full bg-green-100 text-green-800 text-xs font-medium">
+                <span class="w-2 h-2 rounded-full bg-green-500 mr-2"></span>{{ c.area }}
+              </span>
+            {% elif c.area == 3 %}
+              <span class="inline-flex items-center justify-center px-3 py-1 rounded-full bg-blue-200 text-blue-800 text-xs font-medium">
+                <span class="w-2 h-2 rounded-full bg-blue-600 mr-2"></span>{{ c.area }}
+              </span>
+            {% elif c.area == 4 %}
+              <span class="inline-flex items-center justify-center px-3 py-1 rounded-full bg-green-200 text-green-800 text-xs font-medium">
+                <span class="w-2 h-2 rounded-full bg-green-600 mr-2"></span>{{ c.area }}
+              </span>
+            {% elif c.area == 5 %}
+              <span class="inline-flex items-center justify-center px-3 py-1 rounded-full bg-blue-300 text-blue-800 text-xs font-medium">
+                <span class="w-2 h-2 rounded-full bg-blue-700 mr-2"></span>{{ c.area }}
+              </span>
             {% else %}
-              <span class="px-2 py-1 text-xs rounded-full bg-gray-100 text-gray-800">{{ c.area }}</span>
+              <span class="inline-flex items-center justify-center px-3 py-1 rounded-full bg-gray-100 text-gray-800 text-xs font-medium">
+                <span class="w-2 h-2 rounded-full bg-gray-500 mr-2"></span>{{ c.area }}
+              </span>
             {% endif %}
           </td>
           <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-700">
-            {% if c.level == 'A' %}
-              <span class="px-2 py-1 text-xs rounded-full bg-yellow-100 text-yellow-800">A级</span>
-            {% elif c.level == 'B' %}
-              <span class="px-2 py-1 text-xs rounded-full bg-gray-100 text-gray-800">B级</span>
-            {% else %}
-              <span class="px-2 py-1 text-xs rounded-full bg-gray-100 text-gray-800">{{ c.level }}</span>
-            {% endif %}
+            {% comment %} 评级：使用星级评分系统 {% endcomment %}
+            <div class="flex items-center">
+              {% for i in '12345'|make_list %}
+                {% if forloop.counter <= c.level %}
+                  <i class="fa fa-star text-yellow-400 mr-1"></i>
+                {% else %}
+                  <i class="fa fa-star-o text-gray-300 mr-1"></i>
+                {% endif %}
+              {% endfor %}
+              <span class="ml-1 text-xs font-medium text-gray-600">{{ c.level }}</span>
+            </div>
           </td>
           <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-700">{{ c.principal }}</td>
           <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-right">
