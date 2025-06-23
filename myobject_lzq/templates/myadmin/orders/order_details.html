@@ -8,10 +8,17 @@
       <p class="text-gray-500 text-sm">订单编号：#{{ order.orders_id }}</p>
     </div>
     <div class="mt-4 md:mt-0 flex space-x-2">
+      {% if perms.myadmin.change_wmsorders %}
       <a href="{% url 'myadmin_order_detail_add' order.orders_id %}" class="bg-success hover:bg-success/90 text-white px-4 py-2 rounded-lg flex items-center space-x-2 transition-all duration-200 shadow-sm hover:shadow">
         <i class="fa fa-plus"></i>
         <span>添加明细</span>
       </a>
+      {% endif %}
+      {% if perms.myadmin.change_wmsbinstorage %}
+      <a href="{% url 'myadmin_orders_print' order.orders_id %}" class="px-3 py-1 bg-indigo-100 text-indigo-800 rounded-lg text-xs hover:bg-indigo-200 transition">
+        <i class="fa fa-print mr-1"></i> 打印拣货单
+      </a>
+      {% endif %}
       <a href="{% url 'myadmin_order_index' %}" class="bg-gray-100 hover:bg-gray-200 text-gray-700 px-4 py-2 rounded-lg flex items-center space-x-2 transition-all duration-200">
         <i class="fa fa-arrow-left"></i>
         <span>返回订单列表</span>
@@ -68,7 +75,9 @@
           <th class="px-6 py-4">单价</th>
           <th class="px-6 py-4">总价</th>
           <th class="px-6 py-4">状态</th>
+          {% if perms.myadmin.change_wmsorders %}
           <th class="px-6 py-4">操作</th>
+          {% endif %}
         </tr>
       </thead>
       <tbody>
@@ -89,6 +98,7 @@
               {{ detail.status }}
             {% endif %}
           </td>
+          {% if perms.myadmin.change_wmsorders %}
           <td class="px-6 py-4">
             <div class="flex space-x-2">
               <a href="{% url 'myadmin_order_detail_edit' detail.id %}" class="px-3 py-1 bg-warning/10 text-warning rounded-lg text-xs hover:bg-warning/20 transition-colors duration-150">
@@ -99,6 +109,7 @@
               </a>
             </div>
           </td>
+          {% endif %}
         </tr>
         {% empty %}
         <tr>

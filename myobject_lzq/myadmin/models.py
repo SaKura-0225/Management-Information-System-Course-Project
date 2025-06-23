@@ -25,6 +25,8 @@ class WmsOrders(models.Model):
     create_at = models.DateTimeField(blank=True, null=True, db_comment='下单时间')
     update_at = models.DateTimeField(blank=True, null=True, db_comment='更新时间')
 
+    def __str__(self):
+        return f"订单 #{self.orders_id} - 客户: {self.customer.company_name if self.customer else '未知'}"
     class Meta:
         managed = True
         db_table = 'wms_orders'
@@ -45,18 +47,20 @@ class WmsOrdersDetail(models.Model):
 
 #出库表
 class WmsOutbound(models.Model):
-    orders_id = models.IntegerField(blank=True, null=True, db_comment='采购订单id')
-    name = models.CharField(max_length=50, blank=True, null=True, db_comment='物料名称')
-    product_id = models.IntegerField(blank=True, null=True, db_comment='SKU编号')
+    orders = models.ForeignKey('WmsOrders', models.DO_NOTHING, blank=True, null=True, db_comment='销售订单id')
+    product = models.ForeignKey('WmsProduct', models.DO_NOTHING, to_field='product_id', blank=True, null=True, db_comment='SKU编号')
     quantity = models.IntegerField(blank=True, null=True, db_comment='数量')
-    bin_id = models.IntegerField(blank=True, null=True, db_comment='库位编号')
-    user_id = models.IntegerField(blank=True, null=True, db_comment='操作员id')
+    loc = models.ForeignKey('WmsBinStorage', models.DO_NOTHING, to_field='loc_id', blank=True, null=True, db_comment='库位编号')
+    work_no = models.ForeignKey('MyadminEmployeeprofile', models.DO_NOTHING, db_column='work_no', to_field='work_no', blank=True, null=True, db_comment='操作员工号')
     create_at = models.DateTimeField(blank=True, null=True, db_comment='出库时间')
     update_at = models.DateTimeField(blank=True, null=True, db_comment='更新时间')
 
+    def __str__(self):
+        return self.name
     class Meta:
-        managed = True
+        managed = False
         db_table = 'wms_outbound'
+        db_table_comment = '出库表'
 
 
 # 部门表
@@ -102,6 +106,8 @@ class MyadminEmployeeprofile(models.Model):
     department = models.ForeignKey('MyadminDepartment', models.DO_NOTHING, blank=True, null=True)
     user_id = models.BigIntegerField(unique=True)
 
+    def __str__(self):
+        return self.work_no
     class Meta:
         managed = True
         db_table = 'myadmin_employeeprofile'
@@ -115,7 +121,8 @@ class WmsProduct(models.Model):
     price = models.IntegerField(blank=True, null=True, db_comment='单价')
     barcode_file = models.CharField(max_length=100, blank=True, null=True, db_comment='条码图片文件名')
 
-
+    def __str__(self):
+        return self.product_id
     class Meta:
         managed = True
         db_table = 'wms_product'
@@ -183,7 +190,6 @@ class WmsStockCheck(models.Model):
     product = models.ForeignKey('WmsProduct', models.DO_NOTHING, to_field='product_id', blank=True, null=True)
     expected_qty = models.IntegerField()
     actual_qty = models.IntegerField()
-    difference = models.IntegerField(blank=True, null=True)
     checked_by = models.CharField(max_length=50, blank=True, null=True)
     check_time = models.DateTimeField(blank=True, null=True)
     remarks = models.TextField(blank=True, null=True)

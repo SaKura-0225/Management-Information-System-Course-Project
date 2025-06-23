@@ -1,0 +1,60 @@
+{% extends "myadmin/base.html" %}
+{% block main_body %}
+<section class="p-6 bg-white shadow rounded-xl">
+  <h2 class="text-xl font-bold mb-4">个人中心</h2>
+
+  <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+    <div>
+      <p><strong>用户名：</strong> {{ user.username }}</p>
+      <p><strong>工号：</strong> {{ employee.work_no }}</p>
+      <p><strong>部门：</strong> {{ employee.department.name }}</p>
+      <p><strong>电话：</strong> {{ employee.phone }}</p>
+    </div>
+    <div>
+      <p><strong>邮箱：</strong> {{ user.email }}</p>
+    </div>
+  </div>
+
+  <div class="mt-6">
+    <a href="#" class="btn btn-sm btn-primary">修改密码</a>
+  </div>
+</section>
+
+
+<section class="mt-10 p-6 bg-white shadow rounded-xl">
+  <h2 class="text-xl font-bold mb-4">我的拣货任务</h2>
+
+  {% if picking_tasks %}
+    <div class="grid gap-4">
+      {% for order in picking_tasks %}
+        <div class="p-4 border rounded shadow-sm bg-gray-50 hover:bg-gray-100 transition">
+          <div class="flex justify-between items-center">
+            <div>
+              <p class="text-sm text-gray-600">订单编号：<strong>{{ order.orders_id }}</strong></p>
+              <p class="text-sm text-gray-600">客户：{{ order.customer.company_name }}</p>
+              <p class="text-sm text-gray-600">下单时间：{{ order.create_at|date:"Y-m-d H:i" }}</p>
+              <p class="text-sm text-gray-600">紧急程度：
+                {% if order.emergency_status == 3 %}
+                  <span class="text-red-600 font-semibold">紧急</span>
+                {% elif order.emergency_status == 2 %}
+                  <span class="text-orange-500">加急</span>
+                {% else %}
+                  正常
+                {% endif %}
+              </p>
+            </div>
+            <a href="{% url 'myadmin_orders_detail' order.orders_id %}" class="text-sm text-primary hover:underline">
+              查看详情
+            </a>
+          </div>
+        </div>
+      {% endfor %}
+    </div>
+  {% else %}
+    <p class="text-gray-500">暂无待拣货任务。</p>
+  {% endif %}
+</section>
+
+
+
+{% endblock %}

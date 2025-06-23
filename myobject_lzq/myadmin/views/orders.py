@@ -8,6 +8,15 @@ from django.contrib.auth.decorators import permission_required, login_required
 
 from myadmin.models import WmsOrders, WmsOrdersDetail
 from .forms import AddOrdersInfoForm, OrderDetailForm
+from myadmin.templatetags.auth_extras import multiple_permission_required
+from django.utils import timezone
+import qrcode
+import os
+from django.conf import settings
+from django.views.decorators.csrf import csrf_exempt
+from django.http import JsonResponse
+import json
+
 
 @login_required
 @permission_required('myadmin.view_wmsorders', raise_exception=True)
@@ -50,7 +59,7 @@ def index(request):
 
 
 @login_required
-@permission_required('myadmin.view_wmsorders', raise_exception=True)
+@multiple_permission_required(['myadmin.view_wmsorders', 'myadmin.view_wmsordersdetail'])
 def wms_orders_detail(request, orders_id):
     order = get_object_or_404(WmsOrders, orders_id=orders_id)
     order_details = WmsOrdersDetail.objects.filter(orders__orders_id=orders_id)
@@ -61,7 +70,8 @@ def wms_orders_detail(request, orders_id):
     })
 
 
-
+@login_required
+@permission_required('myadmin.change_wmsorders', raise_exception=True)
 def add_orders(request):
     if request.method == "POST":
         form = AddOrdersInfoForm(request.POST)
@@ -74,7 +84,7 @@ def add_orders(request):
 
 
 @login_required
-@permission_required('myadmin.view_wmsorders', raise_exception=True)
+@permission_required('myadmin.change_wmsorders', raise_exception=True)
 def edit_orders(request, orders_id):
     order = get_object_or_404(WmsOrders, orders_id=orders_id)
     if request.method == "POST":
@@ -91,7 +101,7 @@ def edit_orders(request, orders_id):
 
 
 @login_required
-@permission_required('myadmin.view_wmsorders', raise_exception=True)
+@permission_required('myadmin.change_wmsorders', raise_exception=True)
 def delete_orders(request, orders_id):
     order = get_object_or_404(WmsOrders, orders_id=orders_id)
     if request.method == "POST":
@@ -165,7 +175,7 @@ def order_detail_view(request):
     })
 
 @login_required
-@permission_required('myadmin.view_wmsorders', raise_exception=True)
+@permission_required('myadmin.change_wmsorders', raise_exception=True)
 def order_detail_add(request, orders_id):
     order = get_object_or_404(WmsOrders, orders_id=orders_id)
     if request.method == 'POST':
@@ -180,7 +190,7 @@ def order_detail_add(request, orders_id):
     return render(request, 'myadmin/orders/detail_form.html', {'form': form, 'order': order})
 
 @login_required
-@permission_required('myadmin.view_wmsorders', raise_exception=True)
+@permission_required('myadmin.change_wmsorders', raise_exception=True)
 def order_detail_edit(request, detail_id):
     detail = get_object_or_404(WmsOrdersDetail, pk=detail_id)
     if request.method == 'POST':
@@ -193,10 +203,93 @@ def order_detail_edit(request, detail_id):
     return render(request, 'myadmin/orders/detail_form.html', {'form': form, 'order': detail.orders})
 
 @login_required
-@permission_required('myadmin.view_wmsorders', raise_exception=True)
+@permission_required('myadmin.change_wmsorders', raise_exception=True)
 def order_detail_delete(request, detail_id):
     detail = get_object_or_404(WmsOrdersDetail, pk=detail_id)
     if request.method == 'POST':
         detail.delete()
         return redirect('myadmin_order_detail_view')
     return render(request, 'myadmin/orders/detail_delete.html', {'detail': detail})
+
+
+
+# 生成拣货单条码
+def generate_order_barcode(order):
+    import qrcode
+    import os
+    from django.conf import settings
+
+    # 拣货员编号列表（过滤空值）
+    pickers = [p.work_no for p in [order.work_no1, order.work_no2, order.work_no3,
+                                   order.work_no4, order.work_no5, order.work_no6] if p]
+
+    # 拼接二维码内容
+    content = (
+        f"orders_id:{order.orders_id} | "
+        f"customer:{order.customer_id} | "
+        f"create_at:{order.create_at.strftime('%Y-%m-%d %H:%M')} | "
+        f"emergency:{order.emergency_status or '-'} | "
+        f"status:{order.status or '-'} | "
+        f"payment_status:{order.payment_status or '-'} | "
+        f"total_amount:{order.total_amount or 0} | "
+        f"pickers:{','.join(pickers)}"
+    )
+
+    # 保存路径设置
+    folder = os.path.join(settings.BASE_DIR, 'static', 'barcodes', 'orders')
+    os.makedirs(folder, exist_ok=True)
+
+    filename = f"{order.orders_id}.png"
+    path = os.path.join(folder, filename)
+
+    # 生成二维码
+    img = qrcode.make(content)
+    img.save(path)
+
+    return f"/static/barcodes/orders/{filename}", path
+
+
+
+@login_required
+@permission_required('myadmin.view_wmsorders', raise_exception=True)
+def print_pick_list(request, orders_id):
+    order = get_object_or_404(WmsOrders, orders_id=orders_id)
+    details = WmsOrdersDetail.objects.filter(orders=order).select_related(
+        'product__fabric_type', 'product__color', 'product__loc'
+    )
+
+    for d in details:
+        d.subtotal = (d.quantity or 0) * (d.price or 0)
+
+    pickers = [p for p in [
+        order.work_no1, order.work_no2, order.work_no3,
+        order.work_no4, order.work_no5, order.work_no6
+    ] if p]
+
+    total_qty = sum(d.quantity or 0 for d in details)
+    total_money = sum(d.subtotal for d in details)
+
+    barcode_url, barcode_path = generate_order_barcode(order)
+
+
+    return render(request, 'myadmin/orders/print_pick_list.html', {
+        'order': order,
+        'pickers': pickers,
+        'details': details,
+        'total_qty': total_qty,
+        'total_money': total_money,
+        'print_time': timezone.now(),
+        'barcode_url': barcode_url,
+        'barcode_path': barcode_path,
+    })
+
+
+@csrf_exempt
+def delete_barcode(request):
+    if request.method == "POST":
+        data = json.loads(request.body)
+        path = data.get('path')
+        if path and os.path.exists(path):
+            os.remove(path)
+            return JsonResponse({"status": "ok"})
+    return JsonResponse({"status": "fail"})

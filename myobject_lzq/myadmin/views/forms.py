@@ -37,9 +37,25 @@ class AddWarehouseInfoForm(forms.ModelForm):
     class Meta:
         model = WmsOutbound
         fields = '__all__'
+        labels = {
+            'orders': '销售订单编号',
+            'name': '物料名称',
+            'product': 'SKU编号',
+            'quantity': '出库数量',
+            'loc_id': '库位编号',
+            'work_no': '操作员',
+            'create_at': '出库时间',
+            'update_at': '更新时间',
+        }
         widgets = {
-            'create_at': forms.DateInput(attrs={'type': 'date'}),
-            'update_at': forms.DateInput(attrs={'type': 'date'}),
+            'orders': forms.NumberInput(attrs={'class': 'form-control'}),
+            'name': forms.TextInput(attrs={'class': 'form-control'}),
+            'product': forms.NumberInput(attrs={'class': 'form-control'}),
+            'quantity': forms.NumberInput(attrs={'class': 'form-control'}),
+            'loc_id': forms.NumberInput(attrs={'class': 'form-control'}),
+            'work_': forms.NumberInput(attrs={'class': 'form-control'}),
+            'create_at': forms.DateTimeInput(attrs={'type': 'datetime-local', 'class': 'form-control'}),
+            'update_at': forms.DateTimeInput(attrs={'type': 'datetime-local', 'class': 'form-control'}),
         }
 
 
@@ -64,13 +80,23 @@ class EmployeeForm(forms.ModelForm):
 class OrderDetailForm(forms.ModelForm):
     class Meta:
         model = WmsOrdersDetail
-        exclude = ['orders']  # orders 在视图中动态设置
+        exclude = ['orders']  # orders 在视图中设置
+        labels = {
+            'product': '产品',
+            'quantity': '数量',
+            'price': '单价',
+            'total_price': '总价',
+            'create_at': '下单时间',
+        }
         widgets = {
-            'product_id': forms.TextInput(attrs={'class': 'form-control'}),
+            'product': forms.Select(attrs={'class': 'form-control'}),
             'quantity': forms.NumberInput(attrs={'class': 'form-control'}),
             'price': forms.NumberInput(attrs={'class': 'form-control'}),
             'total_price': forms.NumberInput(attrs={'class': 'form-control'}),
-            'status': forms.TextInput(attrs={'class': 'form-control'}),
+            'create_at': forms.DateTimeInput(attrs={
+                'class': 'form-control',
+                'type': 'datetime-local'
+            }),
         }
 
 
@@ -93,6 +119,13 @@ class ProductForm(forms.ModelForm):
     class Meta:
         model = WmsProduct
         fields = ['product_id', 'fabric_type', 'color', 'loc', 'price']
+        labels = {
+            'product_id': '产品编号',
+            'color': '颜色',
+            'fabric_type': '布料品种',
+            'loc': '库位',
+            'price': '单价',
+        }
         widgets = {
             'product_id': forms.TextInput(attrs={'class': 'form-control'}),
             'fabric_type': forms.Select(attrs={'class': 'form-control'}),

@@ -10,22 +10,46 @@ from django.contrib.contenttypes.models import ContentType
 from .forms import UserForm, EmployeeForm
 
 
+# 部门编码 → 权限组映射
+DEPARTMENT_GROUP_MAP = {
+    'sales': '销售权限',
+    'warehouse': '仓储权限',
+    'buy': '采购权限',
+    'human_resources': '人事权限',
+    'produce': '生产权限',
+}
+
 @login_required
 @permission_required('myadmin.view_myadminemployeeprofile', raise_exception=True)
 def employee_index(request):
     employees = EmployeeProfile.objects.select_related('user', 'department').all()
     return render(request, 'myadmin/system/employees/index.html', {'employees': employees})
 
+
 def add_employee(request):
     if request.method == 'POST':
         form = EmployeeForm(request.POST)
         if form.is_valid():
-            form.save()
-            return redirect('myadmin_system_employee_index')  
+            profile = form.save()
+
+            # 自动为对应用户添加权限组
+            try:
+                department = profile.department
+                if department:
+                    group_name = DEPARTMENT_GROUP_MAP.get(department.code)
+                    if group_name:
+                        group = Group.objects.get(name=group_name)
+                        user = User.objects.get(id=profile.user_id)
+                        user.groups.clear()  # 清除旧的组（可选）
+                        user.groups.add(group)
+            except Exception as e:
+                print("自动添加权限失败：", e)
+
+            return redirect('myadmin_system_employee_index')
     else:
         form = EmployeeForm()
-    return render(request, 'myadmin/system/employees/add.html', {'form': form})
 
+    return render(request, 'myadmin/system/employees/add.html', {'form': form})
 @login_required
 @permission_required('myadmin.view_myadminemployeeprofile', raise_exception=True)
 def edit_employee(request, user_id):

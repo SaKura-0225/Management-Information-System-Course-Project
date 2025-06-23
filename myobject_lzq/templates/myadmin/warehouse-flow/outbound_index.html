@@ -85,7 +85,6 @@
               <tr>
                 <th class="px-6 py-4">行号</th>
                 <th class="px-6 py-4">销售订单编号</th>
-                <th class="px-6 py-4">物料名称</th>
                 <th class="px-6 py-4">SKU编号</th>
                 <th class="px-6 py-4">出库数量</th>
                 <th class="px-6 py-4">库位编号</th>
@@ -100,11 +99,10 @@
               <tr class="border-b border-gray-100 hover:bg-gray-50 transition-colors duration-150">
                 <td class="px-6 py-4 font-medium text-dark">{{ vo.id }}</td>
                 <td class="px-6 py-4">{{ vo.orders_id }}</td>
-                <td class="px-6 py-4">{{ vo.name }}</td>
                 <td class="px-6 py-4">{{ vo.product_id }}</td>
                 <td class="px-6 py-4">{{ vo.quantity }}</td>
-                <td class="px-6 py-4">{{ vo.bin_id }}</td>
-                <td class="px-6 py-4">{{ vo.user_id }}</td>
+                <td class="px-6 py-4">{{ vo.loc_id }}</td>
+                <td class="px-6 py-4">{{ vo.work_no.work_no }}</td>
                 <td class="px-6 py-4">{{ vo.create_at|date:'Y-m-d' }}</td>
                 <td class="px-6 py-4">{{ vo.update_at|date:'Y-m-d' }}</td>
                 <td class="px-6 py-4">
