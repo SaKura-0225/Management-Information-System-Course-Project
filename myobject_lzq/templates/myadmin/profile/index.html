@@ -1,60 +1,137 @@
 {% extends "myadmin/base.html" %}
 {% block main_body %}
-<section class="p-6 bg-white shadow rounded-xl">
-  <h2 class="text-xl font-bold mb-4">个人中心</h2>
-
-  <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-    <div>
-      <p><strong>用户名：</strong> {{ user.username }}</p>
-      <p><strong>工号：</strong> {{ employee.work_no }}</p>
-      <p><strong>部门：</strong> {{ employee.department.name }}</p>
-      <p><strong>电话：</strong> {{ employee.phone }}</p>
-    </div>
-    <div>
-      <p><strong>邮箱：</strong> {{ user.email }}</p>
-    </div>
+<!-- 个人信息卡片 -->
+<section class="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden mb-8">
+  <div class="p-6 border-b border-gray-100">
+    <h2 class="text-xl font-bold text-gray-800">个人中心</h2>
   </div>
-
-  <div class="mt-6">
-    <a href="#" class="btn btn-sm btn-primary">修改密码</a>
-  </div>
-</section>
-
-
-<section class="mt-10 p-6 bg-white shadow rounded-xl">
-  <h2 class="text-xl font-bold mb-4">我的拣货任务</h2>
-
-  {% if picking_tasks %}
-    <div class="grid gap-4">
-      {% for order in picking_tasks %}
-        <div class="p-4 border rounded shadow-sm bg-gray-50 hover:bg-gray-100 transition">
-          <div class="flex justify-between items-center">
-            <div>
-              <p class="text-sm text-gray-600">订单编号：<strong>{{ order.orders_id }}</strong></p>
-              <p class="text-sm text-gray-600">客户：{{ order.customer.company_name }}</p>
-              <p class="text-sm text-gray-600">下单时间：{{ order.create_at|date:"Y-m-d H:i" }}</p>
-              <p class="text-sm text-gray-600">紧急程度：
-                {% if order.emergency_status == 3 %}
-                  <span class="text-red-600 font-semibold">紧急</span>
-                {% elif order.emergency_status == 2 %}
-                  <span class="text-orange-500">加急</span>
-                {% else %}
-                  正常
-                {% endif %}
-              </p>
-            </div>
-            <a href="{% url 'myadmin_orders_detail' order.orders_id %}" class="text-sm text-primary hover:underline">
-              查看详情
-            </a>
+  
+  <div class="p-6">
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+      <div class="space-y-6">
+        <div class="flex items-start space-x-4">
+          <div class="w-12 h-12 rounded-full bg-blue-100 flex items-center justify-center text-primary flex-shrink-0">
+            <i class="fa fa-user-o"></i>
+          </div>
+          <div>
+            <p class="text-sm text-gray-500">用户名</p>
+            <p class="font-medium text-gray-800">{{ user.username }}</p>
           </div>
         </div>
-      {% endfor %}
+        
+        <div class="flex items-start space-x-4">
+          <div class="w-12 h-12 rounded-full bg-blue-100 flex items-center justify-center text-primary flex-shrink-0">
+            <i class="fa fa-id-card-o"></i>
+          </div>
+          <div>
+            <p class="text-sm text-gray-500">工号</p>
+            <p class="font-medium text-gray-800">{{ employee.work_no }}</p>
+          </div>
+        </div>
+        
+        <div class="flex items-start space-x-4">
+          <div class="w-12 h-12 rounded-full bg-blue-100 flex items-center justify-center text-primary flex-shrink-0">
+            <i class="fa fa-sitemap"></i>
+          </div>
+          <div>
+            <p class="text-sm text-gray-500">部门</p>
+            <p class="font-medium text-gray-800">{{ employee.department.name }}</p>
+          </div>
+        </div>
+        
+        <div class="flex items-start space-x-4">
+          <div class="w-12 h-12 rounded-full bg-blue-100 flex items-center justify-center text-primary flex-shrink-0">
+            <i class="fa fa-phone"></i>
+          </div>
+          <div>
+            <p class="text-sm text-gray-500">电话</p>
+            <p class="font-medium text-gray-800">{{ employee.phone }}</p>
+          </div>
+        </div>
+      </div>
+      
+      <div class="space-y-6">
+        <div class="flex items-start space-x-4">
+          <div class="w-12 h-12 rounded-full bg-blue-100 flex items-center justify-center text-primary flex-shrink-0">
+            <i class="fa fa-envelope-o"></i>
+          </div>
+          <div>
+            <p class="text-sm text-gray-500">邮箱</p>
+            <p class="font-medium text-gray-800">{{ user.email }}</p>
+          </div>
+        </div>
+      </div>
     </div>
-  {% else %}
-    <p class="text-gray-500">暂无待拣货任务。</p>
-  {% endif %}
+    
+    <div class="mt-8 pt-6 border-t border-gray-100">
+      <a href="#" class="inline-flex items-center justify-center px-4 py-2.5 bg-primary text-white rounded-lg hover:bg-primary/90 transition pulse-hover">
+        <i class="fa fa-key mr-2"></i>
+        <span>修改密码</span>
+      </a>
+    </div>
+  </div>
 </section>
 
-
-
+{% if perms.myadmin.change_wmsbinstorage %}
+<!-- 拣货任务卡片 -->
+<section class="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
+  <div class="p-6 border-b border-gray-100 flex justify-between items-center">
+    <h2 class="text-xl font-bold text-gray-800">我的拣货任务</h2>
+    <div class="text-sm text-gray-500">
+      <span>{{ picking_tasks.count }}</span> 个待处理
+    </div>
+  </div>
+  
+  <div class="p-6">
+    {% if picking_tasks %}
+      <div class="space-y-4">
+        {% for order in picking_tasks %}
+          <div class="p-4 border border-gray-200 rounded-lg hover:border-primary/50 hover:bg-primary/5 transition-all duration-200 scale-hover">
+            <div class="flex flex-col md:flex-row md:justify-between md:items-start gap-4">
+              <div class="flex-1">
+                <p class="text-sm text-gray-500">订单编号</p>
+                <p class="font-medium text-gray-800">{{ order.orders_id }}</p>
+              </div>
+              <div class="flex-1">
+                <p class="text-sm text-gray-500">客户</p>
+                <p class="font-medium text-gray-800">{{ order.customer.company_name }}</p>
+              </div>
+              <div class="flex-1 md:w-64">
+                <p class="text-sm text-gray-500">下单时间</p>
+                <p class="font-medium text-gray-800">{{ order.create_at|date:"Y-m-d H:i" }}</p>
+              </div>
+              <div class="flex-1 md:w-48">
+                <p class="text-sm text-gray-500">紧急程度</p>
+                <p class="font-medium">
+                  {% if order.emergency_status == 3 %}
+                    <span class="bg-red-100 text-red-600 px-2 py-1 rounded text-xs">紧急</span>
+                  {% elif order.emergency_status == 2 %}
+                    <span class="bg-orange-100 text-orange-600 px-2 py-1 rounded text-xs">加急</span>
+                  {% else %}
+                    <span class="bg-green-100 text-green-600 px-2 py-1 rounded text-xs">正常</span>
+                  {% endif %}
+                </p>
+              </div>
+            </div>
+            
+            <div class="mt-4 flex justify-end">
+              <a href="{% url 'myadmin_orders_detail' order.orders_id %}" class="text-primary hover:text-primary/80 text-sm font-medium flex items-center transition">
+                <span>查看详情</span>
+                <i class="fa fa-angle-right ml-1 text-xs"></i>
+              </a>
+            </div>
+          </div>
+        {% endfor %}
+      </div>
+    {% else %}
+      <div class="py-12 text-center text-gray-500">
+        <div class="w-16 h-16 rounded-full bg-gray-100 flex items-center justify-center mx-auto mb-4">
+          <i class="fa fa-check-circle-o text-gray-400 text-2xl"></i>
+        </div>
+        <p>暂无待拣货任务</p>
+      </div>
+    {% endif %}
+  </div>
+</section>
+{% endif %}
 {% endblock %}

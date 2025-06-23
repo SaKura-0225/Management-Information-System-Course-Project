@@ -4,49 +4,218 @@
   <meta charset="UTF-8">
   <title>拣货单 - {{ order.orders_id }}</title>
   <style>
-    body { font-family: "微软雅黑", sans-serif; padding: 20px; }
-    table { border-collapse: collapse; width: 100%; margin-top: 20px; }
-    th, td { border: 1px solid #ccc; padding: 8px; text-align: center; }
-    h1 { text-align: center; }
-    .info { margin-top: 20px; font-size: 14px; }
+    /* 基础样式重置 */
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: "微软雅黑", sans-serif;
+      padding: 20px;
+      background-color: #fff;
+    }
+
+    /* 打印容器 */
+    .print-wrapper {
+      width: 800px;
+      margin: 0 auto;
+      border: 1px solid #ddd;
+      padding: 20px;
+      position: relative;
+    }
+
+    /* 顶部标题 */
+    .title {
+      text-align: center;
+      font-size: 20px;
+      font-weight: bold;
+      margin-bottom: 20px;
+      border-bottom: 2px solid #000;
+      padding-bottom: 10px;
+    }
+
+    /* 信息表格 */
+    .info-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-bottom: 20px;
+    }
+
+    .info-table th,
+    .info-table td {
+      border: 1px solid #ddd;
+      padding: 8px 10px;
+      text-align: left;
+      width: 50%;
+      vertical-align: top;
+    }
+
+    .info-table th {
+      background-color: #f5f5f5;
+      font-weight: bold;
+    }
+
+    /* 商品表格 */
+    .product-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-bottom: 20px;
+    }
+
+    .product-table thead {
+      background-color: #f5f5f5;
+    }
+
+    .product-table th,
+    .product-table td {
+      border: 1px solid #ddd;
+      padding: 8px 10px;
+      text-align: center;
+    }
+
+    /* 合计行 */
+    .total-row {
+      background-color: #fafafa;
+      font-weight: bold;
+    }
+
+    /* 二维码区域 */
+    .qr-container {
+      text-align: center;
+      margin-top: 20px;
+    }
+
+    .qr-container img {
+      width: 120px; /* 缩小二维码尺寸 */
+      height: 120px;
+    }
+
+    /* 签字区域 */
+    .sign-area {
+      display: flex;
+      justify-content: space-between;
+      margin-top: 30px;
+      padding-top: 20px;
+      border-top: 1px dashed #ddd;
+    }
+
+    .sign-block {
+      width: 48%;
+    }
+
+    .sign-block p {
+      margin-bottom: 5px;
+      color: #666;
+    }
+
+    /* 打印按钮 */
+    .print-btn {
+      text-align: right;
+      margin-top: 20px;
+    }
+
+    .print-btn button {
+      padding: 8px 20px;
+      border: 1px solid #ccc;
+      background-color: #f5f5f5;
+      cursor: pointer;
+      border-radius: 4px;
+    }
+
+    .print-btn button:hover {
+      background-color: #eee;
+    }
+
+    /* 打印适配 */
     @media print {
-      .no-print { display: none; }
+      .print-btn {
+        display: none;
+      }
+
+      .print-wrapper {
+        border: none;
+        padding: 0;
+        width: 100%;
+      }
     }
   </style>
 </head>
 
 <script>
-    function cleanupBarcode() {
-      fetch("{% url 'myadmin_delete_barcode' %}", {
-        method: "POST",
-        headers: {
-          "X-CSRFToken": "{{ csrf_token }}",
-          "Content-Type": "application/json"
-        },
-        body: JSON.stringify({ path: "{{ barcode_path }}" })
-      });
-    }
-  
-    window.onafterprint = cleanupBarcode;
-    window.onbeforeunload = cleanupBarcode;
+  function cleanupBarcode() {
+    fetch("{% url 'myadmin_delete_barcode' %}", {
+      method: "POST",
+      headers: {
+        "X-CSRFToken": "{{ csrf_token }}",
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({ path: "{{ barcode_path }}" })
+    });
+  }
+
+  window.onafterprint = cleanupBarcode;
+  window.onbeforeunload = cleanupBarcode;
 </script>
 
 <body>
-    <h1>拣货单</h1>
-  
-    <div class="info">
-      <p><strong>订单编号：</strong>{{ order.orders_id }}</p>
-      <p><strong>客户：</strong>{{ order.customer.company_name }}</p>
-      <p><strong>下单时间：</strong>{{ order.create_at|date:"Y-m-d H:i" }}</p>
-      <p><strong>打印时间：</strong>{{ print_time|date:"Y-m-d H:i" }}</p>
-      <p><strong>紧急程度：</strong>
-        {% if order.emergency_status == 2 %} 加急
-        {% elif order.emergency_status == 3 %} 紧急
-        {% else %} 正常 {% endif %}
-      </p>
-    </div>
-  
-    <table>
+  <div class="print-wrapper">
+    <!-- 标题 -->
+    <div class="title">拣货单</div>
+
+    <!-- 订单信息 & 拣货信息 -->
+    <table class="info-table">
+      <thead>
+        <tr>
+          <th colspan="2">订单信息</th>
+          <th colspan="2">拣货信息</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>订单编号：</td>
+          <td>{{ order.orders_id }}</td>
+          <td>总件数：</td>
+          <td>{{ total_qty }}</td>
+        </tr>
+        <tr>
+          <td>客户名称：</td>
+          <td>{{ order.customer.company_name }}</td>
+          <td>总金额：</td>
+          <td>{{ total_money|floatformat:2 }} 元</td>
+        </tr>
+        <tr>
+          <td>下单时间：</td>
+          <td>{{ order.create_at|date:"Y-m-d H:i" }}</td>
+          <td>拣货员：</td>
+          <td>
+            {% for emp in pickers %}
+            {{ emp.work_no }}
+            {% endfor %}
+          </td>
+        </tr>
+        <tr>
+          <td>打印时间：</td>
+          <td>{{ print_time|date:"Y-m-d H:i" }}</td>
+          <td>备注：</td>
+          <td>请核对商品信息后再拣货</td>
+        </tr>
+        <tr>
+          <td>紧急程度：</td>
+          <td>
+            {% if order.emergency_status == 3 %} 紧急
+            {% elif order.emergency_status == 2 %} 加急
+            {% else %} 正常 {% endif %}
+          </td>
+          <td></td>
+          <td></td>
+        </tr>
+      </tbody>
+    </table>
+
+    <!-- 商品明细 -->
+    <table class="product-table">
       <thead>
         <tr>
           <th>序号</th>
@@ -72,27 +241,38 @@
           <td>{{ d.subtotal|floatformat:2 }}</td>
         </tr>
         {% endfor %}
+        <!-- 合计行 -->
+        <tr class="total-row">
+          <td colspan="4">合计</td>
+          <td>{{ total_qty }}</td>
+          <td colspan="2"></td>
+          <td>{{ total_money|floatformat:2 }}</td>
+        </tr>
       </tbody>
     </table>
-  
-    <div class="info">
-      <p><strong>总件数：</strong>{{ total_qty }}</p>
-      <p><strong>总金额：</strong>{{ total_money|floatformat:2 }} 元</p>
-      <p><strong>拣货员：</strong>
-        {% for emp in pickers %}
-        {{ emp.work_no }}
-        {% endfor %}     
-      </p>
+
+    <!-- 二维码 -->
+    <div class="qr-container">
+      <img src="{{ barcode_url }}" alt="订单条码">
     </div>
-    <div style="text-align: right; margin-top: 20px;">
-        <img src="{{ barcode_url }}" alt="订单条码" width="180">
+
+    <!-- 签字确认 -->
+    <div class="sign-area">
+      <div class="sign-block">
+        <p>拣货确认：__________</p>
+        <p>日期：__________</p>
+      </div>
+      <div class="sign-block">
+        <p>复核确认：__________</p>
+        <p>日期：__________</p>
+      </div>
     </div>
-    <div class="no-print" style="margin-top: 30px;">
-      <button onclick="window.print()">🖨️ 打印此页面</button>
-    </div>
-    <div class="no-print" style="margin-top: 15px;">
-        <button onclick="window.history.back()">🔙 返回</button>
-    </div>
-  </body>
-  </html>
-  
+  </div>
+
+  <!-- 打印按钮 -->
+  <div class="print-btn no-print">
+    <button onclick="window.print()">🖨️ 打印此页面</button>
+    <button onclick="window.history.back()">🔙 返回</button>
+  </div>
+</body>
+</html>

@@ -75,9 +75,9 @@
     <div class="p-6 border-b border-gray-100 flex flex-col md:flex-row md:items-center justify-between">
       <h3 class="text-lg font-semibold text-dark">订单信息表（共 {{ page_obj.paginator.count }} 条）</h3>
       
-      <!-- 搜索框 -->
-      <div class="mt-4 md:mt-0 relative max-w-md w-full">
-        <form action="{% url 'myadmin_order_index' %}" method="get" class="flex flex-wrap items-center space-x-3">
+      <!-- 搜索框 & 筛选区域 -->
+      <div class="mt-4 md:mt-0 flex items-center space-x-3">
+        <form action="{% url 'myadmin_order_index' %}" method="get" class="flex items-center space-x-3">
 
           <!-- 紧急程度筛选 -->
           <select name="urgency" class="border border-gray-300 rounded px-3 py-2 text-sm">
@@ -86,14 +86,19 @@
             <option value="2" {% if filter_urgency == '2' %}selected{% endif %}>加急</option>
             <option value="3" {% if filter_urgency == '3' %}selected{% endif %}>紧急</option>
           </select>
-        
+
           <!-- 拣货状态筛选 -->
           <select name="status" class="border border-gray-300 rounded px-3 py-2 text-sm">
             <option value="">拣货状态</option>
             <option value="1" {% if filter_status == '1' %}selected{% endif %}>已拣货</option>
             <option value="2" {% if filter_status == '2' %}selected{% endif %}>未拣货</option>
           </select>
-        
+
+          <!-- 筛选按钮 -->
+          <button type="submit" class="px-4 py-2 bg-primary text-white rounded text-sm hover:bg-primary/90 transition">
+            筛选
+          </button>
+
           <!-- 搜索框 -->
           <div class="relative flex-1 min-w-[180px]">
             <input type="text" name="keyword" placeholder="搜索订单ID或工号"
@@ -103,13 +108,8 @@
               <i class="fa fa-search"></i>
             </span>
           </div>
-        
-          <button type="submit"
-                  class="px-4 py-2 bg-primary text-white rounded text-sm hover:bg-primary/90 transition">
-            筛选
-          </button>
+
         </form>
-        
       </div>
     </div>
     
